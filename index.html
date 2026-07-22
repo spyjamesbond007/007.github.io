@@ -28,6 +28,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 【v56】LINE/社群連結預覽說明：分享連結時卡片會顯示此段文字 -->
+    <meta name="description" content="LINE 裡點選後如看不到平面圖及 3D，請重新整理畫面或改用其他瀏覽器打開。">
+    <meta property="og:title" content="擋土排樁自動繪算器｜擋土支撐數量、預力計算及 2D、3D 自動繪圖器">
+    <meta property="og:description" content="LINE 裡點選後如看不到平面圖及 3D，請重新整理畫面或改用其他瀏覽器打開。">
+    <meta property="og:type" content="website">
     <title>擋土支撐數量、預力計算及2D、3D自動繪圖器(免責聲明：輸出結果請自行驗證)</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
@@ -167,6 +172,7 @@
         .force-mobile-pdf .main-wrapper { flex-direction: column; gap: 12px; }
         .force-mobile-pdf .left-col, .force-mobile-pdf .right-col { min-width: 0 !important; width: 100%; flex: 1 1 100%; display: contents; }
         .force-mobile-pdf #blockTitle          { order: 0; }
+        .force-mobile-pdf #blockTour           { order: -1; display: none !important; } /* 導覽卡不納入 PDF */
         .force-mobile-pdf #blockQuickInput      { order: 1; }
         .force-mobile-pdf #blockDraw            { order: 2; }
         .force-mobile-pdf #blockDetailParam     { order: 3; }
@@ -175,8 +181,9 @@
         .force-mobile-pdf #blockExport          { order: 6; }
         .force-mobile-pdf #blockBasicKnowledge  { order: 7; }
         .force-mobile-pdf #blockSafetyCheck     { order: 8; }
-        .force-mobile-pdf #blockAuthor          { order: 9; }
-        .force-mobile-pdf .copyright-banner     { order: 10; }
+        .force-mobile-pdf #blockArchDoc         { order: 9; }
+        .force-mobile-pdf #blockAuthor          { order: 10; }
+        .force-mobile-pdf .copyright-banner     { order: 11; }
 
         @media (max-width: 600px) {
             body { padding: 6px; }
@@ -474,17 +481,22 @@
                 min-width: 0 !important; width: 100%;
                 flex: 1 1 100%; display: contents;
             }
-            #blockTitle          { order: 0; }
-            #blockQuickInput     { order: 1; }
-            #blockDraw           { order: 2; }
-            #blockDetailParam    { order: 3; }
-            #blockCalcDetail     { order: 4; }
-            #blockSummary        { order: 5; }
-            #blockExport         { order: 6; }
-            #blockBasicKnowledge { order: 7; }
-            #blockSafetyCheck    { order: 8; }
-            #blockAuthor         { order: 9; }
-            .copyright-banner    { order: 10; }
+            /* 【v56】完整 13 區塊排序：blockTour(導覽卡)置於標題後、
+               blockArchDoc(程式架構與功能總說明)移至 blockAuthor(作者附註)前一個。
+               ★未指定 order 的 flex 子項預設為 0 會被擠到最前面，故務必列全。 */
+            #blockTitle          { order:  0; }
+            #blockTour           { order:  1; }
+            #blockQuickInput     { order:  2; }
+            #blockDraw           { order:  3; }
+            #blockDetailParam    { order:  4; }
+            #blockCalcDetail     { order:  5; }
+            #blockSummary        { order:  6; }
+            #blockExport         { order:  7; }
+            #blockBasicKnowledge { order:  8; }
+            #blockSafetyCheck    { order:  9; }
+            #blockArchDoc        { order: 10; }
+            #blockAuthor         { order: 11; }
+            .copyright-banner    { order: 12; }
 
             /* 繪圖區 canvas 一律滿版，根除「被壓成左側窄條、右邊空一片」 */
             #blockDraw canvas:not(#specCanvas):not(#sheetSpecCanvas) {
@@ -7988,6 +8000,8 @@ window.onload = function() { init3D(); applyPileTypeMode(); drawSheetSpecChart()
        ============================================================ */
     (function(){
         let stage = null, timer = null, running = false;
+        /* 【v56】手動控制：manual=true 後停止自動換頁，由使用者按鈕/方向鍵控制 */
+        let curSteps = null, curIdx = 0, manual = false;
 
         function buildStage() {
             if (stage) return stage;
@@ -8001,15 +8015,28 @@ window.onload = function() { init3D(); applyPileTypeMode(); drawSheetSpecChart()
                   '<div id="tourText" style="font-size:1.15em; line-height:1.9; text-shadow:0 2px 10px rgba(0,0,0,0.9);"></div>' +
                   '<div id="tourProg" style="margin-top:22px; font-size:0.85em; color:#90caf9;"></div>' +
                 '</div>' +
-                '<button id="tourSkip" style="position:absolute; right:22px; top:20px; pointer-events:auto; cursor:pointer; padding:8px 16px; border-radius:20px; border:1px solid #90caf9; background:rgba(255,255,255,0.92); font-weight:bold; color:#0d47a1;">✕ 結束導覽 (Esc)</button>';
+                '<button id="tourSkip" style="position:absolute; right:22px; top:20px; pointer-events:auto; cursor:pointer; padding:8px 16px; border-radius:20px; border:1px solid #90caf9; background:rgba(255,255,255,0.92); font-weight:bold; color:#0d47a1;">✕ 結束導覽 (Esc)</button>' +
+                /* 【v56】底部手動控制列：按「下一頁」即停止自動播放，改由使用者控制 */
+                '<div id="tourNav" style="position:absolute; left:50%; bottom:26px; transform:translateX(-50%); display:flex; gap:12px; pointer-events:auto; align-items:center;">' +
+                  '<button id="tourPrev" style="cursor:pointer; padding:10px 18px; border-radius:24px; border:1px solid #90caf9; background:rgba(255,255,255,0.92); font-weight:bold; color:#0d47a1; font-size:1em;">◀ 上一頁</button>' +
+                  '<button id="tourNext" style="cursor:pointer; padding:10px 22px; border-radius:24px; border:none; background:#1976d2; color:#fff; font-weight:bold; font-size:1em;">下一頁 ▶</button>' +
+                '</div>';
             document.body.appendChild(stage);
             stage.querySelector('#tourSkip').onclick = endTour;
+            stage.querySelector('#tourNext').onclick = function(){ manual = true; nextStep(); };
+            stage.querySelector('#tourPrev').onclick = function(){ manual = true; prevStep(); };
+            document.addEventListener('keydown', function(e){
+                if (!running) return;
+                if (e.key === 'ArrowRight') { manual = true; nextStep(); }
+                else if (e.key === 'ArrowLeft') { manual = true; prevStep(); }
+            });
             document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && running) endTour(); });
             return stage;
         }
 
         function endTour() {
             running = false;
+            manual = false; curSteps = null; curIdx = 0;
             if (timer) { clearTimeout(timer); timer = null; }
             if (stage) stage.style.display = 'none';
             document.body.classList.remove('tour-single');
@@ -8050,10 +8077,42 @@ window.onload = function() { init3D(); applyPileTypeMode(); drawSheetSpecChart()
         function play(steps, idx) {
             if (!running) return;
             if (idx >= steps.length) { endTour(); return; }
+            if (idx < 0) idx = 0;
+            curSteps = steps; curIdx = idx;               // 記錄目前進度供手動前後翻
+            if (timer) { clearTimeout(timer); timer = null; }
             const st = steps[idx];
             try { if (st.before) st.before(); } catch (e) {}
-            caption(st.t, st.d, '第 ' + (idx + 1) + ' / ' + steps.length + ' 段　(按 Esc 可隨時結束)', st.dim);
-            timer = setTimeout(function(){ play(steps, idx + 1); }, st.ms || 3000);
+            const tail = manual
+                ? '　(方向鍵或按鈕翻頁；Esc 結束)'
+                : '　(自動播放中；按「下一頁」可改手動)';
+            caption(st.t, st.d, '第 ' + (idx + 1) + ' / ' + steps.length + ' 段' + tail, st.dim);
+            updateNavButtons();
+            if (!manual) {                                 // 僅自動模式才排定下一頁計時器
+                timer = setTimeout(function(){ play(steps, idx + 1); }, st.ms || 3000);
+            }
+        }
+
+        // 手動：下一頁 / 上一頁（呼叫端已設 manual=true）
+        function nextStep() {
+            if (!running || !curSteps) return;
+            if (curIdx + 1 >= curSteps.length) { endTour(); return; }
+            play(curSteps, curIdx + 1);
+        }
+        function prevStep() {
+            if (!running || !curSteps) return;
+            play(curSteps, Math.max(0, curIdx - 1));
+        }
+        // 更新上一頁/下一頁按鈕的可用狀態與末頁文字
+        function updateNavButtons() {
+            if (!stage) return;
+            const pv = stage.querySelector('#tourPrev'), nx = stage.querySelector('#tourNext');
+            if (!pv || !nx) return;
+            const atStart = curIdx <= 0;
+            const atEnd = curSteps && curIdx >= curSteps.length - 1;
+            pv.disabled = atStart;
+            pv.style.opacity = atStart ? '0.4' : '1';
+            pv.style.cursor = atStart ? 'default' : 'pointer';
+            nx.textContent = atEnd ? '完成 ✓' : '下一頁 ▶';
         }
 
         function expandAll() {
@@ -8134,6 +8193,7 @@ window.onload = function() { init3D(); applyPileTypeMode(); drawSheetSpecChart()
         window.startTour = function(which) {
             endTour();
             running = true;
+            manual = false; curSteps = null; curIdx = 0;   // 每次重新開始：預設自動播放
             buildStage();
             const steps = (which === 2) ? TOUR2 : (which === 3) ? TOUR3 : (which === 4) ? TOUR4 : TOUR1;
             play(steps, 0);
@@ -8155,6 +8215,67 @@ window.onload = function() { init3D(); applyPileTypeMode(); drawSheetSpecChart()
         }
         if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run);
         else run();
+    })();
+    </script>
+    <script>
+    /* ════════════════════════════════════════════════════════════════
+       【v56】LINE 內建瀏覽器偵測 → 自動彈窗教學
+       LINE 的 in-app WebView 對 WebGL(3D)/Canvas 支援不穩，常出現
+       平面圖或 3D 載不出、或操作到一半消失。改用手機預設瀏覽器
+       (Chrome 等)或電腦即正常。偵測到 LINE 時自動提示解法。
+       ════════════════════════════════════════════════════════════════ */
+    (function lineInAppHint(){
+        try {
+            var ua = navigator.userAgent || '';
+            // LINE 內建瀏覽器 UA 含 "Line/"；一併涵蓋常見夾帶字樣
+            var isLine = /\bLine\//i.test(ua) || /Line\/[\d.]+/i.test(ua);
+            if (!isLine) return;
+            // 本次瀏覽階段只跳一次(避免每次重整都彈)
+            try { if (sessionStorage.getItem('lineHintDone') === '1') return; } catch(e){}
+
+            function build(){
+                if (document.getElementById('lineHintMask')) return;
+                var mask = document.createElement('div');
+                mask.id = 'lineHintMask';
+                mask.style.cssText = 'position:fixed;inset:0;z-index:2147483000;background:rgba(8,18,30,0.78);display:flex;align-items:center;justify-content:center;padding:16px;box-sizing:border-box;font-family:inherit;';
+                var box = document.createElement('div');
+                box.style.cssText = 'background:#fff;max-width:440px;width:100%;max-height:88vh;overflow:auto;border-radius:14px;box-shadow:0 12px 40px rgba(0,0,0,0.4);padding:20px 18px;box-sizing:border-box;line-height:1.7;color:#263238;';
+                box.innerHTML =
+                    '<div style="font-size:1.25em;font-weight:900;color:#c62828;margin-bottom:10px;">⚠️ 您正用 LINE 內建瀏覽器開啟</div>' +
+                    '<div style="font-size:0.97em;margin-bottom:14px;">LINE 內建瀏覽器對 <b>平面圖與 3D</b> 支援較不穩，可能<b>載不出來或操作一半消失</b>。請用下列任一方式解決：</div>' +
+                    '<div style="background:#e3f2fd;border-left:4px solid #1976d2;border-radius:6px;padding:10px 12px;margin-bottom:12px;font-size:0.95em;">' +
+                        '<b>方法 1（最推薦）</b>：改用其他瀏覽器開啟<br>' +
+                        '按下方藍色按鈕，或點<b>畫面右上角</b>的 <b>⋯</b> / <b>≡</b> 選單 → 選「<b>用預設瀏覽器開啟</b>／在瀏覽器開啟」，建議選 <b>Google Chrome</b> 或手機預設瀏覽器。' +
+                    '</div>' +
+                    '<div style="background:#fff8e1;border-left:4px solid #f9a825;border-radius:6px;padding:10px 12px;margin-bottom:12px;font-size:0.95em;">' +
+                        '<b>方法 2</b>：若圖仍空白，請<b>重新整理本頁</b>（按下方按鈕，或下拉畫面重整）。' +
+                    '</div>' +
+                    '<div style="background:#f1f8e9;border-left:4px solid #558b2f;border-radius:6px;padding:10px 12px;margin-bottom:14px;font-size:0.92em;color:#33691e;">' +
+                        '💡 <b>用電腦或 Google Chrome 開啟功能最完整。</b><br>💡 圖面太小時，可用<b>兩指滑動放大／縮小</b>細看。' +
+                    '</div>' +
+                    '<div style="display:flex;flex-direction:column;gap:9px;">' +
+                        '<button id="lineOpenExt" style="width:100%;padding:12px;border:none;border-radius:8px;background:#1976d2;color:#fff;font-weight:bold;font-size:1.02em;cursor:pointer;">🌐 用外部瀏覽器開啟（推薦）</button>' +
+                        '<button id="lineReload" style="width:100%;padding:11px;border:1px solid #f9a825;border-radius:8px;background:#fff;color:#e65100;font-weight:bold;font-size:0.98em;cursor:pointer;">🔄 重新整理本頁</button>' +
+                        '<button id="lineClose" style="width:100%;padding:10px;border:1px solid #b0bec5;border-radius:8px;background:#fff;color:#546e7a;font-weight:bold;font-size:0.95em;cursor:pointer;">我知道了，先繼續使用</button>' +
+                    '</div>';
+                mask.appendChild(box);
+                document.body.appendChild(mask);
+
+                document.getElementById('lineOpenExt').onclick = function(){
+                    // LINE 官方參數：連結帶 openExternalBrowser=1 會由 LINE 轉交裝置預設瀏覽器
+                    var u = location.href.split('#')[0];
+                    u += (u.indexOf('?') >= 0 ? '&' : '?') + 'openExternalBrowser=1';
+                    location.href = u;
+                };
+                document.getElementById('lineReload').onclick = function(){ location.reload(); };
+                document.getElementById('lineClose').onclick = function(){
+                    try { sessionStorage.setItem('lineHintDone','1'); } catch(e){}
+                    mask.parentNode && mask.parentNode.removeChild(mask);
+                };
+            }
+            if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', build);
+            else build();
+        } catch(e){}
     })();
     </script>
 </body>
