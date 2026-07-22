@@ -113,7 +113,7 @@
         .inline-alert { color: #c62828; font-weight: bold; font-size: 0.85em; display: none; position: absolute; right: 230px; background: #ffebee; padding: 2px 5px; border-radius: 3px; z-index: 10;}
         .stage-alert { color: #c62828; font-weight: bold; font-size: 0.9em; display: none; padding: 8px; background: #ffebee; border-left: 4px solid #c62828; margin-bottom: 10px;}
         
-        .copyright-banner { font-size: 1.2em; font-weight: bold; color: #7f8c8d; text-align: center; margin-top: 20px; padding: 20px; border-top: 2px dashed #cfd8dc; line-height: 1.4; width: 100%; }
+        .copyright-banner { font-size: 1.2em; font-weight: bold; color: #7f8c8d; text-align: center; margin-top: 20px; padding: 20px; border-top: 2px dashed #cfd8dc; line-height: 1.4; width: 100%; box-sizing: border-box; overflow-wrap: anywhere; word-break: break-word; }
 
         /* 3D立體示意圖樣式 */
         .threeD-instructions { width:100%; box-sizing:border-box; background:#fff3e0; border-left:4px solid #ff9800; color:#7a4a00; font-size:0.88em; padding:8px 12px; border-radius:4px; margin-top:8px; margin-bottom:8px; }
@@ -329,15 +329,14 @@
            避免 containment 影響 main-wrapper 內 sticky 標題的固定行為(零風險)。 */
         .layout-shell { container-type: inline-size; container-name: layout; width: 100%; display: flex; justify-content: center; }
 
-        /* 預設(窄)：單欄堆疊，解除舊的 min-width 硬下限 */
+        /* 預設(行動優先)：單欄堆疊，解除舊的 min-width 硬下限。
+           【v55】雙欄/單欄切換統一改由「視窗寬度」於檔末三段式斷點裁決，
+           不再使用 @container：避免其依賴 JS 動態包 layout-shell 的載入時序
+           (LINE 等內建瀏覽器易失效)，並消除與 600px 媒體查詢之間的
+           600–1080px「斷點死區」(死區內欄位用桌機寬度硬擠→被 overflow 裁掉→釘死)。 */
         .left-col, .right-col {
             min-width: 0;
             flex-basis: 100%;
-        }
-        /* 容器夠寬(≥ 兩欄各約520px + gap)才並排雙欄 */
-        @container layout (min-width: 1080px) {
-            .left-col  { flex: 1 1 0; min-width: var(--col-min); }
-            .right-col { flex: 1.4 1 0; min-width: var(--col-min); }
         }
 
         /* ── (B) 輸入元件：固定寬 → clamp 連續縮放 ─────────────────────── */
@@ -440,13 +439,80 @@
         img, canvas, svg, table { max-width: 100%; }
         html, body { overflow-x: hidden; }
 
-        /* ── (I) 漸進增強回退：不支援容器查詢的舊瀏覽器 ───────────────── */
-        /* 若瀏覽器不懂 @container，退回以視窗寬度判斷雙欄(近似舊行為) */
-        @supports not (container-type: inline-size) {
-            @media (min-width: 1120px) {
-                .left-col  { flex: 1 1 0; min-width: var(--col-min); }
-                .right-col { flex: 1.4 1 0; min-width: var(--col-min); }
+        /* ════════════════════════════════════════════════════════════════
+           【v55 響應式統一裁決】三段式視窗斷點(手機 / 平板 / 電腦)
+           ----------------------------------------------------------------
+           取代原「@media 600px + @container 1080px」雙系統。本區塊置於樣式
+           最末，來源順序最高、優先權最大，為唯一版面切換依據，杜絕死區。
+             ≤ 600px          手機：單欄 + 跨欄重排 + 輸入列上下堆疊(觸控友善)
+             601–1119.98px    平板：單欄 + 跨欄重排 + 輸入列左右並排 + 欄位加寬
+             ≥ 1120px         電腦：左右雙欄(還原原始設計)
+           ════════════════════════════════════════════════════════════════ */
+
+        /* ── (共用) 手機 + 平板：單欄堆疊 + 跨欄重新排序 ─────────────── */
+        @media (max-width: 1119.98px) {
+            /* align-items:stretch 是關鍵：原 .main-wrapper 為 flex-start，單欄時會讓
+               各區塊「依內容寬度自我縮放」→ 內容寬者(輸入區)爆出撐破、內容窄者
+               (繪圖區)縮成窄條。改 stretch 強制每區塊撐滿容器寬度,一次解決兩症狀。 */
+            .main-wrapper { flex-direction: column; gap: 14px; align-items: stretch; }
+            /* 保險:即使被 display:contents 提升的區塊,也一律 100% 寬。
+               min-width:0 是關鍵：flex 子項預設 min-width:auto 會拒絕縮到比
+               「內容最小寬」更窄→區塊撐破容器被裁。設 0 才能收斂至容器寬。 */
+            .left-col > .content-block, .right-col > .content-block,
+            .left-col > .copyright-banner, .right-col > .copyright-banner {
+                width: 100%; min-width: 0;
+                /* border-box 是最後關鍵:content-box 下 width:100%(=內容寬)再加左右
+                   padding 會多撐約 40px 被裁。改 border-box 讓 padding 含入寬度內。 */
+                box-sizing: border-box;
             }
+            /* 區塊內輸入列一律允許換行、可收縮,杜絕單列過寬撐破區塊 */
+            .content-block .input-group { flex-wrap: wrap; min-width: 0; }
+            .content-block .input-group > * { min-width: 0; max-width: 100%; }
+            /* display:contents 使左右欄框「消失」、其內區塊升為 main-wrapper
+               直接子項，才能用 order 跨欄重排(把自動繪圖區提到快速輸入之後)。 */
+            .left-col, .right-col {
+                min-width: 0 !important; width: 100%;
+                flex: 1 1 100%; display: contents;
+            }
+            #blockTitle          { order: 0; }
+            #blockQuickInput     { order: 1; }
+            #blockDraw           { order: 2; }
+            #blockDetailParam    { order: 3; }
+            #blockCalcDetail     { order: 4; }
+            #blockSummary        { order: 5; }
+            #blockExport         { order: 6; }
+            #blockBasicKnowledge { order: 7; }
+            #blockSafetyCheck    { order: 8; }
+            #blockAuthor         { order: 9; }
+            .copyright-banner    { order: 10; }
+
+            /* 繪圖區 canvas 一律滿版，根除「被壓成左側窄條、右邊空一片」 */
+            #blockDraw canvas:not(#specCanvas):not(#sheetSpecCanvas) {
+                width: 100% !important; max-width: 100% !important; height: auto;
+            }
+            /* 任一區塊內元件皆不得超出容器(防溢出被 overflow:hidden 裁掉而不可捲) */
+            .content-block input, .content-block select, .content-block textarea,
+            .content-block img, .content-block canvas, .content-block table {
+                max-width: 100% !important;
+            }
+        }
+
+        /* ── (平板 601–1119.98px) 專屬微調：單欄放大、輸入列維持左右並排 ─ */
+        @media (min-width: 601px) and (max-width: 1119.98px) {
+            body { padding: 12px; }
+            .content-block { padding: clamp(16px, 2.6vw, 22px); }
+            /* 單欄空間充裕→主要數值欄與長文字欄放寬，閱讀輸入更舒適 */
+            :root {
+                --fld-num: clamp(160px, 26vw, 240px);
+                --fld-txt: clamp(240px, 46vw, 380px);
+            }
+        }
+
+        /* ── (電腦 ≥ 1120px) 左右雙欄：還原原始雙欄設計 ─────────────── */
+        @media (min-width: 1120px) {
+            .main-wrapper { flex-direction: row; }
+            .left-col  { display: flex; flex-direction: column; flex: 1 1 0;   min-width: var(--col-min); }
+            .right-col { display: flex; flex-direction: column; flex: 1.4 1 0; min-width: var(--col-min); }
         }
     </style>
 </head>
@@ -1814,7 +1880,7 @@
                  3. 修改再製後之檔案仍應保留本宣告與原版權文字。
                  ============================================================ -->
             <div class="copyright-banner">
-                本版權屬陳金賢所有，同意無償供各界使用、修改、再製，使用意見、修改再製後檔案及建議等指教寄spyjamesbond007@gmail.com交流，0929-833339。版本日期：2026年7月19日<br>
+                本版權屬陳金賢所有，同意無償供各界使用、修改、再製，使用意見、修改再製後檔案及建議等指教寄spyjamesbond007@gmail.com交流，0929-833339。版本日期：2026年7月22日<br>
                 <span style="font-size:0.85em;">※ 修改者宣告：任何修改本檔者(含AI)均同意遵守上述授權條款，並於每次修改時將本「版本日期」自動更新為修改當日。</span>
             </div>
         </div>
