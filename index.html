@@ -1397,40 +1397,45 @@
                     <span id="threeDExportMsg" style="font-size:0.85em; margin-left:6px;"></span>
                 </div>
                                 <div id="three-container"></div>
+                <!-- 【v57】3D 操作鍵改置於 3D 視圖「外部」(容器正下方)，手機不再遮擋畫面；
+                     並加收合鈕，手機(≤600px)預設收合以節省高度。觸控可直接在畫面單指旋轉、雙指縮放/平移。 -->
+                <div class="threeD-toolbar" id="nav3DPadHost" style="background:#f5f7fa; border:1px solid #cfd8dc; border-radius:6px; padding:6px 10px; margin-top:8px; align-items:flex-start;"></div>
                 <script>
-                /* 3D 畫面內建操作鍵(替代滑鼠)：縮放、上下左右平移、上下左右旋轉 */
                 (function(){
-                    function mk() {
-                        const c = document.getElementById('three-container'); if (!c || document.getElementById('nav3DPad')) return;
+                    const bs = 'width:30px; height:28px; margin:1px; cursor:pointer; border:1px solid #90a4ae; background:#eceff1; border-radius:4px; font-size:13px; line-height:1;';
+                    function grp(t, inner){ return '<div style="text-align:center;"><div style="color:#666; font-size:0.85em; margin-bottom:2px;">'+t+'</div>'+inner+'</div>'; }
+                    function mk(){
+                        const host = document.getElementById('nav3DPadHost');
+                        if (!host || document.getElementById('nav3DPad')) return;
                         const pad = document.createElement('div');
                         pad.id = 'nav3DPad';
-                        pad.style.cssText = 'position:absolute; left:10px; top:10px; z-index:18; background:rgba(255,255,255,0.92);' +
-                            'border:1px solid #b0bec5; border-radius:8px; padding:6px 8px; font-size:0.78em; box-shadow:0 2px 6px rgba(0,0,0,0.2);';
-                        const bs = 'width:26px; height:24px; margin:1px; cursor:pointer; border:1px solid #90a4ae; background:#eceff1; border-radius:4px; font-size:12px; line-height:1;';
+                        pad.style.cssText = 'display:flex; align-items:center; gap:12px; flex-wrap:wrap; width:100%;';
                         pad.innerHTML =
-                            '<div style="font-weight:bold; color:#37474f; margin-bottom:3px;">🖱 操作鍵</div>' +
-                            '<div style="display:flex; gap:10px;">' +
-                              '<div><div style="color:#666; text-align:center;">旋轉</div>' +
-                                '<div style="text-align:center;"><button type="button" style="'+bs+'" onclick="nav3D(\'rotU\')">▲</button></div>' +
-                                '<div><button type="button" style="'+bs+'" onclick="nav3D(\'rotL\')">◀</button>' +
-                                '<button type="button" style="'+bs+'" onclick="nav3D(\'rotR\')">▶</button></div>' +
-                                '<div style="text-align:center;"><button type="button" style="'+bs+'" onclick="nav3D(\'rotD\')">▼</button></div>' +
-                              '</div>' +
-                              '<div><div style="color:#666; text-align:center;">平移</div>' +
-                                '<div style="text-align:center;"><button type="button" style="'+bs+'" onclick="nav3D(\'panU\')">▲</button></div>' +
-                                '<div><button type="button" style="'+bs+'" onclick="nav3D(\'panL\')">◀</button>' +
-                                '<button type="button" style="'+bs+'" onclick="nav3D(\'panR\')">▶</button></div>' +
-                                '<div style="text-align:center;"><button type="button" style="'+bs+'" onclick="nav3D(\'panD\')">▼</button></div>' +
-                              '</div>' +
-                              '<div><div style="color:#666; text-align:center;">縮放</div>' +
-                                '<div style="text-align:center;"><button type="button" style="'+bs+'" onclick="nav3D(\'zoomIn\')">＋</button></div>' +
-                                '<div style="text-align:center;"><button type="button" style="'+bs+'" onclick="nav3D(\'zoomOut\')">－</button></div>' +
-                                '<div style="text-align:center;"><button type="button" style="width:56px; height:22px; margin:1px; cursor:pointer; border:1px solid #90a4ae; background:#e3f2fd; border-radius:4px; font-size:11px;" onclick="resetView3D()">重置</button></div>' +
-                              '</div>' +
+                            '<button type="button" id="nav3DToggle" style="cursor:pointer; border:1px solid #90a4ae; background:#e3f2fd; color:#0d47a1; font-weight:bold; border-radius:6px; padding:7px 12px; font-size:0.92em; min-height:36px;">\uD83D\uDDB1 3D \u64cd\u4f5c\u9375 \u25be</button>' +
+                            '<div id="nav3DBody" style="display:flex; gap:16px; flex-wrap:wrap; align-items:flex-start;">' +
+                              grp('\u65cb\u8f49',
+                                '<div><button type="button" style="'+bs+'" onclick="nav3D(\'rotU\')">\u25b2</button></div>' +
+                                '<div><button type="button" style="'+bs+'" onclick="nav3D(\'rotL\')">\u25c0</button>' +
+                                '<button type="button" style="'+bs+'" onclick="nav3D(\'rotR\')">\u25b6</button></div>' +
+                                '<div><button type="button" style="'+bs+'" onclick="nav3D(\'rotD\')">\u25bc</button></div>') +
+                              grp('\u5e73\u79fb',
+                                '<div><button type="button" style="'+bs+'" onclick="nav3D(\'panU\')">\u25b2</button></div>' +
+                                '<div><button type="button" style="'+bs+'" onclick="nav3D(\'panL\')">\u25c0</button>' +
+                                '<button type="button" style="'+bs+'" onclick="nav3D(\'panR\')">\u25b6</button></div>' +
+                                '<div><button type="button" style="'+bs+'" onclick="nav3D(\'panD\')">\u25bc</button></div>') +
+                              grp('\u7e2e\u653e',
+                                '<div><button type="button" style="'+bs+'" onclick="nav3D(\'zoomIn\')">\uff0b</button></div>' +
+                                '<div><button type="button" style="'+bs+'" onclick="nav3D(\'zoomOut\')">\uff0d</button></div>') +
+                              '<div style="align-self:center;"><button type="button" style="width:70px; height:30px; cursor:pointer; border:1px solid #90a4ae; background:#e3f2fd; border-radius:4px; font-size:12px; font-weight:bold;" onclick="resetView3D()">\u91cd\u7f6e\u8996\u89d2</button></div>' +
                             '</div>';
-                        c.appendChild(pad);
+                        host.appendChild(pad);
+                        const body = pad.querySelector('#nav3DBody');
+                        const tgl = pad.querySelector('#nav3DToggle');
+                        function setOpen(open){ body.style.display = open ? 'flex' : 'none'; tgl.innerHTML = open ? '\uD83D\uDDB1 3D \u64cd\u4f5c\u9375 \u25be' : '\uD83D\uDDB1 3D \u64cd\u4f5c\u9375 \u25b8'; }
+                        tgl.onclick = function(){ setOpen(body.style.display === 'none'); };
+                        setOpen(!(window.matchMedia && window.matchMedia('(max-width: 600px)').matches));
                     }
-                    window._mkNav3D = mk;   // 3D初始化會清空容器(innerHTML='')，故需於每次更新後重建
+                    window._mkNav3D = mk;   // 面板已移至容器外，3D重繪不再清除；保留供相容呼叫
                     if (document.readyState === 'loading') window.addEventListener('DOMContentLoaded', mk); else setTimeout(mk, 60);
                 })();
                 </script>
