@@ -232,6 +232,57 @@
             .canvas-zoom-bar { display: block; background:#fff8e1; border-left:4px solid #fbc02d;
                                padding:6px 8px; margin-bottom:6px; font-size:0.82em; border-radius:4px; }
             .canvas-zoom-bar button { margin-left:4px; font-size:0.85em; padding:4px 10px; min-height:32px; }
+
+            /* ============================================================
+               【手機跑版修正】雙向欄位(方向1×方向2、各階深、單一數值)修正
+               這些欄位以 inline style="width:90px/62px/110px" + <span white-space:nowrap>
+               硬排版，未走 .input-group 響應式規則，在窄螢幕會撐破區塊而溢出黃框。
+               以下用高優先權(!important)覆蓋，僅在 ≤600px 生效，不影響桌機版。
+               ============================================================ */
+
+            /* (1) input-group 內作為「數值容器」的 span：解除不換行、改為可彈性換行的 flex 容器 */
+            .input-group > span[style*="nowrap"] {
+                white-space: normal !important;
+                display: flex !important;
+                flex-wrap: wrap !important;
+                align-items: center !important;
+                gap: 6px 4px !important;
+                width: 100% !important;
+            }
+
+            /* (2) 這些 span 內的 inline 固定寬輸入框 → 改為彈性佔滿、換行不溢出 */
+            .input-group > span[style*="nowrap"] input[type="number"] {
+                width: auto !important;
+                flex: 1 1 90px !important;   /* 最小 90px，可伸縮，多欄自動換行 */
+                min-width: 80px !important;
+                box-sizing: border-box !important;
+                font-size: 16px !important;  /* 防 iOS 聚焦放大 */
+                padding: 8px !important;
+                text-align: right !important;
+            }
+
+            /* (3) 「方向1 / 方向2 / 第N階」等文字標記：不被壓縮，維持在輸入框左側 */
+            .input-group > span[style*="nowrap"] > span {
+                flex: 0 0 auto !important;
+                white-space: nowrap !important;
+            }
+
+            /* (4) 各階深 5 欄：每欄(標記+輸入框)成對，兩欄一行較好按 */
+            #qd1, #qd2, #qd3, #qd4, #qd5 {
+                flex: 1 1 90px !important;
+                min-width: 72px !important;
+            }
+
+            /* (5) 保險：任何區塊內的直接 input/select 一律不得超出容器 */
+            .content-block input[type="number"],
+            .content-block input[type="text"],
+            .content-block select {
+                max-width: 100% !important;
+            }
+
+            /* (6) 防止任何子元素造成整頁橫向捲動 */
+            html, body { overflow-x: hidden !important; }
+            .content-block { overflow-x: hidden !important; }
         }
 
         /* 「原尺寸(可左右捲動)」模式：讓圖面以原始解析度呈現，手機可捲動/縮放細看 */
@@ -248,6 +299,155 @@
         #three-container { width:100%; height:640px; max-width:1100px; position:relative; border:1px solid #ccc; border-radius:6px; overflow:hidden; background:linear-gradient(#dfeaf5,#f7f9fb); box-shadow:0 2px 4px rgba(0,0,0,0.05); margin-bottom:10px; touch-action:none; }
         #three-container canvas { width:100% !important; height:100% !important; display:block; border:none; margin:0; box-shadow:none; }
         #three-container .loading3d { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:#78909c; font-size:0.95em; }
+
+        /* ════════════════════════════════════════════════════════════════
+           【v53 全面響應式重構】clamp() + Container Queries
+           ----------------------------------------------------------------
+           設計原則：
+           (A) 尺寸連續縮放：以 clamp(最小, 理想vw, 最大) 取代固定 px 斷點，
+               讓欄位/圖面/工具列在任何寬度下平滑縮放，消除「卡在斷點邊界跳版」。
+           (B) 容器查詢(@container)：版面依「自身容器寬度」而非「視窗寬度」決定
+               單/雙欄，元件因此可在任何嵌套情境正確排版(如導覽單欄模式)。
+           (C) 漸進增強：本區塊置於既有 CSS 之後，以較高特異度覆蓋舊值；
+               不支援 @container 的舊瀏覽器仍會落回上方既有 @media 規則。
+           (D) 統一設計權杖(CSS 變數)：集中管理欄位寬與間距，日後只改一處。
+           ════════════════════════════════════════════════════════════════ */
+
+        :root {
+            /* 設計權杖：欄位寬度族(小/中/大/文字欄) — clamp(下限, 隨視窗, 上限) */
+            --fld-sm:  clamp(58px,  16vw,  72px);   /* 各階深等窄欄(原48~72px) */
+            --fld-md:  clamp(80px,  22vw, 110px);   /* 方向值/高程/一般數值(原88~110px) */
+            --fld-num: clamp(120px, 30vw, 220px);   /* 主要數值輸入(原220px) */
+            --fld-txt: clamp(180px, 60vw, 320px);   /* 專案名稱等長文字欄(原320px) */
+            --gap-fld: clamp(4px, 1.2vw, 10px);     /* 欄位間距 */
+            /* 版面欄寬理想下限(供容器查詢判斷) */
+            --col-min: 520px;
+        }
+
+        /* ── (A) 主版面：改用容器查詢驅動單/雙欄 ───────────────────────── */
+        /* 查詢容器設在獨立外層 .layout-shell(而非 main-wrapper)，
+           避免 containment 影響 main-wrapper 內 sticky 標題的固定行為(零風險)。 */
+        .layout-shell { container-type: inline-size; container-name: layout; width: 100%; display: flex; justify-content: center; }
+
+        /* 預設(窄)：單欄堆疊，解除舊的 min-width 硬下限 */
+        .left-col, .right-col {
+            min-width: 0;
+            flex-basis: 100%;
+        }
+        /* 容器夠寬(≥ 兩欄各約520px + gap)才並排雙欄 */
+        @container layout (min-width: 1080px) {
+            .left-col  { flex: 1 1 0; min-width: var(--col-min); }
+            .right-col { flex: 1.4 1 0; min-width: var(--col-min); }
+        }
+
+        /* ── (B) 輸入元件：固定寬 → clamp 連續縮放 ─────────────────────── */
+        input[type="number"], input[type="text"], select {
+            width: var(--fld-num);
+            max-width: 100%;
+            box-sizing: border-box;
+        }
+        /* 長文字欄(專案/區域/承包商等) */
+        #projName, #areaName, #contractorName, #supervisorOrg, #authorityOrg, #authorityUnit {
+            width: var(--fld-txt);
+        }
+
+        /* inline 固定寬批次 clamp 化(涵蓋 body 內 157 處 style="width:NNpx")：
+           依原寬度區間映射到對應權杖，一條規則取代逐一改 HTML。 */
+        [style*="width:48px"], [style*="width:52px"], [style*="width:56px"],
+        [style*="width:62px"], [style*="width:64px"], [style*="width:66px"],
+        [style*="width:70px"], [style*="width:72px"] {
+            width: var(--fld-sm) !important;
+        }
+        [style*="width:88px"], [style*="width:90px"], [style*="width:110px"],
+        [style*="width:140px"] {
+            width: var(--fld-md) !important;
+        }
+        [style*="width:170px"], [style*="width:190px"], [style*="width:200px"],
+        [style*="width:220px"], [style*="width:280px"] {
+            width: var(--fld-num) !important;
+        }
+        /* 大尺寸(470/900px)多為圖說/表格容器 → 改為滿版彈性 */
+        [style*="width:470px"], [style*="width:900px"] {
+            width: 100% !important; max-width: 900px;
+        }
+
+        /* ── (B2) 雙向欄位容器(方向1×方向2、各階深)：flex 換行、由容器決定 ── */
+        /* 這些 nowrap span 內含多欄，改為可換行的 flex；不再依賴 @media 覆蓋 */
+        .input-group > span[style*="nowrap"] {
+            white-space: normal;
+            display: inline-flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: var(--gap-fld);
+            max-width: 100%;
+        }
+        .input-group > span[style*="nowrap"] > span {   /* 方向/階數文字標記不壓縮 */
+            flex: 0 0 auto; white-space: nowrap;
+        }
+        .input-group > span[style*="nowrap"] input {
+            flex: 1 1 var(--fld-md);
+        }
+        /* input-group 的 label/值上下堆疊：沿用既有 @media(max-width:600px) 規則，
+           不強行容器化 — 因手機版 left-col 使用 display:contents 會使容器查詢失效，
+           clamp 已負責欄位寬度連續縮放，堆疊切換交給視窗斷點最穩定可靠。 */
+
+        /* ── (C) 圖面 canvas：clamp 尺寸、由繪圖容器決定 ───────────────── */
+        /* 僅套用於 blockDraw 內的主圖(平面/立面)，排除詳細參數區的小型規格示意圖 */
+        #blockDraw { container-type: inline-size; container-name: draw; }
+        #blockDraw canvas:not(#specCanvas):not(#sheetSpecCanvas) {
+            width: 100%;
+            max-width: clamp(320px, 92cqw, 1100px);   /* 依 draw 容器寬縮放 */
+            height: auto;
+        }
+        /* 小型規格示意圖：維持原設計小尺寸，隨視窗微縮但不放大 */
+        #specCanvas { width: clamp(150px, 40vw, 200px) !important; height: auto !important; }
+        #sheetSpecCanvas { width: clamp(200px, 55vw, 280px) !important; height: auto !important; }
+        /* 3D 視窗高度隨視窗連續縮放(取代 640px / 55vh 斷裂) */
+        #three-container {
+            height: clamp(300px, 60vh, 680px);
+            max-width: clamp(320px, 92cqw, 1100px);
+        }
+
+        /* ── (D) 3D 工具列：clamp 字級/間距/觸控目標 ──────────────────── */
+        .threeD-toolbar { gap: clamp(6px, 2vw, 16px); font-size: clamp(0.8em, 2.4vw, 0.9em); }
+        .threeD-toolbar button, .threeD-toolbar label {
+            font-size: clamp(0.8em, 2.4vw, 0.9em);
+            padding: clamp(5px, 1.4vw, 8px) clamp(8px, 2vw, 14px);
+        }
+        .threeD-toolbar button { min-height: clamp(34px, 8vw, 40px); }   /* 觸控 ≥34px */
+        .threeD-toolbar input[type="checkbox"] { transform: scale(clamp(1, 1vw + 0.7, 1.3)); }
+
+        /* ── (E) 千斤頂/預力表格：容器化 + clamp，窄螢幕可橫捲不破版 ──── */
+        .jack-table { font-size: clamp(0.7em, 2.2vw, 0.82em); width: 100%; }
+        .jack-table input {
+            width: clamp(40px, 11vw, 60px) !important;
+            font-size: clamp(11px, 3vw, 14px) !important;
+        }
+        /* 表格外層若過窄 → 允許自身橫捲(不牽動整頁) */
+        .jack-table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; max-width: 100%; }
+
+        /* ── (F) 圖例：clamp 間距字級 ─────────────────────────────────── */
+        .legend { gap: clamp(8px, 2.5vw, 15px); font-size: clamp(0.8em, 2.3vw, 0.9em); }
+
+        /* ── (G) 區塊內距/標題：clamp，取代 @media 內的固定壓縮值 ──────── */
+        .content-block { padding: clamp(12px, 3.2vw, 25px); }
+        .block-heading { font-size: clamp(1.15em, 3.6vw, 1.4em); }
+        .theme-title { padding: clamp(6px, 1.6vw, 8px) clamp(8px, 2.4vw, 16px); }
+        .theme-title h1 { font-size: clamp(1.0em, 3.4vw, 1.4em); line-height: 1.3; }
+
+        /* ── (H) 通用防溢出護欄(取代舊 !important 覆蓋) ────────────────── */
+        .content-block input, .content-block select, .content-block textarea { max-width: 100%; }
+        img, canvas, svg, table { max-width: 100%; }
+        html, body { overflow-x: hidden; }
+
+        /* ── (I) 漸進增強回退：不支援容器查詢的舊瀏覽器 ───────────────── */
+        /* 若瀏覽器不懂 @container，退回以視窗寬度判斷雙欄(近似舊行為) */
+        @supports not (container-type: inline-size) {
+            @media (min-width: 1120px) {
+                .left-col  { flex: 1 1 0; min-width: var(--col-min); }
+                .right-col { flex: 1.4 1 0; min-width: var(--col-min); }
+            }
+        }
     </style>
 </head>
 <body>
@@ -342,7 +542,7 @@
                 <button type="button" id="btnExpandAll" onclick="toggleAllCollapsibles()"
                         style="width:100%; margin-top:12px; padding:10px; font-size:1.0em; font-weight:bold; cursor:pointer;
                                color:#0d47a1; background:#e3f2fd; border:1px solid #90caf9; border-radius:6px;">
-                    ⬇ 展開所有收合項目
+                    ⬆ 收合所有項目
                 </button>
             </div>
 
@@ -7336,7 +7536,7 @@ window.onload = function() { init3D(); applyPileTypeMode(); drawSheetSpecChart()
                 }
                 toMove.forEach(function(x) { wrap.appendChild(x); });
                 parent.insertBefore(wrap, t.nextSibling);
-                makeCollapsible(t, wrap, key, false);
+                makeCollapsible(t, wrap, key, true);   // 預設展開(全展開)
             });
         }
 
@@ -7358,7 +7558,7 @@ window.onload = function() { init3D(); applyPileTypeMode(); drawSheetSpecChart()
                 while (n && n !== stop) { toMove.push(n); n = n.nextSibling; }
                 toMove.forEach(function(x) { wrap.appendChild(x); });
                 parent.insertBefore(wrap, h.nextSibling);
-                makeCollapsible(h, wrap, key, false);
+                makeCollapsible(h, wrap, key, true);   // 預設展開(全展開)
             });
         }
         // calcDetail 每次計算都重寫 → 用 MutationObserver 於重建後自動重新包裝
@@ -7394,8 +7594,8 @@ window.onload = function() { init3D(); applyPileTypeMode(); drawSheetSpecChart()
             document.querySelectorAll('#blockDraw h3').forEach(function(h) { if (/3D立體示意圖/.test(h.innerText)) h3D = h; });
             // 平面圖(預設展開) → 立面A-A'(收合) → 立面B-B'(收合) → 3D(預設展開)
             if (hPlan) groupBetween(hPlan, hA, 'sec:PLAN', true);
-            groupBetween(hA, hB, 'sec:AA', false);
-            groupBetween(hB, h3D, 'sec:BB', false);
+            groupBetween(hA, hB, 'sec:AA', true);   // 立面A-A'：預設展開
+            groupBetween(hB, h3D, 'sec:BB', true);  // 立面B-B'：預設展開
             // 3D 區(標題→其後的3D圖例前)預設展開；3D圖例另行收合
             if (h3D) {
                 let legend3D = null;
@@ -7416,7 +7616,7 @@ window.onload = function() { init3D(); applyPileTypeMode(); drawSheetSpecChart()
                 while (n) { toMove.push(n); n = n.nextSibling; }
                 toMove.forEach(function(x) { wrap.appendChild(x); });
                 lg.appendChild(wrap);
-                makeCollapsible(title, wrap, key, false);   // 圖例預設收合
+                makeCollapsible(title, wrap, key, true);   // 圖例：預設展開(全展開)
             });
         }
 
@@ -7598,7 +7798,7 @@ window.onload = function() { init3D(); applyPileTypeMode(); drawSheetSpecChart()
             }
             toMove.forEach(function(x){ wrap.appendChild(x); });
             parent.insertBefore(wrap, header.nextSibling);
-            makeCollapsible(header, wrap, '3d:disp', false);   // 預設收起
+            makeCollapsible(header, wrap, '3d:disp', true);   // 預設展開(全展開)
         }
 
         // ---- 一鍵展開/收合所有收合項目(供主要參數區長條按鈕使用) ----
@@ -7684,21 +7884,28 @@ window.onload = function() { init3D(); applyPileTypeMode(); drawSheetSpecChart()
             // 區塊層級整塊收合(可指定預設展開)：僅「主要參數快速輸入區」與「自動繪圖區」預設展開，
             // 自動繪圖區內再細分平面圖/3D(展開)、立面圖/圖例(收合)；其餘區塊一律預設收合。
             initBlockCollapse('blockQuickInput', 'blk:quick', true);    // 主要參數區：展開
-            initBlockCollapse('blockDetailParam', 'blk:detail', false); // 詳細參數輸入區：收合
-            initBlockCollapse('blockCalcDetail', 'blk:calc', false);    // 計算推演區：收合
+            initBlockCollapse('blockDetailParam', 'blk:detail', true);  // 詳細參數輸入區：展開(預設全展開)
+            initBlockCollapse('blockCalcDetail', 'blk:calc', true);     // 計算推演區：展開(預設全展開)
             initBlockCollapse('blockDraw', 'blk:draw', true);           // 自動繪圖區：展開(內部再細分)
-            initBlockCollapse('blockSummary', 'blk:summary', false);
-            initBlockCollapse('blockExport', 'blk:export', false);
-            initBlockCollapse('blockBasicKnowledge', 'blk:knowledge', false);
-            initBlockCollapse('blockArchDoc', 'blk:archdoc', false);
-            initBlockCollapse('blockAuthor', 'blk:author', false);
+            initBlockCollapse('blockSummary', 'blk:summary', true);     // 預設全展開
+            initBlockCollapse('blockExport', 'blk:export', true);       // 預設全展開
+            initBlockCollapse('blockBasicKnowledge', 'blk:knowledge', true); // 預設全展開
+            initBlockCollapse('blockArchDoc', 'blk:archdoc', true);     // 預設全展開
+            initBlockCollapse('blockAuthor', 'blk:author', true);       // 預設全展開
             // 內層細項
             initParamCollapse();       // 詳細參數輸入區各 ▼ 子區(收合)
             watchCalcDetail();         // 計算推演區三大部分(收合)
             initSectionCollapse();     // 平面圖(開)/立面A/B(收)/3D(開)
             initLegendCollapse();      // 各圖例(收)
-            initThreeDToggleCollapse();// 3D 顯示選項工具列(收)
+            initThreeDToggleCollapse();// 3D 顯示選項工具列(展開)
             updateRiver3D();
+            // 安全檢核區(獨立收合機制)：預設展開
+            (function(){
+                const scWrap = document.getElementById('safetyCheckContentWrap');
+                const scArrow = document.getElementById('safetyToggleArrow');
+                if (scWrap) scWrap.style.display = 'block';
+                if (scArrow) scArrow.innerText = '▴ 點擊收合';
+            })();
         }
         if (document.readyState === 'complete' || document.readyState === 'interactive') setTimeout(initAll, 50);
         else window.addEventListener('DOMContentLoaded', function() { setTimeout(initAll, 50); });
@@ -7865,6 +8072,23 @@ window.onload = function() { init3D(); applyPileTypeMode(); drawSheetSpecChart()
             const steps = (which === 2) ? TOUR2 : (which === 3) ? TOUR3 : (which === 4) ? TOUR4 : TOUR1;
             play(steps, 0);
         };
+    })();
+    </script>
+    <script>
+    /* 【v53】容器查詢外層包裹：將 .main-wrapper 包進 .layout-shell，
+       使版面依「內容容器寬度」而非視窗寬度切換單/雙欄。
+       獨立外層可避免 containment 干擾 main-wrapper 內 sticky 標題。 */
+    (function wrapLayoutShell(){
+        function run(){
+            var mw = document.querySelector('.main-wrapper');
+            if (!mw || mw.parentNode.classList.contains('layout-shell')) return;
+            var shell = document.createElement('div');
+            shell.className = 'layout-shell';
+            mw.parentNode.insertBefore(shell, mw);
+            shell.appendChild(mw);
+        }
+        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run);
+        else run();
     })();
     </script>
 </body>
