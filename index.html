@@ -490,18 +490,19 @@
                blockArchDoc(程式架構與功能總說明)移至 blockAuthor(作者附註)前一個。
                ★未指定 order 的 flex 子項預設為 0 會被擠到最前面，故務必列全。 */
             #blockTitle          { order:  0; }
-            #blockTour           { order:  1; }
-            #blockQuickInput     { order:  2; }
-            #blockDraw           { order:  3; }
-            #blockDetailParam    { order:  4; }
-            #blockCalcDetail     { order:  5; }
-            #blockSummary        { order:  6; }
-            #blockExport         { order:  7; }
-            #blockBasicKnowledge { order:  8; }
-            #blockSafetyCheck    { order:  9; }
-            #blockArchDoc        { order: 10; }
-            #blockAuthor         { order: 11; }
-            .copyright-banner    { order: 12; }
+#blockTour           { order:  1; }
+#blockQuickInput     { order:  2; }
+#blockDraw           { order:  3; }
+#blockDetailParam    { order:  4; }
+#blockCalcDetail     { order:  5; }
+#blockSummary        { order:  6; }
+#blockExport         { order:  7; }
+#blockBasicKnowledge { order:  8; }
+#blockSafetyCheck    { order:  9; }
+#blockArchDoc        { order: 10; }  /* 程式架構與功能總說明 */
+#blockGeomCheck      { order: 11; }  /* 元件合理性與碰撞檢查彙整表 (倒數第二個) */
+#blockAuthor         { order: 12; }  /* 作者附註區 (最後一個區塊) */
+.copyright-banner    { order: 13; }  /* 版權宣誓橫幅 */
 
             /* 繪圖區 canvas 一律滿版，根除「被壓成左側窄條、右邊空一片」 */
             #blockDraw canvas:not(#specCanvas):not(#sheetSpecCanvas) {
