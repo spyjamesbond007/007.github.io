@@ -699,7 +699,38 @@
             #v72PrimaryNav, #v72SecondaryNav { overflow:visible !important; }
         }
 
-    </style>
+    
+        /* 【v72.9】B-02/B-03 查驗量測選項與內嵌平面圖 */
+        .v72-inspect-option {
+            font-size:0.82em !important; color:#c62828 !important; font-weight:600 !important;
+            white-space:nowrap; cursor:pointer; margin-left:8px;
+        }
+        .v72-inspect-option input[type="checkbox"] { vertical-align:middle; margin-right:4px; }
+        .v72-inspect-dir-wrap {
+            display:flex; flex-wrap:wrap; gap:8px 16px; align-items:flex-start; justify-content:flex-end; max-width:100%;
+        }
+        .v72-inspect-dir-item {
+            display:flex; flex-wrap:wrap; align-items:center; gap:5px; min-width:min(100%, 320px);
+        }
+        .v72-inline-plan {
+            margin:14px 0 18px; padding:12px; background:#f7fafc;
+            border:1px solid #aab9c3; border-left:5px solid #f4a300; border-radius:6px;
+            box-sizing:border-box; overflow:hidden;
+        }
+        .v72-inline-plan-title { font-weight:800; color:#17324d; font-size:1.02em; margin-bottom:3px; }
+        .v72-inline-plan-note { color:#60727e; font-size:.82em; margin-bottom:8px; line-height:1.55; }
+        .v72-inline-plan canvas {
+            display:block; width:100% !important; max-width:1100px !important; height:auto !important;
+            margin:0 auto; background:#fff; border:1px solid #cfd8dc; border-radius:4px; box-shadow:none;
+        }
+        @media (max-width:600px) {
+            .v72-inspect-dir-wrap { justify-content:stretch; width:100%; }
+            .v72-inspect-dir-item { width:100%; min-width:0; }
+            .v72-inspect-option { margin-left:0; white-space:normal; }
+            .v72-inline-plan { padding:8px; }
+        }
+
+</style>
 
 <style id="v728ModeModalStyle">
 #v728ModeModal{position:fixed;inset:0;z-index:30000;background:rgba(13,31,45,.78);display:flex;align-items:center;justify-content:center;padding:18px;box-sizing:border-box;backdrop-filter:blur(2px)}
@@ -943,6 +974,7 @@
                 <div id="sheetPileSection">
                 <div class="sub-group-title">▼ 鋼板樁規格與幾何 <span style="font-size:0.75em; color:#888; font-weight:normal;">(主要參數輸入區A選「鋼板樁」時適用；雙層圍堰)</span></div>
                 <div style="font-size:0.85em; color:#1565c0; margin-bottom:6px;">規格符號示意圖請參閱<a href="#sheetSpecKnowledge" style="color:#1565c0; font-weight:bold;">■ 相關知識區</a></div>
+                <div class="sheet-only" style="font-size:0.82em; color:#1565c0; background:#e3f2fd; border-left:3px solid #1976d2; padding:6px 10px; margin:2px 0 10px; line-height:1.6;">💡 勾選下面的〔本項為查驗時量測數據〕，可在平面圖標示查驗當下實際量測所採用的尺寸基準；方向1與方向2各最多勾選1項。</div>
                 <div class="input-group">
                     <label>SP-1. 選用鋼板樁型號:</label>
                     <select id="sheetModel" onchange="calc()">
@@ -972,13 +1004,34 @@
                 </div>
                 <div class="input-group" style="flex-wrap:wrap;">
                     <label id="lblSpOuter">SP-2. 圍堰雙層鋼板樁外層外緣寬度 (m) ＝<br><span style="font-size:0.78em; color:#999; font-weight:normal;">(與主要參數快速輸入區C雙向連動)</span></label>
-                    <span style="white-space:nowrap;"><span id="spOuterDirLbl1">方向1</span> <input type="number" id="spOuterA" value="14.1" step="0.1" style="width:90px;" oninput="document.getElementById('quickOuterA').value=this.value; calc();">
-                    × <span id="spOuterDirLbl2">方向2</span> <input type="number" id="spOuterB" value="15.6" step="0.1" style="width:90px;" oninput="document.getElementById('quickOuterB').value=this.value; calc();"></span>
+                    <div class="v72-inspect-dir-wrap">
+                        <span class="v72-inspect-dir-item"><span id="spOuterDirLbl1">方向1</span>
+                            <input type="number" id="spOuterA" value="14.1" step="0.1" style="width:90px;" oninput="document.getElementById('quickOuterA').value=this.value; calc();">
+                            <label class="v72-inspect-option"><input type="checkbox" id="inspSpOuterA" data-inspgrp="top" onchange="onInspectCheck(this); calc();"> 本項為查驗時量測數據</label>
+                        </span>
+                        <span class="v72-inspect-dir-item"><span id="spOuterDirLbl2">方向2</span>
+                            <input type="number" id="spOuterB" value="15.6" step="0.1" style="width:90px;" oninput="document.getElementById('quickOuterB').value=this.value; calc();">
+                            <label class="v72-inspect-option"><input type="checkbox" id="inspSpOuterB" data-inspgrp="left" onchange="onInspectCheck(this); calc();"> 本項為查驗時量測數據</label>
+                        </span>
+                    </div>
                 </div>
                 <div class="input-group" style="flex-wrap:wrap;">
                     <label id="lblSpInner">SP-3. 圍堰雙層鋼板樁內層外緣寬度 (m) ＝<br><span style="font-size:0.78em; color:#999; font-weight:normal;">(與主要參數快速輸入區D雙向連動)</span></label>
-                    <span style="white-space:nowrap;"><span id="spInnerDirLbl1">方向1</span> <input type="number" id="spInnerA" value="10.7" step="0.1" style="width:90px;" oninput="document.getElementById('quickInnerA').value=this.value; calc();">
-                    × <span id="spInnerDirLbl2">方向2</span> <input type="number" id="spInnerB" value="12.7" step="0.1" style="width:90px;" oninput="document.getElementById('quickInnerB').value=this.value; calc();"></span>
+                    <div class="v72-inspect-dir-wrap">
+                        <span class="v72-inspect-dir-item"><span id="spInnerDirLbl1">方向1</span>
+                            <input type="number" id="spInnerA" value="10.7" step="0.1" style="width:90px;" oninput="document.getElementById('quickInnerA').value=this.value; calc();">
+                            <label class="v72-inspect-option"><input type="checkbox" id="inspSpInnerA" data-inspgrp="top" onchange="onInspectCheck(this); calc();"> 本項為查驗時量測數據</label>
+                        </span>
+                        <span class="v72-inspect-dir-item"><span id="spInnerDirLbl2">方向2</span>
+                            <input type="number" id="spInnerB" value="12.7" step="0.1" style="width:90px;" oninput="document.getElementById('quickInnerB').value=this.value; calc();">
+                            <label class="v72-inspect-option"><input type="checkbox" id="inspSpInnerB" data-inspgrp="left" onchange="onInspectCheck(this); calc();"> 本項為查驗時量測數據</label>
+                        </span>
+                    </div>
+                </div>
+                <div id="v72PlanPreviewSheet" class="v72-inline-plan sheet-only">
+                    <div class="v72-inline-plan-title">B-03 平面圖即時預覽</div>
+                    <div class="v72-inline-plan-note">顯示目前鋼板樁幾何與內部支撐配置；與 C-01 平面圖同步，本處不顯示圖例、元件顯示或匯出工具。</div>
+                    <canvas id="v72PlanCanvasSheet" width="1400" height="1100"></canvas>
                 </div>
                 <!-- 原SP-4~SP-6(樁頂/潮位/河床高程)已移至「▼ 相關高程E.L設定」重編為5-1~9；
                      spRiverbedEL保留為隱藏欄位以維持既有計算/JSON存讀相容(calc每輪自動與elGround同步) -->
@@ -1026,7 +1079,7 @@
 
                 <div id="hbeamGeomSection">
                 <div class="sub-group-title">▼ H型鋼樁開挖幾何 <span style="font-size:0.7em; color:#888; font-weight:normal;">(H型鋼樁模式適用；鋼板樁幾何請至鋼板樁規格與幾何區輸入)</span></div>
-                <div class="hbeam-only" style="font-size:0.82em; color:#1565c0; background:#e3f2fd; border-left:3px solid #1976d2; padding:6px 10px; margin:2px 0 10px; line-height:1.6;">💡 勾選下面的〔查驗量測數據〕是為了在平面圖標註查驗當下的量測位置，供審查人員判斷本系統的計算基準及方式是否正確，同時可以適應各種查驗人員內心計算小世界。</div>
+                <div class="hbeam-only" style="font-size:0.82em; color:#1565c0; background:#e3f2fd; border-left:3px solid #1976d2; padding:6px 10px; margin:2px 0 10px; line-height:1.6;">💡 勾選下面的〔本項為查驗時量測數據〕是為了在平面圖標註查驗當下的量測位置，供審查人員判斷本系統的計算基準及方式是否正確，同時可以適應各種查驗人員內心計算小世界。</div>
                 <div class="input-group">
                     <label>3-1. 方向1 辨識文字:</label>
                     <input type="text" id="dir1LabelText" value="車行方向" placeholder="留空則不顯示" oninput="calc()">
@@ -1034,13 +1087,13 @@
                 <div class="input-group">
                     <label id="lblL">3-2. H型鋼樁方向1 垂直排樁外緣寬度 (m):</label>
                     <input type="number" id="L" value="12.71" step="0.1" oninput="calc()">
-                    <label class="hbeam-only" style="margin-left:8px; font-size:0.82em; color:#c62828; white-space:nowrap; cursor:pointer;"><input type="checkbox" id="inspL" data-inspgrp="top" onchange="onInspectCheck(this); calc();" style="vertical-align:middle;"> 查驗量測數據</label>
+                    <label class="hbeam-only v72-inspect-option" style="margin-left:8px; font-size:0.82em; color:#c62828; white-space:nowrap; cursor:pointer;"><input type="checkbox" id="inspL" data-inspgrp="top" onchange="onInspectCheck(this); calc();" style="vertical-align:middle;"> 本項為查驗時量測數據</label>
                 </div>
                 <div class="depth-total-box">
                     <div class="row">
                         <label id="lblL_inner">方向1 垂直排樁內緣寬度 (m)<br>→即橫擋(圍囹)外緣寬度:</label>
                         <input type="number" id="innerLDisplay" step="0.1" min="0" oninput="syncOuterInner('L'); calc();" style="font-weight:bold; color:#0d47a1; font-size:1.05em; width:100px;" title="改此值→外緣寬自動＝內緣＋2×翼板高H">
-                        <label class="hbeam-only" style="margin-left:8px; font-size:0.82em; color:#c62828; white-space:nowrap; cursor:pointer;"><input type="checkbox" id="inspInnerL" data-inspgrp="top" onchange="onInspectCheck(this); calc();" style="vertical-align:middle;"> 查驗量測數據</label>
+                        <label class="hbeam-only v72-inspect-option" style="margin-left:8px; font-size:0.82em; color:#c62828; white-space:nowrap; cursor:pointer;"><input type="checkbox" id="inspInnerL" data-inspgrp="top" onchange="onInspectCheck(this); calc();" style="vertical-align:middle;"> 本項為查驗時量測數據</label>
                     </div>
                     <div class="mini-calc">[外緣寬度 - 2 × 垂直排樁翼板高度H]</div>
                 </div>
@@ -1052,13 +1105,13 @@
                 <div class="input-group">
                     <label id="lblW">3-4. H型鋼樁方向2 垂直排樁外緣寬度 (m):</label>
                     <input type="number" id="W" value="11.07" step="0.1" oninput="calc()">
-                    <label class="hbeam-only" style="margin-left:8px; font-size:0.82em; color:#c62828; white-space:nowrap; cursor:pointer;"><input type="checkbox" id="inspW" data-inspgrp="left" onchange="onInspectCheck(this); calc();" style="vertical-align:middle;"> 查驗量測數據</label>
+                    <label class="hbeam-only v72-inspect-option" style="margin-left:8px; font-size:0.82em; color:#c62828; white-space:nowrap; cursor:pointer;"><input type="checkbox" id="inspW" data-inspgrp="left" onchange="onInspectCheck(this); calc();" style="vertical-align:middle;"> 本項為查驗時量測數據</label>
                 </div>
                 <div class="depth-total-box">
                     <div class="row">
                         <label id="lblW_inner">方向2 垂直排樁內緣寬度 (m)<br>→即橫擋(圍囹)外緣寬度:</label>
                         <input type="number" id="innerWDisplay" step="0.1" min="0" oninput="syncOuterInner('W'); calc();" style="font-weight:bold; color:#0d47a1; font-size:1.05em; width:100px;" title="改此值→外緣寬自動＝內緣＋2×翼板高H">
-                        <label class="hbeam-only" style="margin-left:8px; font-size:0.82em; color:#c62828; white-space:nowrap; cursor:pointer;"><input type="checkbox" id="inspInnerW" data-inspgrp="left" onchange="onInspectCheck(this); calc();" style="vertical-align:middle;"> 查驗量測數據</label>
+                        <label class="hbeam-only v72-inspect-option" style="margin-left:8px; font-size:0.82em; color:#c62828; white-space:nowrap; cursor:pointer;"><input type="checkbox" id="inspInnerW" data-inspgrp="left" onchange="onInspectCheck(this); calc();" style="vertical-align:middle;"> 本項為查驗時量測數據</label>
                     </div>
                     <div class="mini-calc">[外緣寬度 - 2 × 垂直排樁翼板高度H]</div>
                 </div>
@@ -1084,6 +1137,11 @@
                         <span id="calcPileSpacingL" style="font-weight:bold; color:#0d47a1; font-size:1.1em;">— m</span>
                     </div>
                     <div class="mini-calc">(外緣寬 － 3 × 型鋼翼板高度H) / 格數　※即平面圖所標之實際中心間距，必 ≦ 間距上限</div>
+                </div>
+                <div id="v72PlanPreviewH" class="v72-inline-plan hbeam-only">
+                    <div class="v72-inline-plan-title">B-02 平面圖即時預覽</div>
+                    <div class="v72-inline-plan-note">與 C-01 平面圖同步；本處僅顯示圖面，不另提供圖例、元件顯示或匯出工具。</div>
+                    <canvas id="v72PlanCanvasH" width="1400" height="1100"></canvas>
                 </div>
                 <div class="depth-total-box">
                     <div class="row">
@@ -3293,7 +3351,7 @@
 
         /* 【v64】斜撐/角撐 垂直邊長 ↔ 斜邊長 雙向連動(45°斜置：斜邊=垂直邊×√2)。
            改「垂直邊」→斜邊自動×√2；改「斜邊」→垂直邊自動÷√2。key: SmallBrace/BigBrace/Slant。 */
-        /* 【v66】查驗量測數據勾選：同側(top:①②/left:③④)互斥，各側最多勾1個，全體最多2個。
+        /* 【v66】本項為查驗時量測數據勾選：同側(top:①②/left:③④)互斥，各側最多勾1個，全體最多2個。
            上側勾者→平面圖標註右端紅字「查驗數據1」；左側勾者→「查驗數據2」。 */
         function onInspectCheck(cb) {
             if (!cb.checked) return;
@@ -3303,13 +3361,41 @@
             });
         }
         // 供繪圖查詢：某標註是否被勾為查驗數據，回傳 '' / '查驗數據1' / '查驗數據2'
+        // H鋼模式：外緣/橫擋外緣各方向二選一；
+        // 鋼板樁模式：外層牆/內層牆各方向二選一。
         function inspectLabelOf(which) {
             function on(id){ var e=document.getElementById(id); return e && e.checked; }
+            var sheet = ((document.getElementById('pileType')||{}).value === 'sheet');
+            if (sheet) {
+                if (which === 'spOuterL') return on('inspSpOuterA') ? '查驗數據1' : '';
+                if (which === 'spOuterW') return on('inspSpOuterB') ? '查驗數據2' : '';
+                if (which === 'L')        return on('inspSpInnerA') ? '查驗數據1' : '';
+                if (which === 'W')        return on('inspSpInnerB') ? '查驗數據2' : '';
+                // 鋼板樁模式的 innerL/innerW 是內層牆再扣板樁高度後的橫擋外緣，
+                // 不屬本次四個查驗量測選項。
+                return '';
+            }
             if (which === 'L')      return on('inspL')      ? '查驗數據1' : '';
             if (which === 'innerL') return on('inspInnerL') ? '查驗數據1' : '';
             if (which === 'W')      return on('inspW')      ? '查驗數據2' : '';
             if (which === 'innerW') return on('inspInnerW') ? '查驗數據2' : '';
             return '';
+        }
+
+        // B-02 / B-03 內嵌平面圖：直接複製 C-01 已完成繪製的主畫布，
+        // 因此幾何、尺寸、查驗標記與主平面圖完全一致，但不附帶圖例/顯示開關/匯出工具。
+        function syncInlinePlanPreviews() {
+            var src = document.getElementById('layoutCanvas');
+            if (!src) return;
+            ['v72PlanCanvasH','v72PlanCanvasSheet'].forEach(function(id){
+                var dst = document.getElementById(id);
+                if (!dst) return;
+                if (dst.width !== src.width) dst.width = src.width;
+                if (dst.height !== src.height) dst.height = src.height;
+                var c = dst.getContext('2d');
+                c.clearRect(0,0,dst.width,dst.height);
+                c.drawImage(src,0,0);
+            });
         }
 
         /* 【v67】3-2/3-4 外緣寬 ↔ 內緣寬(橫擋外緣寬) 雙向連動：
@@ -5369,6 +5455,7 @@
                     document.getElementById('sectionCanvas2').height = requiredSecH;
 
                     drawCanvas(L, W, bH, bB, t1, t2, actualL, actualW, intervalsL, intervalsW, d1Txt, d2Txt, woodThickCM, innerL, innerW, wailerWidthM, distSmallBraceCenter, distBigBraceCenter, gridCountShort, gridCountLong, isGridActive, specSlant, distSlantCenter, hasSlant, planScale, planOffsetX, d1DirStr, d2DirStr);
+                    syncInlinePlanPreviews();
                     
                     drawSectionCanvas(planOffsetX, L * planScale, planScale, elGround, pileLength, bracketVertical, depthList, digStages, wailerStages, wailerWidthM, bH, wailer_bH, gridCountLong, gridCountShort, isGridActive, gridSpecObj, workSpace, 'sectionCanvas', false, d1Full);
                     // 第二方向立面圖(B-B'剖面)：L/W與gridCountLong/gridCountShort互換，呈現垂直於方向1的剖視
@@ -5473,10 +5560,10 @@
                     ctx.fillText('雙層內填：' + sp.fillMat + '(' + sp.fillVol.toFixed(1) + ' m³)', offsetX + inL_px / 2, oY_out + offOz * scale * 0.72);
                     ctx.fillText('繫材鋼棒 Ø' + sp.rodDia.toFixed(0) + 'mm @' + sp.rodSp.toFixed(2) + 'm(共' + sp.rodCount + '支，樁頂下0.5m)', offsetX + inL_px / 2, oY_out + sp.outerW * scale - offOz * scale / 2);
                     // 外層寬度尺寸標註
-                    drawDimensionLine(ctx, oX_out, oY_out + sp.outerW * scale, oX_out + sp.outerL * scale, oY_out + sp.outerW * scale, '圍堰雙層鋼板樁外層外緣寬度(方向1) ' + sp.outerLo.toFixed(2) + ' m', 105, false, 25);
+                    drawDimensionLine(ctx, oX_out, oY_out + sp.outerW * scale, oX_out + sp.outerL * scale, oY_out + sp.outerW * scale, '圍堰雙層鋼板樁外層外緣寬度(方向1) ' + sp.outerLo.toFixed(2) + ' m', 105, false, 25, false, 0, inspectLabelOf('spOuterL'));
                     /* 【v58】外層(方向2)標註原固定退105px，內外層間距小時會與內層(-170)標註文字重疊；
                        改為動態保證退到內層標註線再左側55px以上，並帶延伸線指回外層牆。 */
-                    drawDimensionLine(ctx, oX_out, oY_out, oX_out, oY_out + sp.outerW * scale, '圍堰雙層鋼板樁外層外緣寬度(方向2) ' + sp.outerWo.toFixed(2) + ' m', -Math.max(105, 225 - offOx * scale), true, 25);
+                    drawDimensionLine(ctx, oX_out, oY_out, oX_out, oY_out + sp.outerW * scale, '圍堰雙層鋼板樁外層外緣寬度(方向2) ' + sp.outerWo.toFixed(2) + ' m', -Math.max(105, 225 - offOx * scale), true, 25, false, 0, inspectLabelOf('spOuterW'));
                     // 內外層間距標註(右上，方向2)
                     /* 【v58】改以「外層外緣 → 內層外緣」為標註點(原值 gap2 係中性軸基準，與圖上線段不符)，並更名 */
                     drawDimensionLine(ctx, offsetX + inL_px, oY_out, offsetX + inL_px, oY0, '內、外層間距 ' + ((sp.outerWo - W) / 2).toFixed(3) + ' m', 42, true, 18);
@@ -9199,7 +9286,7 @@ window.onload = function() { init3D(); applyPileTypeMode(); drawSheetSpecChart()
 
 <script>
 /* ═══════════════════════════════════════════════════════════════════════
-   【v72.8】三層式工程應用介面控制器
+   【v72.9】三層式工程應用介面控制器
    - 保留既有計算核心、欄位 ID、2D/3D、匯出與 JSON 邏輯
    - 舊快速輸入 B~I 不再顯示，僅保留相容 DOM；擋土型式改由 B-01 勾選卡控制
    - 主頁切換只變更顯示，不複製帶 ID 的節點，避免破壞既有程式
@@ -9480,6 +9567,7 @@ window.onload = function() { init3D(); applyPileTypeMode(); drawSheetSpecChart()
         // 全域錯誤訊息只在有內容時顯示，不當成任何子頁重複內容。
         const h=blk.querySelector('.block-heading'); if(h) h.textContent='B-'+sub+' '+((NAV.B.pages.find(x=>x[0]===sub)||[])[1]||'輸入');
         renumberDetail(sub);
+        if(sub==='02' || sub==='03') requestAnimationFrame(syncInlinePlanPreviews);
     }
 
     function stripOldPrefix(node){
@@ -9502,12 +9590,23 @@ window.onload = function() { init3D(); applyPileTypeMode(); drawSheetSpecChart()
     }
     function renumberDetail(sub){
         const blk=q('blockDetailParam'); if(!blk) return;
+        // 查驗量測勾選屬「狀態選項」，不是工程參數，不配置 B-xx-xx 項目編號。
+        all('.v72-inspect-option',blk).forEach(lb=>{
+            const c=lb.querySelector(':scope > .v72-field-code'); if(c) c.remove();
+        });
+        all('label',blk).forEach(lb=>{
+            if(lb.querySelector('input[data-inspgrp]')){
+                const c=lb.querySelector(':scope > .v72-field-code'); if(c) c.remove();
+            }
+        });
         const visibleGroups=detailGroups().filter(g=>!g.title.classList.contains('v72-filter-hidden'));
         let n=2; // 01 reserved for B-01-01 擋土型式
         if(sub!=='01') n=1;
         visibleGroups.forEach(g=>{
             const root=g.wrap||g.title.parentElement;
-            all('.input-group > label, .depth-total-box label, .min-dig-display label',root).forEach(lb=>addCode(lb,'B-'+sub+'-'+String(n++).padStart(2,'0')));
+            all('.input-group > label, .depth-total-box label, .min-dig-display label',root)
+                .filter(lb=>!lb.classList.contains('v72-inspect-option') && !lb.querySelector('input[data-inspgrp]'))
+                .forEach(lb=>addCode(lb,'B-'+sub+'-'+String(n++).padStart(2,'0')));
         });
     }
 
@@ -9658,7 +9757,7 @@ window.onload = function() { init3D(); applyPileTypeMode(); drawSheetSpecChart()
           '<h3>A-05-11　響應式與固定導覽</h3><p>頁首、第一層與第二層共同固定在頂端。桌機/平板導覽不足寬時換行；手機為避免導覽佔掉過多高度，改為單列橫向滑動。第三層作業區維持單工作區邏輯，避免桌機雙欄與手機單欄產生兩套操作流程。</p>'+
           '<h3>A-05-12　維護檢查清單</h3><p>新增/修改輸入欄位時依序檢查：①HTML ID與標籤編號 ②calc()讀值與公式 ③模式顯示/隱藏 ④JSON存讀 ⑤D計算推演 ⑥E統計 ⑦2D ⑧3D ⑨F檢核 ⑩Excel/Word/PDF/DXF/ZIP。若只改其中一處，最容易形成「畫面有值但輸出沒值」或「計算有值但載入無法還原」。</p>'+
           '<h3>A-05-13　故障排查順序</h3><p>遇到異常時建議依序：先看瀏覽器 Console 是否有 JS 錯誤 → 確認欄位 ID 是否存在 → 確認模式 class 是否正確 → 手動呼叫 calc() → 檢查 2D/3D 函式 → 再查匯出。若只有某第二層頁面重複或消失，優先檢查 v72 分頁過濾，而非改計算核心。</p>'+
-          '<div style="font-size:.82em;color:#667983;margin-top:18px;padding-top:10px;border-top:1px dashed #b8c4cc;">版本：v72.8｜輸入重排、8階支撐、重量公式、千斤頂表與模式必選：2026-08-11</div></div>';
+          '<div style="font-size:.82em;color:#667983;margin-top:18px;padding-top:10px;border-top:1px dashed #b8c4cc;">版本：v72.9｜查驗量測選項與 B-02/B-03 平面圖即時預覽：2026-08-11</div></div>';
     }
 
     function openPage(main,sub,scroll=true){
