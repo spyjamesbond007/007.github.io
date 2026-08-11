@@ -280,7 +280,7 @@
             }
 
             /* (4) 各階深 5 欄：每欄(標記+輸入框)成對，兩欄一行較好按 */
-            #qd1, #qd2, #qd3, #qd4, #qd5 {
+            #qd1, #qd2, #qd3, #qd4, #qd5, #qd6, #qd7, #qd8, #qd9 {
                 flex: 1 1 90px !important;
                 min-width: 72px !important;
             }
@@ -700,6 +700,17 @@
         }
 
     </style>
+
+<style id="v728ModeModalStyle">
+#v728ModeModal{position:fixed;inset:0;z-index:30000;background:rgba(13,31,45,.78);display:flex;align-items:center;justify-content:center;padding:18px;box-sizing:border-box;backdrop-filter:blur(2px)}
+#v728ModeModal .v728-modal-card{width:min(620px,100%);background:#f7f9fa;border-top:6px solid #f4a300;border-radius:10px;box-shadow:0 18px 55px rgba(0,0,0,.42);padding:24px;box-sizing:border-box;color:#263238}
+#v728ModeModal h2{margin:0 0 8px;color:#17324d;font-size:1.35rem}#v728ModeModal p{margin:0 0 18px;line-height:1.7;color:#52636d}
+#v728ModeModal .v728-mode-actions{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+#v728ModeModal button{border:2px solid #8ba0ad;background:#fff;border-radius:8px;padding:16px 12px;font-weight:800;font-size:1rem;cursor:pointer;color:#17324d;min-height:62px}
+#v728ModeModal button:hover,#v728ModeModal button:focus{border-color:#f4a300;background:#fff8df;outline:none}
+#v728ModeModal .v728-required{font-size:.82rem;color:#a44700;margin-top:12px;font-weight:700}
+@media(max-width:600px){#v728ModeModal .v728-mode-actions{grid-template-columns:1fr}#v728ModeModal .v728-modal-card{padding:18px}}
+</style>
 </head>
 <body>
 
@@ -775,9 +786,13 @@
                     <span style="font-size:0.75em; color:#888;">第3階</span><input type="number" id="qd3" value="4.0" step="0.1" min="0" style="width:62px;" oninput="document.getElementById('depth3').value=this.value; calc();">
                     <span style="font-size:0.75em; color:#888;">第4階</span><input type="number" id="qd4" value="0.0" step="0.1" min="0" style="width:62px;" oninput="document.getElementById('depth4').value=this.value; calc();">
                     <span style="font-size:0.75em; color:#888;">第5階</span><input type="number" id="qd5" value="0.0" step="0.1" min="0" style="width:62px;" oninput="document.getElementById('depth5').value=this.value; calc();">
+                    <span style="font-size:0.75em; color:#888;">第6階</span><input type="number" id="qd6" value="0.0" step="0.1" min="0" style="width:62px;" oninput="document.getElementById('depth6').value=this.value; calc();">
+                    <span style="font-size:0.75em; color:#888;">第7階</span><input type="number" id="qd7" value="0.0" step="0.1" min="0" style="width:62px;" oninput="document.getElementById('depth7').value=this.value; calc();">
+                    <span style="font-size:0.75em; color:#888;">第8階</span><input type="number" id="qd8" value="0.0" step="0.1" min="0" style="width:62px;" oninput="document.getElementById('depth8').value=this.value; calc();">
+                    <span style="font-size:0.75em; color:#888;">第9階</span><input type="number" id="qd9" value="0.0" step="0.1" min="0" style="width:62px;" oninput="document.getElementById('depth9').value=this.value; calc();">
                     </span>
                 </div>
-                <div style="font-size:0.8em; color:#888; margin-top:-4px;">(第1~5階，填0表無該階)</div>
+                <div style="font-size:0.8em; color:#888; margin-top:-4px;">(第1~9階，填0表無該階；最多8階水平支撐，第9階為最後大底)</div>
                 <div class="depth-total-box" style="margin-top:6px;">
                     <div class="row">
                         <label>開挖總階數 / 水平支撐階數 (自動):</label>
@@ -810,36 +825,6 @@
             <div class="content-block theme-param" id="blockDetailParam">
                 <h2 class="block-heading">■ 詳細參數輸入區</h2>
                 <div id="globalErrorBox" class="error-msg"></div>
-
-                <div class="sub-group-title collapsible-sub" data-subkey="basic">▼ 工程基本資料 <span style="font-size:0.7em;color:#888;font-weight:normal;">(點擊展開/收合)</span></div>
-                <div class="input-group">
-                    <label>1-1. 工程名稱:</label>
-                    <input type="text" id="projName" value="台11線花蓮大橋改建工程(第1階段工程)" oninput="calc()">
-                </div>
-                <div class="input-group">
-                    <label>1-2. 開挖區代號名稱:</label>
-                    <input type="text" id="areaName" value="P8N基礎墩柱" oninput="calc()">
-                </div>
-                <div class="input-group">
-                    <label>1-3. 承包商:</label>
-                    <input type="text" id="contractorName" value="利德工程股份有限公司" oninput="calc()">
-                </div>
-                <div class="input-group">
-                    <label>1-4. 監造單位:</label>
-                    <input type="text" id="supervisorOrg" value="建業工程顧問有限公司" oninput="calc()">
-                </div>
-                <div class="input-group">
-                    <label>1-5. 主辦機關:</label>
-                    <input type="text" id="authorityOrg" value="交通部公路局東區養護工程分局" oninput="calc()">
-                </div>
-                <div class="input-group">
-                    <label>1-6. 主辦單位:</label>
-                    <input type="text" id="authorityUnit" value="交通部公路局東區養護工程分局花蓮工務段" oninput="calc()">
-                </div>
-                <div class="input-group">
-                    <label>1-7. 工區所在河川名稱:</label>
-                    <input type="text" id="riverName" value="花蓮溪" oninput="calc()">
-                </div>
 
                 <div class="sub-group-title">▼ 型鋼規格 <span style="font-size:0.7em; color:#888; font-weight:normal;">(不輸入代表無使用，規格符號示意圖請參閱<a href="#hbeamSpecKnowledge" style="color:#1565c0; font-weight:bold;">■ 相關知識區</a>)</span></div>
                 <div class="input-group">
@@ -902,7 +887,7 @@
                 <div id="specParseAlert" class="stage-alert">⚠ 型鋼規格格式無法解析，已暫以預設 H350x350x12x19 計算</div>
                 <div style="font-size:0.8em; color:#888; margin:-4px 0 10px 0;">※ 點欄位可下拉選擇常用JIS規格，也可自行輸入(格式：H高x寬x腹板厚x翼板厚)</div>
 
-                <!-- 【v64】2-10 型鋼單位長重量表(5組)：供水平支撐/中間柱依所選型號自動比對取單位重→算總重量 -->
+                <!-- 【v72.8】型鋼單位長重量表(10組)：供水平支撐/中間柱依所選型號自動比對取單位重→算總重量 -->
                 <div class="input-group" style="flex-direction:column; align-items:stretch;">
                     <label style="margin-bottom:4px;">2-4. 型鋼單位長重量 (T/m，每米公噸重)：</label>
                     <div style="font-size:0.8em; color:#666; margin-bottom:6px;">前兩組為常用預設值；其餘由使用者自行填入型號與單位重。各構件(橫擋/角撐/斜撐/中間水平支撐/中間柱)會依所選型號<b>自動比對本表</b>取單位重計算總重量。</div>
@@ -952,7 +937,7 @@
                         </div>
                     
                     </div>
-                    <div id="steelWeightMissAlert" class="stage-alert" style="margin-top:6px;">⚠ 有構件的型號未在 2-10 建表，該項重量以 0 計；請於上表補齊型號與單位重。</div>
+                    <div id="steelWeightMissAlert" class="stage-alert" style="margin-top:6px;">⚠ 有構件的型號未在 B-02 型鋼單位長重量表建表，該項重量以 0 計；請於上表補齊型號與單位重。</div>
                 </div>
 
                 <div id="sheetPileSection">
@@ -1130,14 +1115,14 @@
                 </div>
                 </div><!-- /hbeamGeomCalcs -->
 
-                <div class="sub-group-title">▼ 水平支撐幾何與數量 <span style="font-size:0.7em; color:#888; font-weight:normal;">水平支撐：角撐、斜撐、中間柱、中間水平支撐之H型鋼</span></div>
+                <div class="sub-group-title">▼ 水平支撐幾何與數量 <span style="font-size:0.7em; color:#888; font-weight:normal;">角撐、斜撐、中間水平支撐</span></div>
 
                 <div class="depth-total-box">
                     <div class="row">
                         <label>橫擋(圍囹)總長度:</label>
                         <span id="calcWailerTotalLen" style="font-weight:bold; color:#0d47a1; font-size:1.1em;">— m</span>
                     </div>
-                    <div class="mini-calc" style="line-height:1.55;">[方向1橫擋(圍囹)外緣寬 × 2 ＋ (方向2橫擋(圍囹)外緣寬 － 2×橫擋型鋼寬) × 2] × 水平支撐階數</div>
+                    <div class="mini-calc" style="line-height:1.55;">[長度] 單階橫擋長 × 水平支撐階數<br>[總重] 橫擋總長度 × 橫擋型鋼單位重(T/m)</div>
                     <div class="mini-calc" style="line-height:1.55; margin-top:2px;">※ 設方向1橫擋佔滿，方向2橫擋嵌於兩根方向1橫擋之間，故扣除2倍橫擋型鋼寬</div>
                 </div>
 
@@ -1190,13 +1175,7 @@
                 <div id="collisionAlert" class="stage-alert" style="background:#ffebee; border-color:#c62828; color:#b71c1c; font-weight:bold;"></div>
                 <div id="smallBraceOverlapAlert" class="stage-alert">⚠ 警告：換算為型鋼中心基準後，小角撐大於「大角撐 － 半個型鋼寬」，小角撐將與大角撐重疊或超越，請縮小4-1或加大4-2數值</div>
 
-                <div class="depth-total-box">
-                    <div class="row">
-                        <label>小角撐斜邊長:</label>
-                        <span id="calcSmallBraceLen" style="font-weight:bold; color:#0d47a1; font-size:1.1em;">— m</span>
-                    </div>
-                    <div class="mini-calc">[垂直邊距離 × √2]</div>
-                </div>
+                <span id="calcSmallBraceLen" style="display:none" aria-hidden="true"></span><!-- v72.8：與輸入項重複之自動顯示卡已移除 -->
 
                 <div class="input-group">
                     <label>4-2. 大角撐垂直邊長 (m):</label>
@@ -1206,20 +1185,14 @@
                     <label>4-2b. 大角撐斜邊長 (m)＝垂直邊×√2:</label>
                     <input type="number" id="hypBigBrace" value="3.536" step="0.1" min="0" oninput="syncBrace('BigBrace','hyp');calc()">
                 </div>
-                <div class="depth-total-box">
-                    <div class="row">
-                        <label>大角撐斜邊長:</label>
-                        <span id="calcBigBraceLen" style="font-weight:bold; color:#0d47a1; font-size:1.1em;">— m</span>
-                    </div>
-                    <div class="mini-calc">[垂直邊距離 × √2]</div>
-                </div>
+                <span id="calcBigBraceLen" style="display:none" aria-hidden="true"></span><!-- v72.8：與輸入項重複之自動顯示卡已移除 -->
 
                 <div class="depth-total-box">
                     <div class="row">
                         <label>大、小角撐總長度:</label>
                         <span id="calcBraceTotal" style="font-weight:bold; color:#0d47a1; font-size:1.1em;">— m</span>
                     </div>
-                    <div class="mini-calc">[(小角撐+大角撐斜邊長度) × 4角 × 階數]</div>
+                    <div class="mini-calc">[長度] (小角撐＋大角撐斜邊長) × 4角 × 水平支撐階數<br>[總重] 小角撐總長×小角撐單位重 ＋ 大角撐總長×大角撐單位重</div>
                 </div>
 
                 <div class="input-group">
@@ -1235,7 +1208,7 @@
                         <label>中間水平支撐(井)總長度:</label>
                         <span id="calcGridTotal" style="font-weight:bold; color:#0d47a1; font-size:1.1em;">— m</span>
                     </div>
-                    <div class="mini-calc">[(長向支數×垂直排樁內緣寬 + 短向支數×垂直排樁內緣長) × 水平支撐階數]</div>
+                    <div class="mini-calc">[長度] (長向支數×內緣寬＋短向支數×內緣長) × 水平支撐階數<br>[總重] 中間水平支撐總長度 × 對應型鋼單位重(T/m)</div>
                 </div>
 
                 <div class="input-group">
@@ -1247,7 +1220,7 @@
                     <input type="number" id="hypSlant" value="1.414" step="0.1" min="0" oninput="syncBrace('Slant','hyp');calc()">
                 </div>
                 <div style="border:1px solid #cfd8dc; border-radius:6px; padding:8px 10px; margin:-4px 0 12px 0; background:#fafafa;">
-                    <div style="font-size:0.85em; font-weight:bold; color:#37474f; margin-bottom:4px;">📐 4-5 是指：中間水平支撐(井字樑)兩端，斜向補強型鋼的垂直邊長</div>
+                    <div style="font-size:0.85em; font-weight:bold; color:#37474f; margin-bottom:4px;">斜撐垂直邊長：中間水平支撐(井字樑)兩端，斜向補強型鋼在橫擋上的垂直邊長</div>
                     <svg viewBox="0 0 470 200" style="width:100%; max-width:470px; height:auto;">
                         <defs><marker id="ah2" markerWidth="9" markerHeight="9" refX="4.5" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="#d32f2f"/></marker></defs>
                         <!-- 橫擋(左側直牆) -->
@@ -1262,22 +1235,16 @@
                         <polygon points="86,150 86,162 140,108 128,108" fill="#00bcd4" opacity="0.6" stroke="#00838f"/>
                         <text x="170" y="46" font-size="12" fill="#00838f">斜撐(補強型鋼，上下各一支)</text>
                         <text x="170" y="170" font-size="12" fill="#666">斜邊長 ＝ 垂直邊 × √2 (45°斜置)</text>
-                        <!-- 4-5 垂直邊長：沿牆面自斜撐端點量到井字樑中心 -->
+                        <!-- 斜撐垂直邊長：沿橫擋自斜撐端點量到井字樑中心 -->
                         <line x1="56" y1="100" x2="56" y2="44" stroke="#d32f2f" stroke-width="1.6" marker-end="url(#ah2)"/>
-                        <text x="48" y="72" font-size="12" fill="#d32f2f" text-anchor="middle" transform="rotate(-90 48 72)">4-5 垂直邊長</text>
+                        <text x="48" y="72" font-size="12" fill="#d32f2f" text-anchor="middle" transform="rotate(-90 48 72)">斜撐垂直邊長</text>
                     </svg>
                     <div style="font-size:0.8em; color:#666; line-height:1.7;">
                         斜撐是加在<b>中間水平支撐(井字樑)靠近橫擋的兩端</b>、呈45°斜向的補強型鋼，用來縮短井字樑的無支撐跨距。<br>
                         您輸入的是它沿<b>橫擋方向的垂直邊長</b>(量測基準同上方「角撐及斜撐垂直邊長測量基準選擇」)。
                     </div>
                 </div>
-                <div class="depth-total-box">
-                    <div class="row">
-                        <label>斜撐斜邊長:</label>
-                        <span id="calcSlantLen" style="font-weight:bold; color:#0d47a1; font-size:1.1em;">— m</span>
-                    </div>
-                    <div class="mini-calc">[垂直邊長 × √2]</div>
-                </div>
+                <span id="calcSlantLen" style="display:none" aria-hidden="true"></span><!-- v72.8：與輸入項重複之自動顯示卡已移除 -->
                 <div class="depth-total-box">
                     <div class="row">
                         <label>斜撐總支數:</label>
@@ -1290,7 +1257,7 @@
                         <label>斜撐總長度:</label>
                         <span id="calcSlantTotal" style="font-weight:bold; color:#0d47a1; font-size:1.1em;">— m</span>
                     </div>
-                    <div class="mini-calc">[斜撐總支數 × 斜撐斜邊長]</div>
+                    <div class="mini-calc">[長度] 斜撐總支數 × 斜撐斜邊長<br>[總重] 斜撐總長度 × 斜撐型鋼單位重(T/m)</div>
                 </div>
 
                 <div class="input-group">
@@ -1309,7 +1276,33 @@
                         <label>中間柱總長度:</label>
                         <span id="calcMidPileTotal" style="font-weight:bold; color:#0d47a1; font-size:1.1em;">— m</span>
                     </div>
-                    <div class="mini-calc">[中間柱支數 × 中間柱長度]</div>
+                    <div class="mini-calc">[長度] 中間柱支數 × 單支長度<br>[總重] 中間柱總長度 × 中間柱型鋼單位重(T/m)</div>
+                </div>
+
+                <div class="sub-group-title" style="font-size:1.0em; margin-top:15px;">▼ 橫擋三角拖架</div>
+                <div class="input-group">
+                    <label>9-1. 垂直邊長 (m):</label>
+                    <input type="number" id="bracketVertical" value="0.4" step="0.01" min="0" oninput="calc()">
+                </div>
+                <div class="input-group">
+                    <label>9-2. 水平邊長 (m):</label>
+                    <input type="number" id="bracketHorizontal" value="0.4" step="0.01" min="0" oninput="calc()">
+                </div>
+                <div class="depth-total-box" style="background:#eeeeee; border-color:#bdbdbd;">
+                    <div class="row">
+                        <label style="color:#757575; font-size:0.95em;">中間柱三角拖架 (自動):</label>
+                        <span id="calcMidBracketDims" style="font-weight:bold; color:#757575; font-size:0.95em;">—</span>
+                    </div>
+                    <div class="mini-calc" style="color:#9e9e9e; font-size:0.95em;">[中間柱水平邊長須較長始可拖到中間水平支撐，僅供3D繪圖用]</div>
+                </div>
+                <div class="input-group">
+                    <label>9-3. 三角拖架的水平間距 (m):<br><span style="font-size:0.8em; color:#999; font-weight:normal;">(上述3項供3D示意圖佈設使用)</span></label>
+                    <input type="number" id="bracketSpacing" value="4" step="0.5" min="0.5" oninput="calc()">
+                </div>
+
+                <div class="input-group">
+                    <label>9-4. 三角拖架下方最少作業空間 (m):<br><span style="font-size:0.85em; color:#e65100; font-weight:normal;">(註: 開挖最後一階大底無水平支撐，不加此空間)</span></label>
+                    <input type="number" id="workSpace" value="0.4" step="0.05" min="0" oninput="calc()">
                 </div>
 
                 <!-- 相關高程E.L設定(原5-1~5-3)已移至「■ 主要參數快速輸入區」，編號改為 F/G/H -->
@@ -1321,7 +1314,8 @@
                 <div id="digStagesAutoNote" class="stage-alert" style="background:#e8f5e9; border-color:#2e7d32; color:#1b5e20;"></div>
                 <div id="digStagesWarnNote" class="stage-alert" style="background:#fff3e0; border-color:#ff9800; color:#e65100;"></div>
 
-                <div class="sub-group-title" style="font-size:1.0em; margin-top:15px;">5-4. 各階設計深度及實務上開挖高程</div>
+
+                <div class="sub-group-title" style="font-size:1.0em; margin-top:15px;">▼ 各階設計深度及實務上開挖高程</div>
                 <div class="input-group"><label>5-4-1. 第1階設計深度 (m):</label><input type="number" id="depth1" value="2.0" step="0.1" min="0" oninput="calc()"></div>
                 <div id="minDigDisp1" class="min-dig-display"></div>
                 <div id="minDigEmpty1" class="min-dig-empty-note"></div>
@@ -1341,6 +1335,22 @@
                 <div class="input-group"><label>5-4-5. 第5階設計深度 (m):(填0表無)</label><input type="number" id="depth5" value="0.0" step="0.1" min="0" oninput="calc()"></div>
                 <div id="minDigDisp5" class="min-dig-display"></div>
                 <div id="minDigEmpty5" class="min-dig-empty-note"></div>
+
+                <div class="input-group"><label>5-4-6. 第6階設計深度 (m):(填0表無)</label><input type="number" id="depth6" value="0.0" step="0.1" min="0" oninput="calc()"></div>
+                <div id="minDigDisp6" class="min-dig-display"></div>
+                <div id="minDigEmpty6" class="min-dig-empty-note"></div>
+
+                <div class="input-group"><label>5-4-7. 第7階設計深度 (m):(填0表無)</label><input type="number" id="depth7" value="0.0" step="0.1" min="0" oninput="calc()"></div>
+                <div id="minDigDisp7" class="min-dig-display"></div>
+                <div id="minDigEmpty7" class="min-dig-empty-note"></div>
+
+                <div class="input-group"><label>5-4-8. 第8階設計深度 (m):(填0表無)</label><input type="number" id="depth8" value="0.0" step="0.1" min="0" oninput="calc()"></div>
+                <div id="minDigDisp8" class="min-dig-display"></div>
+                <div id="minDigEmpty8" class="min-dig-empty-note"></div>
+
+                <div class="input-group"><label>5-4-9. 第9階設計深度 (m):(填0表無；最多8階水平支撐)</label><input type="number" id="depth9" value="0.0" step="0.1" min="0" oninput="calc()"></div>
+                <div id="minDigDisp9" class="min-dig-display"></div>
+                <div id="minDigEmpty9" class="min-dig-empty-note"></div>
                 
                 <div class="depth-total-box">
                     <div class="row">
@@ -1358,6 +1368,10 @@
                 <div class="input-group"><label>6-2. 第2階水平支撐設計預力 (ton):</label><input type="number" id="prestress2" value="40" step="1" min="0" oninput="calc()"></div>
                 <div class="input-group"><label>6-3. 第3階水平支撐設計預力 (ton):</label><input type="number" id="prestress3" value="40" step="1" min="0" oninput="calc()"></div>
                 <div class="input-group"><label>6-4. 第4階水平支撐設計預力 (ton):(填0表無)</label><input type="number" id="prestress4" value="0" step="1" min="0" oninput="calc()"></div>
+                <div class="input-group"><label>6-5. 第5階水平支撐設計預力 (ton):(填0表無)</label><input type="number" id="prestress5" value="0" step="1" min="0" oninput="calc()"></div>
+                <div class="input-group"><label>6-6. 第6階水平支撐設計預力 (ton):(填0表無)</label><input type="number" id="prestress6" value="0" step="1" min="0" oninput="calc()"></div>
+                <div class="input-group"><label>6-7. 第7階水平支撐設計預力 (ton):(填0表無)</label><input type="number" id="prestress7" value="0" step="1" min="0" oninput="calc()"></div>
+                <div class="input-group"><label>6-8. 第8階水平支撐設計預力 (ton):(填0表無)</label><input type="number" id="prestress8" value="0" step="1" min="0" oninput="calc()"></div>
 
 
                 <div class="sub-group-title">▼ 千斤頂加壓出力對照表</div>
@@ -1368,7 +1382,7 @@
                     請直接改寫下表數值(型號名稱也可改)</b>，本程式即會依您輸入的表自動換算。
                 </div>
                 <div class="input-group">
-                    <label>6-5. 水平支撐千斤頂型號、加壓換算對照表(由專業工班提供):</label>
+                    <label>6-9. 水平支撐千斤頂型號、加壓換算對照表(由專業工班提供):</label>
                     <span style="font-weight:bold; color:#0277bd; margin-right:2px;">現場使用之千斤頂型號</span><select id="jackModel" onchange="calc()" style="margin-left:2px;"><option value="0">JACK-100</option><option value="1" selected>JACK-150</option><option value="2">JACK-200</option><option value="3">JACK-250</option><option value="4">JACK-300</option><option value="5">JACK-350</option><option value="6">JACK-400</option></select>
                 </div>
                 <div style="overflow-x:auto; margin-bottom:10px;">
@@ -1376,15 +1390,15 @@
                         <tr>
                             <th style="background:#eaf2fb; line-height:1.3;">加壓值<br>
                                 <span style="font-weight:normal; font-size:0.85em; color:#546e7a;">╲ KGF/CM²</span><br>
-                                <span style="font-weight:normal; font-size:0.85em; color:#c62828;">加壓機型號</span>
+                                <span style="font-weight:normal; font-size:0.85em; color:#c62828;">千斤頂型號</span>
                             </th><th style="background:#dbe8f5;"><input type="number" id="jp_0" value="100" step="10" min="1" oninput="calc()" style="width:52px; text-align:center; padding:2px; font-weight:bold;"><div style="font-size:0.78em; font-weight:normal; color:#546e7a; margin-top:1px;">kgf/cm²</div></th><th style="background:#dbe8f5;"><input type="number" id="jp_1" value="200" step="10" min="1" oninput="calc()" style="width:52px; text-align:center; padding:2px; font-weight:bold;"><div style="font-size:0.78em; font-weight:normal; color:#546e7a; margin-top:1px;">kgf/cm²</div></th><th style="background:#dbe8f5;"><input type="number" id="jp_2" value="300" step="10" min="1" oninput="calc()" style="width:52px; text-align:center; padding:2px; font-weight:bold;"><div style="font-size:0.78em; font-weight:normal; color:#546e7a; margin-top:1px;">kgf/cm²</div></th><th style="background:#dbe8f5;"><input type="number" id="jp_3" value="400" step="10" min="1" oninput="calc()" style="width:52px; text-align:center; padding:2px; font-weight:bold;"><div style="font-size:0.78em; font-weight:normal; color:#546e7a; margin-top:1px;">kgf/cm²</div></th><th style="background:#dbe8f5;"><input type="number" id="jp_4" value="500" step="10" min="1" oninput="calc()" style="width:52px; text-align:center; padding:2px; font-weight:bold;"><div style="font-size:0.78em; font-weight:normal; color:#546e7a; margin-top:1px;">kgf/cm²</div></th><th style="background:#dbe8f5;"><input type="number" id="jp_5" value="600" step="10" min="1" oninput="calc()" style="width:52px; text-align:center; padding:2px; font-weight:bold;"><div style="font-size:0.78em; font-weight:normal; color:#546e7a; margin-top:1px;">kgf/cm²</div></th><th style="background:#dbe8f5;"><input type="number" id="jp_6" value="700" step="10" min="1" oninput="calc()" style="width:52px; text-align:center; padding:2px; font-weight:bold;"><div style="font-size:0.78em; font-weight:normal; color:#546e7a; margin-top:1px;">kgf/cm²</div></th><th style="background:#dbe8f5;"><input type="number" id="jp_7" value="800" step="10" min="1" oninput="calc()" style="width:52px; text-align:center; padding:2px; font-weight:bold;"><div style="font-size:0.78em; font-weight:normal; color:#546e7a; margin-top:1px;">kgf/cm²</div></th><th style="background:#dbe8f5;"><input type="number" id="jp_8" value="900" step="10" min="1" oninput="calc()" style="width:52px; text-align:center; padding:2px; font-weight:bold;"><div style="font-size:0.78em; font-weight:normal; color:#546e7a; margin-top:1px;">kgf/cm²</div></th></tr>
-<tr><td style="background:#eaf2fb;"><input type="text" id="jn_0" value="JACK-100" oninput="syncJackModels(); calc();" style="width:88px; text-align:center; padding:2px; font-weight:bold;"></td><td><input type="number" id="jt_0_0" value="14" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_0_1" value="28" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_0_2" value="43" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_0_3" value="57" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_0_4" value="71" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_0_5" value="85" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_0_6" value="100" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_0_7" value="114" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_0_8" value="128" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td></tr>
-<tr><td style="background:#eaf2fb;"><input type="text" id="jn_1" value="JACK-150" oninput="syncJackModels(); calc();" style="width:88px; text-align:center; padding:2px; font-weight:bold;"></td><td><input type="number" id="jt_1_0" value="21" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_1_1" value="42" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_1_2" value="64" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_1_3" value="85" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_1_4" value="100" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_1_5" value="128" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_1_6" value="149" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_1_7" value="170" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_1_8" value="191" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td></tr>
-<tr><td style="background:#eaf2fb;"><input type="text" id="jn_2" value="JACK-200" oninput="syncJackModels(); calc();" style="width:88px; text-align:center; padding:2px; font-weight:bold;"></td><td><input type="number" id="jt_2_0" value="28" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_2_1" value="56" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_2_2" value="85" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_2_3" value="113" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_2_4" value="141" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_2_5" value="170" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_2_6" value="199" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_2_7" value="227" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_2_8" value="255" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td></tr>
-<tr><td style="background:#eaf2fb;"><input type="text" id="jn_3" value="JACK-250" oninput="syncJackModels(); calc();" style="width:88px; text-align:center; padding:2px; font-weight:bold;"></td><td><input type="number" id="jt_3_0" value="36" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_3_1" value="72" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_3_2" value="108" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_3_3" value="145" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_3_4" value="181" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_3_5" value="217" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_3_6" value="254" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_3_7" value="290" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_3_8" value="328" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td></tr>
-<tr><td style="background:#eaf2fb;"><input type="text" id="jn_4" value="JACK-300" oninput="syncJackModels(); calc();" style="width:88px; text-align:center; padding:2px; font-weight:bold;"></td><td><input type="number" id="jt_4_0" value="43" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_4_1" value="86" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_4_2" value="130" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_4_3" value="173" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_4_4" value="216" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_4_5" value="260" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_4_6" value="303" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_4_7" value="346" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_4_8" value="389" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td></tr>
-<tr><td style="background:#eaf2fb;"><input type="text" id="jn_5" value="JACK-350" oninput="syncJackModels(); calc();" style="width:88px; text-align:center; padding:2px; font-weight:bold;"></td><td><input type="number" id="jt_5_0" value="51" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_5_1" value="102" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_5_2" value="153" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_5_3" value="204" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_5_4" value="255" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_5_5" value="306" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_5_6" value="357" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_5_7" value="408" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_5_8" value="459" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td></tr>
-<tr><td style="background:#eaf2fb;"><input type="text" id="jn_6" value="JACK-400" oninput="syncJackModels(); calc();" style="width:88px; text-align:center; padding:2px; font-weight:bold;"></td><td><input type="number" id="jt_6_0" value="57" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_6_1" value="114" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_6_2" value="171" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_6_3" value="229" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_6_4" value="286" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_6_5" value="343" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_6_6" value="400" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_6_7" value="457" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_6_8" value="514" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td></tr>
+<tr><td style="background:#eaf2fb;"><input type="text" id="jn_0" value="JACK-100" oninput="syncJackModels(); calc();" style="width:88px; text-align:center; padding:2px; font-weight:bold; font-size:0.67em !important;"></td><td><input type="number" id="jt_0_0" value="14" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_0_1" value="28" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_0_2" value="43" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_0_3" value="57" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_0_4" value="71" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_0_5" value="85" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_0_6" value="100" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_0_7" value="114" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_0_8" value="128" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td></tr>
+<tr><td style="background:#eaf2fb;"><input type="text" id="jn_1" value="JACK-150" oninput="syncJackModels(); calc();" style="width:88px; text-align:center; padding:2px; font-weight:bold; font-size:0.67em !important;"></td><td><input type="number" id="jt_1_0" value="21" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_1_1" value="42" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_1_2" value="64" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_1_3" value="85" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_1_4" value="100" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_1_5" value="128" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_1_6" value="149" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_1_7" value="170" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_1_8" value="191" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td></tr>
+<tr><td style="background:#eaf2fb;"><input type="text" id="jn_2" value="JACK-200" oninput="syncJackModels(); calc();" style="width:88px; text-align:center; padding:2px; font-weight:bold; font-size:0.67em !important;"></td><td><input type="number" id="jt_2_0" value="28" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_2_1" value="56" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_2_2" value="85" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_2_3" value="113" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_2_4" value="141" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_2_5" value="170" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_2_6" value="199" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_2_7" value="227" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_2_8" value="255" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td></tr>
+<tr><td style="background:#eaf2fb;"><input type="text" id="jn_3" value="JACK-250" oninput="syncJackModels(); calc();" style="width:88px; text-align:center; padding:2px; font-weight:bold; font-size:0.67em !important;"></td><td><input type="number" id="jt_3_0" value="36" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_3_1" value="72" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_3_2" value="108" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_3_3" value="145" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_3_4" value="181" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_3_5" value="217" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_3_6" value="254" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_3_7" value="290" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_3_8" value="328" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td></tr>
+<tr><td style="background:#eaf2fb;"><input type="text" id="jn_4" value="JACK-300" oninput="syncJackModels(); calc();" style="width:88px; text-align:center; padding:2px; font-weight:bold; font-size:0.67em !important;"></td><td><input type="number" id="jt_4_0" value="43" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_4_1" value="86" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_4_2" value="130" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_4_3" value="173" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_4_4" value="216" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_4_5" value="260" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_4_6" value="303" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_4_7" value="346" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_4_8" value="389" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td></tr>
+<tr><td style="background:#eaf2fb;"><input type="text" id="jn_5" value="JACK-350" oninput="syncJackModels(); calc();" style="width:88px; text-align:center; padding:2px; font-weight:bold; font-size:0.67em !important;"></td><td><input type="number" id="jt_5_0" value="51" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_5_1" value="102" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_5_2" value="153" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_5_3" value="204" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_5_4" value="255" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_5_5" value="306" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_5_6" value="357" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_5_7" value="408" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_5_8" value="459" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td></tr>
+<tr><td style="background:#eaf2fb;"><input type="text" id="jn_6" value="JACK-400" oninput="syncJackModels(); calc();" style="width:88px; text-align:center; padding:2px; font-weight:bold; font-size:0.67em !important;"></td><td><input type="number" id="jt_6_0" value="57" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_6_1" value="114" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_6_2" value="171" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_6_3" value="229" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_6_4" value="286" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_6_5" value="343" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_6_6" value="400" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_6_7" value="457" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td><td><input type="number" id="jt_6_8" value="514" step="1" min="0" oninput="calc()" style="width:52px; text-align:center; padding:2px;"><span style="font-size:0.72em; color:#546e7a;">t</span></td></tr>
                     </table>
                 </div>
                 <div id="jackPressureBox" class="depth-total-box" style="margin-top:10px;"></div>
@@ -1433,7 +1447,7 @@
                     </div>
                 </div>
 
-                <div class="sub-group-title" style="margin-top:15px; font-size:1.0em;">6-6. 千斤頂型號、加壓換算對照表內插法參考點、加壓錶值速覽</div>
+                <div class="sub-group-title" style="margin-top:15px; font-size:1.0em;">▼ 千斤頂型號、加壓換算對照表內插法參考點、加壓錶值速覽</div>
                 <div id="jackPressureCompareBox" class="depth-total-box" style="margin-top:0;"></div>
 
                 <div class="sub-group-title">▼ 開挖及回填土方計算</div>
@@ -1519,31 +1533,37 @@
                     <div class="mini-calc">[內緣立面周長 × 總設計深]</div>
                 </div>
 
-                <div class="sub-group-title" style="font-size:1.0em; margin-top:15px;">9. 橫擋三角拖架</div>
+                <div class="sub-group-title collapsible-sub" data-subkey="basic">▼ 工程基本資料 <span style="font-size:0.7em;color:#888;font-weight:normal;">(點擊展開/收合)</span></div>
                 <div class="input-group">
-                    <label>9-1. 垂直邊長 (m):</label>
-                    <input type="number" id="bracketVertical" value="0.4" step="0.01" min="0" oninput="calc()">
+                    <label>1-1. 工程名稱:</label>
+                    <input type="text" id="projName" value="台11線花蓮大橋改建工程(第1階段工程)" oninput="calc()">
                 </div>
                 <div class="input-group">
-                    <label>9-2. 水平邊長 (m):</label>
-                    <input type="number" id="bracketHorizontal" value="0.4" step="0.01" min="0" oninput="calc()">
-                </div>
-                <div class="depth-total-box" style="background:#eeeeee; border-color:#bdbdbd;">
-                    <div class="row">
-                        <label style="color:#757575; font-size:0.95em;">中間柱三角拖架 (自動):</label>
-                        <span id="calcMidBracketDims" style="font-weight:bold; color:#757575; font-size:0.95em;">—</span>
-                    </div>
-                    <div class="mini-calc" style="color:#9e9e9e; font-size:0.95em;">[中間柱水平邊長須較長始可拖到中間水平支撐，僅供3D繪圖用]</div>
+                    <label>1-2. 開挖區代號名稱:</label>
+                    <input type="text" id="areaName" value="P8N基礎墩柱" oninput="calc()">
                 </div>
                 <div class="input-group">
-                    <label>9-3. 三角拖架的水平間距 (m):<br><span style="font-size:0.8em; color:#999; font-weight:normal;">(上述3項供3D示意圖佈設使用)</span></label>
-                    <input type="number" id="bracketSpacing" value="4" step="0.5" min="0.5" oninput="calc()">
+                    <label>1-3. 承包商:</label>
+                    <input type="text" id="contractorName" value="利德工程股份有限公司" oninput="calc()">
+                </div>
+                <div class="input-group">
+                    <label>1-4. 監造單位:</label>
+                    <input type="text" id="supervisorOrg" value="建業工程顧問有限公司" oninput="calc()">
+                </div>
+                <div class="input-group">
+                    <label>1-5. 主辦機關:</label>
+                    <input type="text" id="authorityOrg" value="交通部公路局東區養護工程分局" oninput="calc()">
+                </div>
+                <div class="input-group">
+                    <label>1-6. 主辦單位:</label>
+                    <input type="text" id="authorityUnit" value="交通部公路局東區養護工程分局花蓮工務段" oninput="calc()">
+                </div>
+                <div class="input-group">
+                    <label>1-7. 工區所在河川名稱:</label>
+                    <input type="text" id="riverName" value="花蓮溪" oninput="calc()">
                 </div>
 
-                <div class="input-group">
-                    <label>9-4. 三角拖架下方最少作業空間 (m):<br><span style="font-size:0.85em; color:#e65100; font-weight:normal;">(註: 開挖最後一階大底無水平支撐，不加此空間)</span></label>
-                    <input type="number" id="workSpace" value="0.4" step="0.05" min="0" oninput="calc()">
-                </div>
+
 
             </div>
 
@@ -1891,7 +1911,7 @@
 
                 <div class="sub-group-title" style="margin-top:15px;">▼ 地質與水文參數輸入 <span style="font-size:0.7em; color:#888; font-weight:normal;">(供下方逐步安全檢核使用，非必要輸入項目，程式已提供合理預設值)</span></div>
                 <div style="font-size:0.82em; color:#795548; background:#fff8e1; border-left:4px solid #fbc02d; padding:6px 10px; margin-bottom:10px; line-height:1.7;">
-                    ※ <b>檢核假設說明：</b>本區檢核中的「水平支撐(千斤頂)水平間距」係<b>借用 9-3 三角拖架間距作為近似值</b>；
+                    ※ <b>檢核假設說明：</b>本區檢核中的「水平支撐(千斤頂)水平間距」係<b>借用 B-06-04 三角拖架水平間距作為近似值</b>；
                     實際千斤頂間距由角撐與中間水平支撐(井)的實際配置決定，可能與此不同。若實際間距較大，
                     步驟10(橫擋彎矩)與步驟12(預力充分性)的需求值會被<b>低估</b>，請以計算書之實際支撐配置為準。
                 </div>
@@ -1979,6 +1999,10 @@
                     第2階<input type="number" id="tsR2" value="0" step="0.5" min="0" style="width:70px;" oninput="calc()">
                     第3階<input type="number" id="tsR3" value="0" step="0.5" min="0" style="width:70px;" oninput="calc()">
                     第4階<input type="number" id="tsR4" value="0" step="0.5" min="0" style="width:70px;" oninput="calc()">
+                    第5階<input type="number" id="tsR5" value="0" step="0.5" min="0" style="width:70px;" oninput="calc()">
+                    第6階<input type="number" id="tsR6" value="0" step="0.5" min="0" style="width:70px;" oninput="calc()">
+                    第7階<input type="number" id="tsR7" value="0" step="0.5" min="0" style="width:70px;" oninput="calc()">
+                    第8階<input type="number" id="tsR8" value="0" step="0.5" min="0" style="width:70px;" oninput="calc()">
                     </span>
                 </div>
                 <div style="font-size:0.8em; color:#888; margin:-4px 0 10px 0;">(自計算書「5.4 支撐荷重分析結果」之MAXIMUM列填入，如01冊34.3t、06冊7.7/41.8t)</div>
@@ -2136,7 +2160,7 @@
                     <strong style="color:#c62828;">【二、頁面區塊順序與用途】</strong>
                     <div style="padding-left:15px;">
                         ① <b>主要參數快速輸入區</b>：A垂直排樁型式、B H型鋼外緣寬、C鋼板樁外層寬、D內外層固定間距(鋼板樁專用)、E內層寬、F各階深、G樁頂高程、H最高潮位(鋼板樁專用)、I河床面高程。與詳細參數區<b>雙向連動</b>。<br>
-                        ② <b>詳細參數輸入區</b>：1基本資料／2型鋼規格／3 H型鋼開挖幾何／4角撐與水平支撐／5高程與各階深／6預力與千斤頂／7土方／8木襯板／9三角拖架／SP鋼板樁專區。<br>
+                        ② <b>B 輸入區</b>：B-01 基本設定（木襯板＋工程基本資料）／B-02 H鋼設定／B-03 板樁設定／B-04 水平支撐／B-05 預力加壓（最多8階）／B-06 開挖回填（三角拖架＋最多9階開挖＋土方）。<br>
                         ③ <b>安全檢核區</b>：Peck 表觀土壓力包絡線＋容許應力法之逐步檢核(含木襯板材料參數 SC-9)。<br>
                         ④ <b>計算推演區</b>：圍堰鋼板樁部分／H型鋼樁部分／共同部分，三段可收合。<br>
                         ⑤ <b>自動繪圖區</b>：平面圖、立面圖A-A′／B-B′、3D立體示意圖(含施工流程動畫)。<br>
@@ -2231,7 +2255,7 @@
         const ALIGN_LINE_COLOR = '#d5d5d5'; 
 
         // 開挖總階數(5-4)自動修正邏輯用：區分「使用者直接編輯開挖總階數欄位」與
-        // 「使用者編輯各階設計深度(5-4-1~5-4-5)欄位」兩種情境，兩者對應不同的自動修正/警示行為。
+        // 「使用者編輯各階設計深度(5-4-1~5-4-9)欄位」兩種情境，兩者對應不同的自動修正/警示行為。
         window._digStagesJustManuallyChanged = false;
         function onDigStagesManualChange() { window._digStagesJustManuallyChanged = true; }
 
@@ -2981,9 +3005,13 @@
                     parseFloat(document.getElementById('depth2').value) || 0,
                     parseFloat(document.getElementById('depth3').value) || 0,
                     parseFloat(document.getElementById('depth4').value) || 0,
-                    parseFloat(document.getElementById('depth5').value) || 0
+                    parseFloat(document.getElementById('depth5').value) || 0,
+                    parseFloat(document.getElementById('depth6').value) || 0,
+                    parseFloat(document.getElementById('depth7').value) || 0,
+                    parseFloat(document.getElementById('depth8').value) || 0,
+                    parseFloat(document.getElementById('depth9').value) || 0
                 ];
-                const digStages = Math.max(1, Math.min(5, parseInt(document.getElementById('digStages').value) || 1));
+                const digStages = Math.max(1, Math.min(9, parseInt(document.getElementById('digStages').value) || 1));
                 const wailerStages = Math.max(0, digStages - 1);
                 const innerSpan = spanOuter - 2 * bH;   // 橫擋(圍囹)外緣到外緣
 
@@ -3442,12 +3470,12 @@
             chk('C4','邏輯一致','各階開挖深度合理',
                 '各階深度不遞減(後階 ≥ 前階，允許相等)',
                 dps.join(', '),
-                mono, '有某階開挖深度小於前一階，請確認輸入', ['depth1','depth2','depth3','depth4','depth5']);
+                mono, '有某階開挖深度小於前一階，請確認輸入', ['depth1','depth2','depth3','depth4','depth5','depth6','depth7','depth8','depth9']);
 
             // 套用紅字到欄位(先清空所有既有,再設)
             ['L','W','S','distBigBrace','hypBigBrace','distSmallBrace','hypSmallBrace','lenSlantPile','hypSlant',
              'specVerticalPile','specWailer','specSmallBrace','specBigBrace','specSlant','specGrid','specMidPile',
-             'pileLength','spTopEL','elGround','depth1','depth2','depth3','depth4','depth5'].forEach(function(fid){
+             'pileLength','spTopEL','elGround','depth1','depth2','depth3','depth4','depth5','depth6','depth7','depth8','depth9'].forEach(function(fid){
                 setFieldWarn(fid, fieldWarns[fid] || '');
             });
             // 渲染彙整表
@@ -3581,16 +3609,20 @@
                 let woodThickAlert = document.getElementById('woodThickAlert');
                 if(woodThickCM < 1 || woodThickCM > 4) { woodThickAlert.style.display = 'inline-block'; } else { woodThickAlert.style.display = 'none'; }
 
-                let digStagesRaw = Math.max(1, Math.min(5, parseInt(document.getElementById('digStages').value) || 1));
+                let digStagesRaw = Math.max(1, Math.min(9, parseInt(document.getElementById('digStages').value) || 1));
                 let depthListForStage = [
                     parseFloat(document.getElementById('depth1').value) || 0,
                     parseFloat(document.getElementById('depth2').value) || 0,
                     parseFloat(document.getElementById('depth3').value) || 0,
                     parseFloat(document.getElementById('depth4').value) || 0,
-                    parseFloat(document.getElementById('depth5').value) || 0
+                    parseFloat(document.getElementById('depth5').value) || 0,
+                    parseFloat(document.getElementById('depth6').value) || 0,
+                    parseFloat(document.getElementById('depth7').value) || 0,
+                    parseFloat(document.getElementById('depth8').value) || 0,
+                    parseFloat(document.getElementById('depth9').value) || 0
                 ];
                 let maxNonZeroStage = 0;
-                for (let i = 4; i >= 0; i--) { if (depthListForStage[i] > 0) { maxNonZeroStage = i + 1; break; } }
+                for (let i = 8; i >= 0; i--) { if (depthListForStage[i] > 0) { maxNonZeroStage = i + 1; break; } }
                 const depthLabelFor = n => "5-4-" + n;
 
                 let digStages;
@@ -3615,7 +3647,7 @@
                         digStagesAutoNoteEl.innerHTML = `✓ 偵測到第 ${digStages} 階已輸入設計深度，開挖總階數已自動修正為 ${digStages} 階。`;
                     }
                 } else {
-                    // 情境二：使用者編輯的是「5-4-1~5-4-5 各階設計深度」欄位 -> 開挖總階數自動與實際輸入深度階數同步(可增可減)
+                    // 情境二：使用者編輯的是「5-4-1~5-4-9 各階設計深度」欄位 -> 開挖總階數自動與實際輸入深度階數同步(可增可減)
                     if (maxNonZeroStage > 0 && maxNonZeroStage !== digStagesRaw) {
                         digStages = maxNonZeroStage;
                         document.getElementById('digStages').value = digStages;
@@ -3771,7 +3803,7 @@
                 let bracketHorizontal = parseFloat(document.getElementById('bracketHorizontal').value) || bracketVertical;
                 let workSpace = parseFloat(document.getElementById('workSpace').value) || 0;
 
-                // 中間柱三角拖架尺寸(自動)：垂直邊＝9-1同值；水平邊＝9-2×2倍(配合架設空間)
+                // 中間柱三角拖架尺寸(自動)：垂直邊＝B-06-01同值；水平邊＝B-06-02×2倍(配合架設空間)
                 let midBrDimEl = document.getElementById('calcMidBracketDims');
                 if (midBrDimEl) midBrDimEl.innerText = '垂直邊 ' + bracketVertical.toFixed(2) + ' m × 水平邊 ' + (bracketHorizontal * 2).toFixed(2) + ' m';
 
@@ -3871,7 +3903,11 @@
                     parseFloat(document.getElementById('depth2').value) || 0,
                     parseFloat(document.getElementById('depth3').value) || 0,
                     parseFloat(document.getElementById('depth4').value) || 0,
-                    parseFloat(document.getElementById('depth5').value) || 0
+                    parseFloat(document.getElementById('depth5').value) || 0,
+                    parseFloat(document.getElementById('depth6').value) || 0,
+                    parseFloat(document.getElementById('depth7').value) || 0,
+                    parseFloat(document.getElementById('depth8').value) || 0,
+                    parseFloat(document.getElementById('depth9').value) || 0
                 ];
 
                 let actualDepthsInput = depthList.filter(d => d > 0).length;
@@ -3883,11 +3919,11 @@
                 }
 
                 let totalDepth = 0;
-                for(let i=0; i<digStages; i++) { if(i < 5) totalDepth += depthList[i]; }
+                for(let i=0; i<digStages; i++) { if(i < depthList.length) totalDepth += depthList[i]; }
                 document.getElementById('totalDepthDisplay').innerHTML = totalDepth.toFixed(2) + " m";
 
-                // 主要參數輸入區 C.各階深(qd1~qd5) 雙向連動：焦點不在該欄位時才回填，避免打字被覆蓋
-                for (let qi = 1; qi <= 5; qi++) {
+                // 主要參數輸入區 C.各階深(qd1~qd9) 雙向連動：焦點不在該欄位時才回填，避免打字被覆蓋
+                for (let qi = 1; qi <= 9; qi++) {
                     const qEl = document.getElementById('qd' + qi);
                     if (qEl && document.activeElement !== qEl) qEl.value = document.getElementById('depth' + qi).value;
                 }
@@ -3908,7 +3944,7 @@
                 if(pileLength > 0 && pileLength < totalDepth) { pileLenAlert.style.display = 'inline-block'; } else { pileLenAlert.style.display = 'none'; }
 
                 let currentCumulate = 0;
-                for(let i=0; i<5; i++){
+                for(let i=0; i<9; i++){
                     let disp = document.getElementById('minDigDisp' + (i+1));
                     let emptyNote = document.getElementById('minDigEmpty' + (i+1));
                     if (i < digStages) {
@@ -4005,8 +4041,8 @@
                     document.getElementById('calcMidPileTotal').innerHTML = midPileTotalLength.toFixed(2) + " m";
                     document.getElementById('calcSlantTotal').innerHTML = slantTotalLength.toFixed(2) + " m";
 
-                    /* ══════════════ 【v64】型鋼總重量計算(依 2-10 單位重表比對) ══════════════
-                       各水平支撐與中間柱依「所選型號」自動比對 2-10 的5組單位重表取 T/m，乘總長度得總重。
+                    /* ══════════════ 【v72.8】型鋼總重量計算(依 B-02 單位重表比對) ══════════════
+                       各水平支撐與中間柱依「所選型號」自動比對 B-02 的10組單位重資料取 T/m，乘總長度得總重。
                        型號正規化：忽略大小寫與空白，'H400x400x12x19'≈'h400X400X12X19'。找不到→以0計並提示。 */
                     var _steelWeightMiss = false;
                     (function computeSteelWeights(){
@@ -4117,7 +4153,11 @@
                         parseFloat(document.getElementById('prestress1').value) || 0,
                         parseFloat(document.getElementById('prestress2').value) || 0,
                         parseFloat(document.getElementById('prestress3').value) || 0,
-                        parseFloat(document.getElementById('prestress4').value) || 0
+                        parseFloat(document.getElementById('prestress4').value) || 0,
+                        parseFloat(document.getElementById('prestress5').value) || 0,
+                        parseFloat(document.getElementById('prestress6').value) || 0,
+                        parseFloat(document.getElementById('prestress7').value) || 0,
+                        parseFloat(document.getElementById('prestress8').value) || 0
                     ];
                     let prestressHtml = '';
                     for (let i = 0; i < wailerStages && i < prestressList.length; i++) {
@@ -4128,7 +4168,7 @@
                     // 預力為各階獨立施加的設計值(依結構設計圖說指定)，性質上不宜累加，故不再顯示合計
                     document.getElementById('infoPrestressStages').innerHTML = "■ 水平支撐階數：" + wailerStages + " 階(各階預力依上列設計值分別施加)";
 
-                    // ---- 千斤頂應加壓錶壓(kgf/cm²) 換算：第1、2階水平支撐 ----
+                    // ---- 千斤頂應加壓錶壓(kgf/cm²) 換算：第1～8階水平支撐 ----
                     syncJackModels();
                     const jmIdx = parseInt(document.getElementById('jackModel').value) || 0;
                     const jmName = (document.getElementById('jn_' + jmIdx) || {}).value || ('第' + (jmIdx+1) + '列');
@@ -4143,7 +4183,7 @@
                     let jpDetail = '';
                     let perStageHtml = '';
                     let summaryRows = '';
-                    const stagesToCalc = Math.min(4, wailerStages);   // 自動計算第1～4階(最多4階水平支撐)
+                    const stagesToCalc = Math.min(8, wailerStages);   // 自動計算第1～8階(最多8階水平支撐)
                     if (stagesToCalc === 0) {
                         perStageHtml += '<div class="mini-calc">(無水平支撐階數，無需加壓)</div>';
                     } else {
@@ -4222,7 +4262,7 @@
 
                     // ---- 6-6. 全部千斤頂型號 對照表(依各階設計預力，僅保留應加壓值欄及其後2欄參考點) ----
                     let compareHtml = '';
-                    const stagesForCompare = Math.min(4, wailerStages);
+                    const stagesForCompare = Math.min(8, wailerStages);
                     if (stagesForCompare === 0) {
                         compareHtml = '<div class="mini-calc">(無水平支撐階數，無需比較)</div>';
                     } else {
@@ -4346,11 +4386,11 @@
                             ['2', '水平支撐',
                              '橫擋(圍囹)＋大小角撐＋斜撐＋中間水平支撐(井)之各階累加總長。',
                              '橫擋'+wailerTotalLength.toFixed(1)+'＋角撐'+(smallBraceTotal+bigBraceTotal).toFixed(1)+'＋斜撐'+slantTotalLength.toFixed(1)+'＋井'+(isGridActive?gridTotalLength.toFixed(1):'0')+' m',
-                             '總長 <b>'+horizLen2.toFixed(2)+' m</b>／總重 '+nz(W2.wailer? (nz(W2.wailer)+nz(W2.smallBrace)+nz(W2.bigBrace)+nz(W2.slant)+nz(W2.grid)):0).toFixed(3)+' T'],
+                             '總長 <b>'+horizLen2.toFixed(2)+' m</b>／總重 '+(nz(W2.wailer)+nz(W2.smallBrace)+nz(W2.bigBrace)+nz(W2.slant)+nz(W2.grid)).toFixed(3)+' T'],
                             ['3', '中間柱',
                              '井字支撐交點配置之立柱，支數乘單柱長度。',
                              (isGridActive? midPileCount:0)+' 支 × 單柱長 '+lenMidPile.toFixed(2)+' m',
-                             '<b>'+(isGridActive?midPileCount:0)+' 支</b>／總長 '+midPileTotalLength.toFixed(2)+' m'],
+                             '<b>'+(isGridActive?midPileCount:0)+' 支</b>／總長 '+midPileTotalLength.toFixed(2)+' m／總重 '+nz(W2.midPile).toFixed(3)+' T'],
                             ['4', '開挖數量',
                              '開挖平面面積(方向1×方向2外緣寬)乘設計總深度之土方體積。',
                              'L '+L.toFixed(2)+' m × W '+W.toFixed(2)+' m × 總深 '+totalDepth.toFixed(2)+' m',
@@ -4481,7 +4521,7 @@
                         // 5. 拖架水平間距 vs 垂直排樁間距(拖架須銲於垂直排樁)
                         const maxPileGap = Math.max(actualL, actualW);
                         if (bracketSpacingV > 0 && bracketSpacingV < maxPileGap) {
-                            warns.push('「9-3 三角拖架的水平間距」(' + bracketSpacingV.toFixed(2) + ' m) <b>小於垂直排樁中心間距</b>(最大 ' +
+                            warns.push('「B-06-04 三角拖架水平間距」(' + bracketSpacingV.toFixed(2) + ' m) <b>小於垂直排樁中心間距</b>(最大 ' +
                                        maxPileGap.toFixed(3) + ' m)：拖架須銲於垂直排樁上，實際上無法做到比樁距更密，程式將以每支垂直排樁設置為上限。');
                         }
 
@@ -4507,7 +4547,7 @@
                         if (!monoP) warns.push('對照表第一列的 <b>kgf/cm² 數值未由小到大遞增</b>，內插結果將不正確，請檢查。');
 
                         // 9. 預力超出千斤頂容量
-                        for (let s = 0; s < Math.min(4, wailerStages); s++) {
+                        for (let s = 0; s < Math.min(8, wailerStages); s++) {
                             const T = prestressList[s];
                             if (T > 0 && jRow[jRow.length-1] > 0 && T > jRow[jRow.length-1]) {
                                 errs.push('<b>第' + (s+1) + '階設計預力 ' + T.toFixed(1) + ' t 已超出「' + jmName + '」的最大出力 ' +
@@ -4563,7 +4603,7 @@
                         // TORSA 計算書成果選填(>0 才視為有填)
                         const tsMmax = parseFloat(document.getElementById('tsMmax').value) || 0;   // t-m/m
                         const tsVmax = parseFloat(document.getElementById('tsVmax').value) || 0;   // t/m
-                        const tsR = [1,2,3,4].map(i => parseFloat(document.getElementById('tsR' + i).value) || 0);
+                        const tsR = [1,2,3,4,5,6,7,8].map(i => parseFloat(document.getElementById('tsR' + i).value) || 0);
                         const isSheetMode = !!(window._sheetPile && window._sheetPile.active);
                         const waterDepth = parseFloat(document.getElementById('waterDepth').value) || 99;
                         const H = totalDepth;
@@ -4598,7 +4638,7 @@
                         step(1, '確認檢核採用之輸入參數',
                             '<table class="sc-tbl">' +
                             '<tr><th>參數</th><th>符號</th><th>數值</th><th>來源</th></tr>' +
-                            '<tr><td>開挖總深度</td><td>H</td><td>' + H.toFixed(2) + ' m</td><td>5-4-1～5-4-5 各階設計深度累加</td></tr>' +
+                            '<tr><td>開挖總深度</td><td>H</td><td>' + H.toFixed(2) + ' m</td><td>5-4-1～5-4-9 各階設計深度累加</td></tr>' +
                             '<tr><td>水平支撐階數</td><td>n</td><td>' + wailerStages + ' 階</td><td>開挖總階數 － 1</td></tr>' +
                             '<tr><td>土壤類型</td><td>—</td><td>' + soilTypeName + '</td><td>SC-1</td></tr>' +
                             '<tr><td>土壤總單位重</td><td>γ</td><td>' + gamma.toFixed(2) + ' t/m³</td><td>SC-2</td></tr>' +
@@ -4611,7 +4651,7 @@
                             '<tr><td>支撐溫度力</td><td>Ft</td><td>' + Ft_temp.toFixed(1) + ' t</td><td>SC-8</td></tr>' +
                             '<tr><td>TORSA成果(選填)</td><td>—</td><td>' + (tsMmax>0||tsVmax>0||tsR.some(r=>r>0) ? ('Mmax=' + tsMmax + ' t-m/m、Vmax=' + tsVmax + ' t/m、R=' + tsR.join('/') + ' t') : '未填(採本工具估算)') + '</td><td>TS-1～TS-3</td></tr>' +
                             '<tr><td>垂直排樁中心間距(方向1/方向2)</td><td>Sp</td><td>' + (actualL||0).toFixed(3) + ' / ' + (actualW||0).toFixed(3) + ' m</td><td>依 3-5 自動計算</td></tr>' +
-                            '<tr><td>三角拖架水平間距</td><td>Sb</td><td>' + spacingForBrackets.toFixed(2) + ' m</td><td>9-3(作為橫擋支點間距)</td></tr>' +
+                            '<tr><td>三角拖架水平間距</td><td>Sb</td><td>' + spacingForBrackets.toFixed(2) + ' m</td><td>B-06-04(作為橫擋支點間距)</td></tr>' +
                             '</table>');
 
                         // ---------- 步驟 2：主動土壓力係數 Ka ----------
@@ -4701,7 +4741,7 @@
                         for (let s = 0; s < wailerStages; s++) {
                             cumD += (depthList[s] || 0);
                             const upperHalf = (depthList[s] || 0) / 2;
-                            const lowerHalf = ((s + 1 < 5) ? (depthList[s+1] || 0) : 0) / 2;
+                            const lowerHalf = ((s + 1 < depthList.length) ? (depthList[s+1] || 0) : 0) / 2;
                             const trib = upperHalf + lowerHalf;
                             if (trib > maxTrib) maxTrib = trib;
                             const strutLoad_per_m = pTotal * trib;      // t/m (沿橫擋方向每公尺)
@@ -5046,7 +5086,7 @@
 
                         // ---------- 步驟 12：各階設計預力充分性檢核 ----------
                         let preRows = '';
-                        for (let s = 0; s < Math.min(4, wailerStages); s++) {
+                        for (let s = 0; s < Math.min(8, wailerStages); s++) {
                             const T = prestressList[s] || 0;
                             const needT = w_wl_list[s] * Le_wl;   // 單支支撐需求(依TORSA或Peck)
                             const r = needT > 0 ? (needT / (T > 0 ? T : 1e-9)) : 0;
@@ -5059,7 +5099,7 @@
                                        '<td>' + needT.toFixed(2) + ' t</td><td>' + T.toFixed(1) + ' t</td>' +
                                        '<td class="' + cls + '" style="font-weight:bold; text-align:left;">' + txt + '</td></tr>';
                         }
-                        step(12, '各階設計預力(6-1～6-4)之充分性檢核',
+                        step(12, '各階設計預力(6-1～6-8)之充分性檢核',
                             fml('單支支撐需求 T ＝ w × 支撐間距(' + Le_wl.toFixed(2) + ' m)　；　檢核 T需求 ≤ T設計預力') +
                             '<table class="sc-tbl"><tr><th>階段</th><th>w</th><th>需求推力</th><th>設計預力</th><th>判定</th></tr>' + preRows + '</table>' +
                             '<div class="sc-note">※ 預力作用為先行壓緊、控制變位，實務常取計算支撐力50～100%；計算書01冊採-15t、06冊圍堰採0t，並非必須≥100%，本表僅供量級對照。</div>');
@@ -5146,7 +5186,7 @@
                         const advice = [];
                         const ratio_pile = Math.max(bc9.ratio, sc9.ratio, ratio_canti || 0);
                         if (ratio_pile > 0.8) advice.push('<b>擋土壁體</b>：應力比偏高，建議加大斷面(提高 Sx/Zx)、縮小垂直排樁中心間距，或縮小各階開挖深度(降低支撐跨距 L，效果最顯著，因 M ∝ L²)。');
-                        if (ratio_wl > 0.8) advice.push('<b>橫擋</b>：應力比偏高，建議加大橫擋型鋼斷面、縮小 9-3 三角拖架間距(M ∝ Sb²)，或增設中間水平支撐以降低分擔高度。');
+                        if (ratio_wl > 0.8) advice.push('<b>橫擋</b>：應力比偏高，建議加大橫擋型鋼斷面、縮小 B-06-04 三角拖架水平間距(M ∝ Sb²)，或增設中間水平支撐以降低分擔高度。');
                         if (embedRatio < 0.3) advice.push('<b>貫入深度</b>：建議加長垂直排樁(2-2)，貫入比宜達開挖深度之30%以上，並由技師以被動土壓平衡與隆起分析正式核算。');
                         if (waterDepth < H) advice.push('<b>地下水</b>：開挖底面已低於地下水位，務必納入降水/止水計畫，並檢核湧砂(Piping)、上舉(Uplift)與隆起(Heave)。');
                         if (findings.warn.some(function(x){ return x.indexOf('未設定預力') >= 0; })) advice.push('<b>預力</b>：部分階段未設定預力，請確認是否為設計本意；水平支撐通常須施加預力以控制壁體變位。');
@@ -5227,14 +5267,15 @@
                         pileRows.push(['垂直排樁打設總長度', '', '', Number(totalPileLen.toFixed(2)), 'm']);
                         sheets['垂直排樁數量表'] = pileRows;
 
+                        const expW = window._steelWeights || {};
                         sheets['水平支撐數量表'] = [
-                            ['構件', '型鋼規格', '階數/支數', '總計長度(m)'],
-                            ['橫擋(圍囹)', specWailer === '無' ? '無' : specWailer, wailerStages + ' 階', wailerStages > 0 ? Number(wailerTotalLength.toFixed(2)) : 0],
-                            ['小角撐', specSmallBrace === '無' ? '無' : specSmallBrace, '', Number(smallBraceTotal.toFixed(2))],
-                            ['大角撐', specBigBrace === '無' ? '無' : specBigBrace, '', Number(bigBraceTotal.toFixed(2))],
-                            ['中間水平支撐(井)', specGrid === '' ? '無' : specGrid, '', isGridActive ? Number(gridTotalLength.toFixed(2)) : 0],
-                            ['中間柱', specMidPile === '無' ? '無' : specMidPile, midPileCount + ' 支', Number(midPileTotalLength.toFixed(2))],
-                            ['斜撐', specSlant === '無' ? '無' : specSlant, totalSlantCount + ' 支', Number(slantTotalLength.toFixed(2))]
+                            ['構件', '型鋼規格', '階數/支數', '總計長度(m)', '總重量(T)', '重量計算式'],
+                            ['橫擋(圍囹)', specWailer === '無' ? '無' : specWailer, wailerStages + ' 階', wailerStages > 0 ? Number(wailerTotalLength.toFixed(2)) : 0, Number((expW.wailer||0).toFixed(3)), '總長度×單位重(T/m)'],
+                            ['小角撐', specSmallBrace === '無' ? '無' : specSmallBrace, '', Number(smallBraceTotal.toFixed(2)), Number((expW.smallBrace||0).toFixed(3)), '總長度×單位重(T/m)'],
+                            ['大角撐', specBigBrace === '無' ? '無' : specBigBrace, '', Number(bigBraceTotal.toFixed(2)), Number((expW.bigBrace||0).toFixed(3)), '總長度×單位重(T/m)'],
+                            ['中間水平支撐(井)', specGrid === '' ? '無' : specGrid, '', isGridActive ? Number(gridTotalLength.toFixed(2)) : 0, Number((expW.grid||0).toFixed(3)), '總長度×單位重(T/m)'],
+                            ['中間柱', specMidPile === '無' ? '無' : specMidPile, midPileCount + ' 支', Number(midPileTotalLength.toFixed(2)), Number((expW.midPile||0).toFixed(3)), '總長度×單位重(T/m)'],
+                            ['斜撐', specSlant === '無' ? '無' : specSlant, totalSlantCount + ' 支', Number(slantTotalLength.toFixed(2)), Number((expW.slant||0).toFixed(3)), '總長度×單位重(T/m)']
                         ];
 
                         sheets['木襯板數量表'] = [
@@ -5272,7 +5313,7 @@
                         }
                         sheets['預力與錶壓換算表'] = preRows;
 
-                        const jkRows = [['加壓機型號'].concat(jP.map(function(p){ return p + ' kgf/cm²'; }))];
+                        const jkRows = [['千斤頂型號'].concat(jP.map(function(p){ return p + ' kgf/cm²'; }))];
                         for (let ri = 0; ri < 7; ri++) {
                             const nm = (document.getElementById('jn_' + ri) || {}).value || ('列' + (ri+1));
                             jkRows.push([nm].concat(readJackRow(ri)));
@@ -7151,13 +7192,13 @@ window.onload = function() { init3D(); applyPileTypeMode(); drawSheetSpecChart()
             const hasSlant = gs('hasSlant');
             const distSlant = _toC3d(gv('lenSlantPile'), (parseHBeamSpec(document.getElementById('specSlant').value||'H350x350x12x19').b||400)/1000);
 
-            const digStages = Math.max(1, gvi('digStages'));
+            const digStages = Math.max(1, Math.min(9, gvi('digStages')));
             const elGround = gv('elGround');
             const wailerStages = Math.max(0, digStages - 1);
             const bracketVertical = gv('bracketVertical'), workSpace = gv('workSpace');
-            const bracketHorizontal3D = gv('bracketHorizontal') || bracketVertical;   // 橫擋拖架水平邊(9-2)
+            const bracketHorizontal3D = gv('bracketHorizontal') || bracketVertical;   // 橫擋拖架水平邊(B-06-02)
             const bracketSpacing = Math.max(0.3, gv('bracketSpacing') || 4);
-            const depthList = [gv('depth1'), gv('depth2'), gv('depth3'), gv('depth4'), gv('depth5')];
+            const depthList = [gv('depth1'), gv('depth2'), gv('depth3'), gv('depth4'), gv('depth5'), gv('depth6'), gv('depth7'), gv('depth8'), gv('depth9')];
             let totalDepth = 0; for (let i = 0; i < digStages; i++) totalDepth += depthList[i];
 
             const woodThickM = (gv('woodThickCM') || 3) / 100;
@@ -7184,7 +7225,7 @@ window.onload = function() { init3D(); applyPileTypeMode(); drawSheetSpecChart()
             const jackChk = document.getElementById('tgJack');
             const showJack = jackChk ? jackChk.checked : false;   // 勾選「千斤頂及保護匣」時才建立
             // 各階水平支撐設計預力(噸)，供千斤頂上標示使用
-            const prestressArr = ['prestress1','prestress2','prestress3','prestress4'].map(function(id){
+            const prestressArr = ['prestress1','prestress2','prestress3','prestress4','prestress5','prestress6','prestress7','prestress8'].map(function(id){
                 const el = document.getElementById(id); return el ? (parseFloat(el.value) || 0) : 0;
             });
             const jackBigChk = document.getElementById('tgJackBigBrace');
@@ -8995,8 +9036,8 @@ window.onload = function() { init3D(); applyPileTypeMode(); drawSheetSpecChart()
             { t:'7｜小角撐與大角撐', d:'四角以斜向構件縮短橫擋轉角附近的有效跨距。本工具將<b>小角撐、大角撐</b>分開設定規格與幾何，因此圖面與數量統計也分開計算。<br><br>斜邊長還可依不同測量基準換算。', dim:0.58, before:function(){ if(window.v72OpenPage)v72OpenPage('B','04',false); } },
             { t:'8｜基坑較寬時：中間水平支撐', d:'當單靠四角支撐不足以形成合理配置時，可加入<b>中間水平支撐（井字支撐）</b>，並搭配中間柱與斜撐。<br><br>B-04 可設定幾何與數量，C-01 可立即確認交點與方向。', dim:0.58, before:function(){ if(window.v72OpenPage)v72OpenPage('B','04',false); } },
             { t:'9｜中間柱是立體系統的垂直支點', d:'中間柱不是外圍擋土樁，而是支撐內部水平構件的垂直構件。其支數會依中間支撐交點配置產生，長度另行設定。<br><br>在 3D 模型中最容易辨識它與水平支撐的關係。', dim:0.55, before:function(){ if(window.v72OpenPage)v72OpenPage('C','04',false); focusCanvas('three-container'); } },
-            { t:'10｜木襯板位在排樁之間', d:'H 型鋼排樁為離散樁，樁間可用木襯板形成擋土面。B-01 後段設定木襯板相關條件，F-03 另有木襯板材料參數供安全檢核使用。', dim:0.58, before:function(){ if(window.v72OpenPage)v72OpenPage('B','01',false); } },
-            { t:'11｜施工節奏：分階開挖、分階支撐', d:'本系統用各階設計深度表示施工階段。<b>大於 0 的最深階</b>決定開挖總階數；水平支撐階數依程式既有邏輯由開挖階數推得。<br><br>B-06「開挖回填」前段負責輸入，C-02/C-03 立面圖負責核對。', dim:0.60, before:function(){ if(window.v72OpenPage)v72OpenPage('B','06',false); } },
+            { t:'10｜木襯板位在排樁之間', d:'H 型鋼排樁為離散樁，樁間可用木襯板形成擋土面。B-01 前段設定木襯板相關條件，F-03 另有木襯板材料參數供安全檢核使用。', dim:0.58, before:function(){ if(window.v72OpenPage)v72OpenPage('B','01',false); } },
+            { t:'11｜施工節奏：分階開挖、分階支撐', d:'本系統用各階設計深度表示施工階段。<b>大於 0 的最深階</b>決定開挖總階數；水平支撐階數依程式既有邏輯由開挖階數推得。<br><br>B-06「開挖回填」由三角拖架開始，後續各階開挖負責輸入，C-02/C-03 立面圖負責核對。', dim:0.60, before:function(){ if(window.v72OpenPage)v72OpenPage('B','06',false); } },
             { t:'12｜從立面圖核對高程', d:'立面圖顯示地面/河床基準、各階開挖面、水平支撐與樁體上下關係。<br><br>不要只看數字；輸入後應切到 C-02 與 C-03，確認兩方向的支撐層位是否一致。', dim:0.50, before:function(){ if(window.v72OpenPage)v72OpenPage('C','02',false); focusCanvas('sectionCanvas'); } },
             { t:'13｜預力與千斤頂不是同一個數字', d:'B-05 先設定各階<b>設計預力</b>，再依千斤頂型號與內插參考點換算成加壓錶值。<br><br>也就是「設計要求的力」與「現場操作看到的錶壓」分屬兩個層次。', dim:0.55, before:function(){ if(window.v72OpenPage)v72OpenPage('B','05',false); } },
             { t:'14｜D 計算：看公式，不只是看答案', d:'D-01 顯示 H 型鋼排樁相關計算推演，D-03 顯示共通支撐計算。<br><br>遇到數量或長度與預期不同時，先看 D 區的公式與中間值，比只看 E 統計更容易找到原因。', dim:0.55, before:function(){ if(window.v72OpenPage)v72OpenPage('D','01',false); } },
@@ -9034,12 +9075,12 @@ window.onload = function() { init3D(); applyPileTypeMode(); drawSheetSpecChart()
             { t:'📖 操作教學｜先認識新版畫面', d:'新版不是長頁面往下找，而是<b>第一層 A～G → 第二層子頁 → 第三層單一作業區</b>。<br><br>第一層與第二層固定在頂端；桌機不足寬會換行，手機可橫向滑動。', dim:0.82, before:function(){ if(window.v72OpenPage)v72OpenPage('A','03',false); } },
             { t:'0-1｜A～G 的工作順序', d:'建議實際使用順序：<b>B 輸入 → C 繪圖 → D 計算 → E 統計 → F 檢核 → G 匯出</b>。<br>A 教學是輔助區，可隨時回來查觀念、操作與程式架構。', dim:0.72 },
             { t:'0-2｜第二層頁籤的原則', d:'第二層每個頁籤現在是<b>獨立作業頁</b>；切換後只顯示該頁內容，不應再同時看到其他第二層頁面的表單。<br><br>這樣可把大量參數拆成可管理的工程工作包。', dim:0.70 },
-            { t:'B-01｜基本設定', d:'第一件事先選 <b>H鋼+木襯板 / 鋼板樁</b>。新版用勾選卡外觀，但底層為單選邏輯。<br><br>本頁先填工程名稱、工區、承包商、監造、主辦機關/單位與河川名稱等基本資料；後段再集中木襯板與三角拖架設定。', dim:0.58, before:function(){ if(window.v72OpenPage)v72OpenPage('B','01',false); } },
+            { t:'B-01｜基本設定', d:'第一件事先選 <b>H鋼+木襯板 / 鋼板樁</b>。新版用勾選卡外觀，但底層為單選邏輯。<br><br>本頁先設定木襯板；「工程基本資料」移至本頁最下方，集中填工程名稱、工區、承包商、監造、主辦機關/單位與河川名稱。三角拖架已移至 B-06 開挖回填最上方。', dim:0.58, before:function(){ if(window.v72OpenPage)v72OpenPage('B','01',false); } },
             { t:'B-02｜H鋼設定', d:'先設定垂直排樁及水平支撐等 H 鋼規格，再輸入 H 鋼排樁開挖幾何；<b>排樁支數、中心間距、總支數與總長度已併在本頁後段</b>，不用再切到另一頁。<br><br>鋼板樁模式仍可使用共用的水平支撐 H 鋼規格，但 H 鋼排樁幾何/數量會自動隱藏。', dim:0.56, before:function(){ tourSetMode('hbeam'); if(window.v72OpenPage)v72OpenPage('B','02',false); } },
             { t:'B-03｜板樁設定', d:'鋼板樁模式在此處理板樁規格、外層/內層幾何、雙層圍堰尺寸關係及相關數量。<br><br>若目前是 H鋼+木襯板 模式，本頁會顯示不適用說明，而不再留下空白頁。', dim:0.55, before:function(){ tourSetMode('sheet'); if(window.v72OpenPage)v72OpenPage('B','03',false); } },
             { t:'B-04｜水平支撐', d:'橫擋、大小角撐、斜撐、中間水平支撐與中間柱的幾何/數量集中在這一頁。<br><br>角撐、斜撐斜邊的量測基準會影響長度與碰撞，輸入後應配合 C-01/F-02 核對。', dim:0.55, before:function(){ if(window.v72OpenPage)v72OpenPage('B','04',false); } },
             { t:'B-05｜預力加壓', d:'設定各階水平支撐設計預力、千斤頂型號與加壓換算參考資料。<br><br>系統會把設計預力轉換成現場可使用的千斤頂錶值資訊。', dim:0.54, before:function(){ if(window.v72OpenPage)v72OpenPage('B','05',false); } },
-            { t:'B-06｜開挖回填', d:'本頁把原「各階開挖」移到預力加壓之後，並與土方回填整併。前段逐階填設計深度/開挖高程，後段計算總開挖、結構體積與回填量。<br><br>填完應到 C-02/C-03 核對立面高程，再到 E 區核對土方結果。', dim:0.54, before:function(){ if(window.v72OpenPage)v72OpenPage('B','06',false); } },
+            { t:'B-06｜開挖回填', d:'本頁最上方先設定橫擋三角拖架，其後可輸入最多9階開挖（對應最多8階水平支撐），後段計算總開挖、結構體積與回填量。<br><br>填完應到 C-02/C-03 核對立面高程，再到 E 區核對土方結果。', dim:0.54, before:function(){ if(window.v72OpenPage)v72OpenPage('B','06',false); } },
             { t:'C-01｜平面圖', d:'先看平面圖核對：外圍排樁/板樁、橫擋、角撐、斜撐、中間水平支撐、中間柱位置是否符合預期。<br><br>平面配置不對時，應回 B-02/B-03/B-04 修正。', dim:0.44, before:function(){ if(window.v72OpenPage)v72OpenPage('C','01',false); focusCanvas('layoutCanvas'); } },
             { t:'C-01｜圖面匯出與顯示控制', d:'平面圖頁保留 JPG、A3 PDF、DXF 等既有匯出能力及元件/名稱顯示控制。<br><br>DXF 用於 CAD 後續處理；JPG/PDF 適合快速檢視與報告。', dim:0.44, before:function(){ if(window.v72OpenPage)v72OpenPage('C','01',false); } },
             { t:'C-02｜立面 A', d:'A-A′ 立面用來核對第一方向：地面/河床基準、水位、樁頂/樁底、各階水平支撐與開挖面。<br><br>層位錯誤通常來自 B-06 開挖回填頁或相關高程輸入。', dim:0.42, before:function(){ if(window.v72OpenPage)v72OpenPage('C','02',false); focusCanvas('sectionCanvas'); } },
@@ -9158,7 +9199,7 @@ window.onload = function() { init3D(); applyPileTypeMode(); drawSheetSpecChart()
 
 <script>
 /* ═══════════════════════════════════════════════════════════════════════
-   【v72.7】三層式工程應用介面控制器
+   【v72.8】三層式工程應用介面控制器
    - 保留既有計算核心、欄位 ID、2D/3D、匯出與 JSON 邏輯
    - 舊快速輸入 B~I 不再顯示，僅保留相容 DOM；擋土型式改由 B-01 勾選卡控制
    - 主頁切換只變更顯示，不複製帶 ID 的節點，避免破壞既有程式
@@ -9328,18 +9369,18 @@ window.onload = function() { init3D(); applyPileTypeMode(); drawSheetSpecChart()
     }
     const BMAP={
         // v72.6：依實際工作流程重新整併第二層頁面
-        // 01 基本設定＝工程基本資料＋木襯板＋三角拖架
+        // 01 基本設定＝木襯板＋工程基本資料（工程基本資料置於本頁最下方）
         // 02 H鋼設定＝型鋼規格＋H鋼開挖幾何＋排樁數量
         // 03 板樁設定＝鋼板樁規格與幾何
         // 04 水平支撐＝水平支撐幾何與數量
-        // 05 預力加壓＝預力＋千斤頂
-        // 06 開挖回填＝各階開挖＋開挖/回填土方
-        '01':['工程基本資料','木襯板設定','橫擋三角拖架'],
+        // 05 預力加壓＝第1～8階預力＋千斤頂
+        // 06 開挖回填＝三角拖架＋第1～9階開挖＋開挖/回填土方
+        '01':['木襯板設定','工程基本資料'],
         '02':['型鋼規格','H型鋼樁開挖幾何','H型鋼樁垂直排樁數量'],
         '03':['鋼板樁規格與幾何'],
         '04':['水平支撐幾何與數量'],
         '05':['水平支撐設計預力設定','千斤頂加壓出力對照表','千斤頂型號'],
-        '06':['各階設計深度','開挖及回填土方計算']
+        '06':['橫擋三角拖架','各階設計深度','開挖及回填土方計算']
     };
     function ensureModeNotice(){
         const blk=q('blockDetailParam'); if(!blk) return null;
@@ -9608,7 +9649,7 @@ window.onload = function() { init3D(); applyPileTypeMode(); drawSheetSpecChart()
           '<h3>A-05-02　主功能模組</h3><p>A 教學＝知識與系統說明；B 輸入＝所有工程/幾何/材料/施工參數；C 繪圖＝平面、兩向立面與 3D；D 計算＝H鋼、板樁、共通推演；E 統計＝摘要、幾何、高程、預力、鋼材、附屬材料；F 檢核＝基本、幾何碰撞、安全；G 匯出＝圖面、報表、JSON、ZIP。</p>'+
           '<h3>A-05-03　資料流與 calc() 主循環</h3><p>輸入元件的 <code>oninput/onchange</code> 主要匯入 <code>calc()</code>。主循環讀取現值後進行幾何換算、排樁/支撐數量、型鋼重量、開挖/回填、預力與千斤頂換算，再更新自動計算欄位並觸發平面圖、立面圖、3D 與檢核結果。維護時應優先沿這條資料流追查，不要在 UI 層另建第二套公式。</p>'+
           '<h3>A-05-04　模式切換與相容層</h3><p>B-01-01 採「勾選卡外觀＋radio 單選邏輯」切換 H鋼+木襯板/鋼板樁；底層仍同步原 <code>#pileType</code>。舊快速輸入 B～I 不再作為使用介面，但必要相容節點仍保留，確保 JSON、舊函式與雙向連動不被一次性重構破壞。</p>'+
-          '<h3>A-05-05　B 輸入頁面分工</h3><p>B-01 基本設定（工程資料＋木襯板＋三角拖架）；B-02 H鋼設定（型鋼規格＋H鋼幾何＋排樁數量）；B-03 板樁設定；B-04 水平支撐；B-05 預力加壓；B-06 開挖回填（各階開挖＋土方回填）。v72.1 起採硬隔離顯示，同一時間只顯示目前第二層頁籤對應群組。</p>'+
+          '<h3>A-05-05　B 輸入頁面分工</h3><p>B-01 基本設定（木襯板＋工程基本資料，工程基本資料置底）；B-02 H鋼設定（型鋼規格＋H鋼幾何＋排樁數量）；B-03 板樁設定；B-04 水平支撐；B-05 預力加壓；B-06 開挖回填（三角拖架＋最多9階開挖＋土方回填）。v72.1 起採硬隔離顯示，同一時間只顯示目前第二層頁籤對應群組。</p>'+
           '<h3>A-05-06　2D 繪圖模組</h3><p><code>drawCanvas()</code> 產生平面配置；<code>drawSectionCanvas()</code> 產生 A-A′/B-B′ 立面。圖面尺寸、排樁、橫擋、角撐、斜撐、井字支撐、中間柱、木襯板與高程均取自同一份輸入資料。若新增構件，應同步考慮圖例、元件顯示開關與 DXF 匯出。</p>'+
           '<h3>A-05-07　3D 模組</h3><p><code>build3DModel()</code> 以 Three.js 重建場景；元件應設定 <code>userData.part</code> 供顯示/隱藏與施工動畫辨識。相機使用 OrbitControls；手機保留旋轉、縮放、平移操作。新增 3D 構件時須同步處理元件開關、名稱標註與動畫階段。</p>'+
           '<h3>A-05-08　計算推演與統計</h3><p>D 區是「公式與推導過程」，E 區是「結果彙整」。兩者資料來源相同，但用途不同：D 適合計算書查核與追算；E 適合材料數量、工程摘要與匯出。新增一項計算時，應確認是否同時需要出現在 D、E 與 Excel/Word。</p>'+
@@ -9617,7 +9658,7 @@ window.onload = function() { init3D(); applyPileTypeMode(); drawSheetSpecChart()
           '<h3>A-05-11　響應式與固定導覽</h3><p>頁首、第一層與第二層共同固定在頂端。桌機/平板導覽不足寬時換行；手機為避免導覽佔掉過多高度，改為單列橫向滑動。第三層作業區維持單工作區邏輯，避免桌機雙欄與手機單欄產生兩套操作流程。</p>'+
           '<h3>A-05-12　維護檢查清單</h3><p>新增/修改輸入欄位時依序檢查：①HTML ID與標籤編號 ②calc()讀值與公式 ③模式顯示/隱藏 ④JSON存讀 ⑤D計算推演 ⑥E統計 ⑦2D ⑧3D ⑨F檢核 ⑩Excel/Word/PDF/DXF/ZIP。若只改其中一處，最容易形成「畫面有值但輸出沒值」或「計算有值但載入無法還原」。</p>'+
           '<h3>A-05-13　故障排查順序</h3><p>遇到異常時建議依序：先看瀏覽器 Console 是否有 JS 錯誤 → 確認欄位 ID 是否存在 → 確認模式 class 是否正確 → 手動呼叫 calc() → 檢查 2D/3D 函式 → 再查匯出。若只有某第二層頁面重複或消失，優先檢查 v72 分頁過濾，而非改計算核心。</p>'+
-          '<div style="font-size:.82em;color:#667983;margin-top:18px;padding-top:10px;border-top:1px dashed #b8c4cc;">版本：v72.7｜第一、二層導覽永久固定：2026-08-11</div></div>';
+          '<div style="font-size:.82em;color:#667983;margin-top:18px;padding-top:10px;border-top:1px dashed #b8c4cc;">版本：v72.8｜輸入重排、8階支撐、重量公式、千斤頂表與模式必選：2026-08-11</div></div>';
     }
 
     function openPage(main,sub,scroll=true){
@@ -9638,6 +9679,26 @@ window.onload = function() { init3D(); applyPileTypeMode(); drawSheetSpecChart()
         if(scroll) window.scrollTo({top:0,behavior:'smooth'});
     }
     window.v72OpenPage=openPage;
+
+    function showPileModeStartupModal(){
+        if(q('v728ModeModal')) return;
+        const overlay=document.createElement('div'); overlay.id='v728ModeModal';
+        overlay.setAttribute('role','dialog'); overlay.setAttribute('aria-modal','true');
+        overlay.innerHTML='<div class="v728-modal-card"><h2>請先選擇擋土型式</h2>'+ 
+            '<p>本系統的輸入欄位、圖面、計算與檢核會依擋土型式切換。請先選擇本案採用的模式，再開始作業。</p>'+ 
+            '<div class="v728-mode-actions"><button type="button" data-mode="hbeam">H鋼+木襯板</button><button type="button" data-mode="sheet">鋼板樁</button></div>'+ 
+            '<div class="v728-required">※ 必須選擇其中一種模式後才能關閉此視窗。</div></div>';
+        document.body.appendChild(overlay);
+        document.body.style.overflow='hidden';
+        all('button[data-mode]',overlay).forEach(btn=>btn.addEventListener('click',function(){
+            const sel=q('pileType');
+            if(sel){ sel.value=this.dataset.mode; sel.dispatchEvent(new Event('change',{bubbles:true})); }
+            all('input[name="v72PileMode"]').forEach(r=>r.checked=(r.value===this.dataset.mode));
+            overlay.remove(); document.body.style.overflow='';
+            currentMain='B'; currentSub='01'; renderSecondary(); openPage('B','01',false);
+        }));
+        const first=overlay.querySelector('button[data-mode]'); if(first) first.focus();
+    }
 
     function enhanceTourFocusCompatibility(){
         // 舊導覽仍可呼叫 focusBlock；若目標被新版分頁隱藏，先切到對應主功能。
@@ -9663,7 +9724,7 @@ window.onload = function() { init3D(); applyPileTypeMode(); drawSheetSpecChart()
         enhanceTourFocusCompatibility();
         let start=['B','01'];
         try{const p=(localStorage.getItem('v72:lastPage')||'').match(/^([A-G])-(\d{2})$/); if(p&&NAV[p[1]].pages.some(x=>x[0]===p[2])) start=[p[1],p[2]];}catch(e){}
-        currentMain=start[0]; currentSub=start[1]; renderSecondary(); openPage(currentMain,currentSub,false);
+        currentMain=start[0]; currentSub=start[1]; renderSecondary(); openPage(currentMain,currentSub,false); setTimeout(showPileModeStartupModal,0);
     }
     if(document.readyState==='loading') window.addEventListener('DOMContentLoaded',()=>setTimeout(init,80)); else setTimeout(init,80);
 })();
