@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <!-- ============================================================================
-  H型鋼擋土支撐計算及繪圖器 — 程式區段目錄 (供日後人工或AI修改時快速定位)
+  擋土排樁繪算器 v72 — 程式區段目錄 (供日後人工或AI修改時快速定位)
   ※ 行號會隨修改漂移，請改用下列「搜尋關鍵字」定位各區段：
   ----------------------------------------------------------------------------
   【CSS樣式】          搜尋: <style>            版面/響應式/自動計算底色/安全檢核逐步樣式(.sc-step)
@@ -13,7 +13,7 @@
   【HTML-匯出存檔區】  搜尋: blockExport         Excel/Word/PDF/JSON/一鍵匯出
   【HTML-相關知識】    搜尋: blockBasicKnowledge
   【HTML-安全檢核區】  搜尋: blockSafetyCheck    SC-x地質參數輸入與逐步檢核結果
-  【HTML-作者附註區】  搜尋: blockAuthor
+  【HTML-作者附註區】  v72 已移除顯示，啟動時刪除 blockAuthor 相容舊碼
   【JS-共用工具】      搜尋: function parseHBeamSpec / drawDimensionLine / drawLabelPoint / downloadBlob / deliverFile
   【JS-匯出功能】      搜尋: window.exportExcel / exportCalcDetailWord / exportSummaryWord / exportSafetyReportWord /
                               exportCanvasAsJPG / exportCanvasAsPDF_A3 / exportPlanAsDXF / exportSectionAsDXF /
@@ -30,10 +30,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- 【v56】LINE/社群連結預覽說明：分享連結時卡片會顯示此段文字 -->
     <meta name="description" content="LINE 裡點選後如看不到平面圖及 3D，請重新整理畫面或改用其他瀏覽器打開。">
-    <meta property="og:title" content="擋土排樁自動繪算器｜擋土支撐數量、預力計算及 2D、3D 自動繪圖器">
+    <meta property="og:title" content="擋土排樁繪算器">
     <meta property="og:description" content="LINE 裡點選後如看不到平面圖及 3D，請重新整理畫面或改用其他瀏覽器打開。">
     <meta property="og:type" content="website">
-    <title>擋土支撐數量、預力計算及2D、3D自動繪圖器(免責聲明：輸出結果請自行驗證)</title>
+    <title>擋土排樁繪算器</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
@@ -490,19 +490,18 @@
                blockArchDoc(程式架構與功能總說明)移至 blockAuthor(作者附註)前一個。
                ★未指定 order 的 flex 子項預設為 0 會被擠到最前面，故務必列全。 */
             #blockTitle          { order:  0; }
-#blockTour           { order:  1; }
-#blockQuickInput     { order:  2; }
-#blockDraw           { order:  3; }
-#blockDetailParam    { order:  4; }
-#blockCalcDetail     { order:  5; }
-#blockSummary        { order:  6; }
-#blockExport         { order:  7; }
-#blockBasicKnowledge { order:  8; }
-#blockSafetyCheck    { order:  9; }
-#blockArchDoc        { order: 10; }  /* 程式架構與功能總說明 */
-#blockGeomCheck      { order: 11; }  /* 元件合理性與碰撞檢查彙整表 (倒數第二個) */
-#blockAuthor         { order: 12; }  /* 作者附註區 (最後一個區塊) */
-.copyright-banner    { order: 13; }  /* 版權宣誓橫幅 */
+            #blockTour           { order:  1; }
+            #blockQuickInput     { order:  2; }
+            #blockDraw           { order:  3; }
+            #blockDetailParam    { order:  4; }
+            #blockCalcDetail     { order:  5; }
+            #blockSummary        { order:  6; }
+            #blockExport         { order:  7; }
+            #blockBasicKnowledge { order:  8; }
+            #blockSafetyCheck    { order:  9; }
+            #blockArchDoc        { order: 10; }
+            #blockAuthor         { order: 11; }
+            .copyright-banner    { order: 12; }
 
             /* 繪圖區 canvas 一律滿版，根除「被壓成左側窄條、右邊空一片」 */
             #blockDraw canvas:not(#specCanvas):not(#sheetSpecCanvas) {
@@ -532,14 +531,194 @@
             .left-col  { display: flex; flex-direction: column; flex: 1 1 0;   min-width: var(--col-min); }
             .right-col { display: flex; flex-direction: column; flex: 1.4 1 0; min-width: var(--col-min); }
         }
+
+
+        /* ════════════════════════════════════════════════════════════════
+           【v72 三層式工程應用介面】2026-08-11
+           第一層 A~G 主功能 / 第二層子頁 / 第三層單一作業區
+           核心計算函式與既有欄位 ID 保留，僅重構資訊架構與操作介面。
+           ════════════════════════════════════════════════════════════════ */
+        :root {
+            --eng-navy:#17324d;
+            --eng-navy-2:#24465f;
+            --eng-steel:#425b6b;
+            --eng-orange:#f4a300;
+            --eng-yellow:#fff1b8;
+            --eng-auto:#eaf3f8;
+            --eng-line:#c9d3da;
+            --eng-bg:#edf1f3;
+            --eng-paper:#fbfaf6;
+            --eng-text:#20303a;
+            --eng-ok:#2e7d32;
+            --eng-warn:#e18b00;
+            --eng-danger:#c62828;
+            --v72-head-h: 0px;
+        }
+        html { scroll-padding-top: calc(var(--v72-head-h) + 12px); }
+        body.v72-ui {
+            display:block !important; padding:var(--v72-head-h) 0 0 0 !important; margin:0 !important;
+            background:var(--eng-bg) !important; color:var(--eng-text);
+            overflow-x:hidden !important;
+        }
+        #v72AppHeader {
+            /* v72.7：真正固定於視窗頂端，不再依賴 sticky。
+               標題列＋第一層＋第二層三列一體固定，頁面上下捲動時永不消失。 */
+            position:fixed !important; top:0; left:0; right:0; z-index:10000;
+            width:100%; box-sizing:border-box;
+            background:var(--eng-navy); color:#fff; box-shadow:0 3px 12px rgba(0,0,0,.22);
+            border-bottom:3px solid var(--eng-orange);
+        }
+        .v72-brand-row {
+            display:flex; align-items:center; gap:12px; min-height:42px; padding:6px 16px;
+            box-sizing:border-box; border-bottom:1px solid rgba(255,255,255,.14);
+        }
+        .v72-brand-mark { font-weight:800; color:var(--eng-orange); letter-spacing:.06em; }
+        .v72-brand-title { font-size:1.12rem; font-weight:800; letter-spacing:.08em; white-space:nowrap; }
+        .v72-brand-sub { margin-left:auto; font-size:.76rem; color:#c8d5df; white-space:nowrap; }
+        .v72-nav-row { display:flex; flex-wrap:wrap; gap:5px; padding:5px 10px; box-sizing:border-box; }
+        #v72PrimaryNav { background:#1d3d58; border-bottom:1px solid rgba(255,255,255,.12); }
+        #v72SecondaryNav { background:#f4f6f7; border-bottom:1px solid #aebbc4; }
+        .v72-nav-btn {
+            appearance:none; border:1px solid transparent; border-radius:5px; cursor:pointer;
+            font-family:inherit; font-weight:700; line-height:1; white-space:nowrap;
+            transition:background .15s, color .15s, border-color .15s, transform .08s;
+        }
+        .v72-nav-btn:active { transform:translateY(1px); }
+        .v72-primary-btn { padding:9px 14px; background:#284d68; color:#eaf1f6; font-size:.9rem; }
+        .v72-primary-btn:hover { background:#315b78; }
+        .v72-primary-btn.is-active { background:var(--eng-orange); color:#172b3b; border-color:#ffd36a; }
+        .v72-secondary-btn { padding:8px 12px; background:#fff; color:#294254; border-color:#c8d2d9; font-size:.84rem; }
+        .v72-secondary-btn:hover { border-color:#78909c; background:#f9fbfc; }
+        .v72-secondary-btn.is-active { background:var(--eng-navy); color:#fff; border-color:var(--eng-navy); box-shadow:inset 0 -3px 0 var(--eng-orange); }
+        .v72-num { opacity:.65; font-size:.84em; margin-right:5px; font-weight:800; }
+
+        /* 舊雙欄改為單一作業區；內容區預設隱藏，由 v72-show 控制 */
+        body.v72-ui .main-wrapper {
+            display:block !important; width:min(1500px, calc(100% - 24px)) !important; max-width:1500px !important;
+            margin:14px auto 0 !important; padding:0 0 12px !important; box-sizing:border-box;
+        }
+        body.v72-ui .left-col, body.v72-ui .right-col { display:contents !important; }
+        body.v72-ui .content-block { display:none !important; width:100% !important; max-width:none !important; box-sizing:border-box; }
+        body.v72-ui .content-block.v72-show { display:block !important; }
+        body.v72-ui #blockDraw.v72-show { display:flex !important; }
+        body.v72-ui #blockTitle, body.v72-ui #blockQuickInput, body.v72-ui #blockAuthor { display:none !important; }
+        body.v72-ui .theme-title { position:static !important; }
+        body.v72-ui .content-block {
+            background:var(--eng-paper) !important; border:1px solid var(--eng-line) !important;
+            border-top:4px solid var(--eng-navy) !important; border-radius:7px !important;
+            box-shadow:0 2px 8px rgba(28,48,62,.10) !important;
+        }
+        body.v72-ui .content-block .block-heading {
+            color:var(--eng-navy) !important; border-bottom:1px solid #cbd5db !important;
+            font-size:1.2rem !important; margin-bottom:14px !important;
+        }
+        body.v72-ui .sub-group-title {
+            color:var(--eng-navy) !important; border-left-color:var(--eng-orange) !important;
+            background:#f1f5f7; padding:8px 10px; border-radius:3px; margin-top:10px !important;
+        }
+        body.v72-ui input[type="number"], body.v72-ui input[type="text"], body.v72-ui select {
+            background:var(--eng-yellow) !important; border:1px solid #d3b85a !important;
+        }
+        body.v72-ui input[readonly], body.v72-ui input:disabled, body.v72-ui select:disabled { background:#e5e9eb !important; }
+        body.v72-ui .depth-total-box, body.v72-ui .min-dig-display { background:var(--eng-auto) !important; }
+        body.v72-ui .clps-hint { display:none !important; }
+        body.v72-ui .copyright-banner {
+            display:block !important; width:100%; box-sizing:border-box; margin:8px auto 0; padding:14px 12px;
+            border-top:1px solid #b8c3ca !important; font-size:.84rem !important; font-weight:500 !important;
+            color:#5d6d77 !important; background:transparent; line-height:1.7; text-align:center;
+        }
+        body.v72-ui .copyright-banner a { color:#315d79; }
+
+        /* B-01 擋土型式：視覺為勾選卡，但底層維持單選，避免兩模式同時成立 */
+        .v72-mode-box { background:#eef3f6; border:1px solid #c4d0d7; border-left:5px solid var(--eng-orange); padding:12px; margin:0 0 16px; border-radius:5px; }
+        .v72-mode-title { font-weight:800; color:var(--eng-navy); margin-bottom:9px; }
+        .v72-mode-options { display:flex; flex-wrap:wrap; gap:9px; }
+        .v72-mode-card { display:flex; align-items:center; gap:7px; min-width:170px; padding:10px 12px; background:#fff; border:2px solid #b7c4cc; border-radius:6px; cursor:pointer; font-weight:700; }
+        .v72-mode-card:has(input:checked) { border-color:var(--eng-orange); background:#fff8df; box-shadow:0 0 0 2px rgba(244,163,0,.15); }
+        .v72-mode-card input { width:18px; height:18px; accent-color:#d89000; }
+        .v72-mode-note { color:#667983; font-size:.78rem; margin-top:7px; }
+
+        /* 編碼 */
+        .v72-field-code { display:inline-block; min-width:72px; margin-right:5px; color:#0d587b; font-weight:800; font-size:.88em; }
+        .v72-item-code { display:inline-block; min-width:70px; margin-right:6px; color:#0d587b; font-weight:800; }
+
+        /* 教學卡 */
+        .v72-tour-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:12px; }
+        .v72-tour-card { border:1px solid #c5d0d8; background:#fff; border-top:4px solid var(--eng-orange); border-radius:6px; padding:14px; }
+        .v72-tour-card h3 { margin:0 0 8px; color:var(--eng-navy); }
+        .v72-action-btn { padding:9px 16px; border:1px solid #274c66; background:var(--eng-navy); color:#fff; border-radius:5px; cursor:pointer; font-weight:700; }
+        .v72-action-btn:hover { background:#254d6b; }
+
+        /* F-01 基本檢核 */
+        #blockBasicCheck .v72-check-summary { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:10px; margin-bottom:12px; }
+        .v72-check-card { padding:12px; background:#fff; border:1px solid #ccd5db; border-left:5px solid var(--eng-ok); border-radius:5px; }
+        .v72-check-card.warn { border-left-color:var(--eng-warn); }
+        .v72-check-card.err { border-left-color:var(--eng-danger); }
+        #v72BasicCheckList { margin:8px 0 0; padding-left:22px; line-height:1.8; }
+
+        /* 分頁過濾器 */
+        .v72-filter-hidden { display:none !important; }
+        body.v72-ui [data-v72-force-open="1"] { display:contents !important; }
+        body.v72-ui #safetyCheckContentWrap[data-v72-force-open="1"] { display:block !important; }
+
+        /* 匯出模式：暫時顯示需要擷取的新版主要區塊，但不再輸出舊快速輸入/舊標題/作者附註 */
+        body.v72-ui.force-mobile-pdf #blockDetailParam,
+        body.v72-ui.force-mobile-pdf #blockCalcDetail,
+        body.v72-ui.force-mobile-pdf #blockDraw,
+        body.v72-ui.force-mobile-pdf #blockSummary,
+        body.v72-ui.force-mobile-pdf #blockExport,
+        body.v72-ui.force-mobile-pdf #blockBasicKnowledge,
+        body.v72-ui.force-mobile-pdf #blockSafetyCheck,
+        body.v72-ui.force-mobile-pdf #blockGeomCheck,
+        body.v72-ui.force-mobile-pdf #blockArchDoc { display:block !important; }
+        body.v72-ui.force-mobile-pdf #blockDraw { display:flex !important; }
+        body.v72-ui.force-mobile-pdf .v72-filter-hidden { display:revert !important; }
+        body.v72-ui.force-mobile-pdf [data-clps-wrap] { display:contents !important; }
+        body.v72-ui.force-mobile-pdf #safetyCheckContentWrap { display:block !important; }
+        body.v72-ui.force-mobile-pdf #blockQuickInput,
+        body.v72-ui.force-mobile-pdf #blockTitle,
+        body.v72-ui.force-mobile-pdf #blockAuthor { display:none !important; }
+
+        @media (max-width: 767.98px) {
+            .v72-brand-row { min-height:38px; padding:5px 9px; }
+            .v72-brand-title { font-size:.98rem; }
+            .v72-brand-sub { display:none; }
+            /* 手機保留單列橫滑；桌機/平板不足寬則自動換行 */
+            #v72PrimaryNav, #v72SecondaryNav {
+                flex-wrap:nowrap !important; overflow-x:auto; overscroll-behavior-x:contain;
+                scrollbar-width:thin; -webkit-overflow-scrolling:touch; padding:5px 7px;
+            }
+            .v72-primary-btn { padding:8px 11px; font-size:.84rem; flex:0 0 auto; }
+            .v72-secondary-btn { padding:8px 10px; font-size:.8rem; flex:0 0 auto; }
+            body.v72-ui .main-wrapper { width:calc(100% - 10px) !important; margin-top:7px !important; }
+            body.v72-ui .content-block { padding:12px !important; }
+            .v72-mode-options { display:grid; grid-template-columns:1fr; }
+            .v72-mode-card { min-width:0; }
+        }
+        @media (min-width:768px) {
+            #v72PrimaryNav, #v72SecondaryNav { overflow:visible !important; }
+        }
+
     </style>
 </head>
 <body>
+
+    <!-- 【v72】固定三級式介面：標題 + 第一層主功能 + 第二層子頁 -->
+    <header id="v72AppHeader" aria-label="擋土排樁繪算器功能導覽">
+        <div class="v72-brand-row">
+            <span class="v72-brand-mark">工</span>
+            <span class="v72-brand-title">擋土排樁繪算器</span>
+            <span class="v72-brand-sub">工程輔助繪圖・計算・檢核</span>
+        </div>
+        <nav id="v72PrimaryNav" class="v72-nav-row" aria-label="第一層主功能"></nav>
+        <nav id="v72SecondaryNav" class="v72-nav-row" aria-label="第二層子功能"></nav>
+    </header>
+
     <div class="main-wrapper">
         
         <div class="left-col">
             <div class="content-block theme-title" id="blockTitle">
-                <h1 style="color: #2c3e50;">擋土排樁自動繪算器(免責聲明：僅供參考)</h1>
+                <h1 style="color: #2c3e50;">擋土排樁繪算器</h1>
             </div>
 
             <div class="content-block" id="blockTour" style="background:linear-gradient(135deg,#0d47a1,#1976d2); border-top:5px solid #ffa726; color:#fff;">
@@ -561,7 +740,7 @@
                 <div class="input-group">
                     <label>A. 垂直排樁型式:</label>
                     <select id="pileType" onchange="applyPileTypeMode(); calc();">
-                        <option value="hbeam" selected>H型鋼樁</option>
+                        <option value="hbeam" selected>H鋼+木襯板</option>
                         <option value="sheet">鋼板樁</option>
                     </select>
                 </div>
@@ -898,6 +1077,7 @@
                     </div>
                     <div class="mini-calc">[外緣寬度 - 2 × 垂直排樁翼板高度H]</div>
                 </div>
+                </div><!-- /hbeamGeomSection：v72.3 B-02 與 B-03 靜態解耦 -->
 
                 <div id="hbeamGeomCalcs">
                 <div class="sub-group-title">▼ H型鋼樁垂直排樁數量</div>
@@ -948,8 +1128,7 @@
                     </div>
                     <div class="mini-calc">[垂直排樁總支數 × 單支樁長]</div>
                 </div>
-                </div>
-                </div>
+                </div><!-- /hbeamGeomCalcs -->
 
                 <div class="sub-group-title">▼ 水平支撐幾何與數量 <span style="font-size:0.7em; color:#888; font-weight:normal;">水平支撐：角撐、斜撐、中間柱、中間水平支撐之H型鋼</span></div>
 
@@ -2041,8 +2220,7 @@
                  3. 修改再製後之檔案仍應保留本宣告與原版權文字。
                  ============================================================ -->
             <div class="copyright-banner">
-                本版權屬陳金賢所有，同意無償供各界使用、修改、再製，使用意見、修改再製後檔案及建議等指教寄spyjamesbond007@gmail.com交流，0929-833339。版本日期：2026年8月2日 (v71)<br>
-                <span style="font-size:0.85em;">※ 修改者宣告：任何修改本檔者(含AI)均同意遵守上述授權條款，並於每次修改時將本「版本日期」自動更新為修改當日。</span>
+                本應用網頁版權屬陳金賢所有，同意無償使用，相關指教請寄<a href="mailto:spyjamesbond007@gmail.com">spyjamesbond007@gmail.com</a>交流，0929-833339。
             </div>
         </div>
     </div>
@@ -8805,79 +8983,87 @@ window.onload = function() { init3D(); applyPileTypeMode(); drawSheetSpecChart()
            皆預設手動翻頁(startManual=true)，使用者按「下一頁/上一頁」控制。
            ══════════════════════════════════════════════════════════════ */
 
-        // ---------- ① 何謂 H 型鋼排樁(概念，15頁；含真實圖面插圖) ----------
+        // ---------- ① H 型鋼排樁：工程概念 + 本系統對照（v72.1 詳細版） ----------
         const TOUR_A = [
-            { t:'🏗 何謂 H 型鋼排樁', d:'開挖深基坑時，四周土壤與地下水會往內崩落、湧入。<br><b>擋土支撐</b>的任務，就是在挖之前先築一道能擋住土與水的臨時牆。<br><br>本篇用約 15 頁，帶你認識最常見的一種：<b>H 型鋼排樁</b>。', dim:0.82, before:function(){ tourSetMode('hbeam'); expandAll(); } },
-            { t:'一、它是什麼', d:'沿著開挖線，把一支支 <b>H 型鋼垂直打入地中</b>，一字排開連成一道牆，就是<b>H 型鋼排樁</b>(又稱兵樁、預壘樁牆的骨架)。<br><br>樁與樁之間，常再插入<b>木襯板</b>擋住細顆粒的土。', dim:0.8 },
-            { t:'二、為什麼是「H」型', d:'H 型鋼斷面像個「工」字：上下兩片<b>翼板(flange)</b>，中間一片<b>腹板(web)</b>。<br><br>這種斷面把材料集中在離中心最遠的地方，<b>抗彎能力極高</b>——正好對付土壓造成的巨大彎矩。', dim:0.8 },
-            { t:'三、翼板高 H 是關鍵尺寸', d:'規格 <b>H350×350×12×19</b> 代表：斷面高 350mm、翼板寬 350mm、腹板厚 12mm、翼板厚 19mm。<br><br>其中<b>斷面高 H</b> 會影響排樁間距、與角撐/橫擋的接合位置，本系統所有幾何都據此換算。', dim:0.72, before:function(){ focusBlock('blockQuickInput'); } },
-            { t:'四、單靠排樁還不夠', d:'一道垂直牆若沒有橫向支撐，會像骨牌一樣被土壓推倒。<br><br>所以要沿樁的內側，加一圈水平的<b>橫擋(圍囹)</b>，把每一支樁<b>綁成整體</b>，讓土壓平均分擔。', dim:0.75 },
-            { t:'五、看平面圖：橫擋成一圈', d:'這是本系統即時畫出的<b>平面圖</b>。<br>最外圈是垂直排樁，往內一圈連續的框就是<b>橫擋(圍囹)</b>——它沿四邊繞行，把所有樁串起來。', dim:0.45, before:function(){ tourSetMode('hbeam'); focusCanvas('layoutCanvas'); } },
-            { t:'六、四個轉角靠角撐', d:'轉角是土壓最集中的地方。<br>在四個角斜放 <b>45° 的角撐</b>(分大、小角撐)，像牆角的三角托架，把兩個方向的推力<b>互相頂住、抵消</b>。', dim:0.45, before:function(){ focusCanvas('layoutCanvas'); } },
-            { t:'七、跨距太大加中間支撐', d:'當基坑很寬，橫擋中段會因無支撐而彎曲。<br>此時在中央加<b>中間水平支撐(井字樑)</b>與<b>中間柱</b>，縮短無支撐跨距，並用<b>斜撐</b>補強井字樑兩端。', dim:0.45, before:function(){ focusCanvas('layoutCanvas'); } },
-            { t:'八、一階一階往下挖', d:'絕不能一次挖到底。每往下挖一層，就<b>架一層水平支撐</b>，<br>形成「<b>挖一層 → 撐一層</b>」的節奏，直到設計深度。最後一層(大底)通常不再設支撐。', dim:0.7 },
-            { t:'九、看立面圖：分層支撐', d:'這是本系統畫的<b>立面圖(A-A′)</b>。<br>可以看到水位線、地面線，以及<b>一層層的水平支撐</b>與各階開挖面高程 E.L.——正是「挖一層撐一層」的側視。', dim:0.42, before:function(){ tourSetMode('hbeam'); focusCanvas('sectionCanvas'); } },
-            { t:'十、預力千斤頂', d:'橫擋與角撐之間放<b>油壓千斤頂</b>，主動施加<b>預力</b>，讓支撐系統「<b>先繃緊</b>」。<br><br>這能大幅減少開挖後土壤的<b>變形位移</b>，保護鄰房與管線。本系統會幫你把設計預力換算成千斤頂錶壓。', dim:0.55, before:function(){ focusBlock('blockDetailParam'); } },
-            { t:'十一、貫入深度與安全', d:'樁不是擋住開挖面就好，還要往開挖面<b>以下繼續插入(貫入)</b>一段，<br>靠被動土壓<b>抵抗踢腳、隆起與湧砂</b>。本系統的安全檢核區會逐項驗算這些破壞模式。', dim:0.5, before:function(){ focusBlock('blockSafetyCheck'); } },
-            { t:'十二、看 3D 立體關係', d:'這是本系統的 <b>3D 模型</b>。<br>排樁、橫擋、角撐、中間柱、千斤頂、木襯板的<b>立體接合關係</b>一目了然，可旋轉、縮放細看。', dim:0.38, before:function(){ tourSetMode('hbeam'); focusCanvas('three-container'); } },
-            { t:'十三、數量怎麼算出來', d:'知道尺寸與規格後，本系統自動算出：<b>排樁支數、橫擋/角撐/斜撐總長、中間柱數量、型鋼總重</b>，<br>以及開挖回填土方、設計預力——全部彙整成表可直接匯出。', dim:0.5, before:function(){ focusBlock('blockSummary'); } },
-            { t:'✅ 小結', d:'<b>H 型鋼排樁 = 垂直排樁牆 + 橫擋 + 角撐 + (中間支撐) + 分層開挖 + 預力。</b><br><br>接著可看第二篇<b>「何謂鋼板樁圍堰」</b>，或直接切到「H型鋼樁」型式開始輸入你的專案。', dim:0.72, before:function(){ tourSetMode('hbeam'); focusBlock('blockQuickInput'); } }
+            { t:'🏗 H 型鋼排樁｜導覽目的', d:'這一篇不是只介紹名詞，而是把 <b>構造 → 受力概念 → 施工順序 → 本系統輸入/圖面/檢核</b> 串在一起。<br><br>完成後，你應能從平面圖、立面圖與 3D 判斷每一種構件的位置與用途。', dim:0.82, before:function(){ tourSetMode('hbeam'); if(window.v72OpenPage)v72OpenPage('A','01',false); } },
+            { t:'1｜H 型鋼排樁是什麼', d:'沿開挖外緣把多支 <b>H 型鋼垂直設置</b>，形成離散排列的擋土骨架；樁間可配置<b>木襯板</b>承接樁間土體。<br><br>本系統把「垂直排樁」視為最外圍構件，再由內側水平支撐把各樁連成整體。', dim:0.78 },
+            { t:'2｜先分清楚：垂直構件與水平構件', d:'<b>垂直構件</b>：H 型鋼排樁、中間柱。<br><b>水平構件</b>：橫擋（圍囹）、小角撐、大角撐、中間水平支撐、斜撐。<br><br>輸入時規格是分開設定的，統計時也會分別計算總長與總重。', dim:0.72, before:function(){ if(window.v72OpenPage)v72OpenPage('B','02',false); } },
+            { t:'3｜讀懂 H350×350×12×19', d:'本工具的 H 型鋼格式採 <b>H高×寬×腹板厚×翼板厚</b>。例如 H350×350×12×19，四個數值會用於斷面判讀、幾何定位與重量比對。<br><br>各構件可以使用不同規格，不必全部相同。', dim:0.72, before:function(){ if(window.v72OpenPage)v72OpenPage('B','02',false); } },
+            { t:'4｜排樁幾何：外緣、內緣與中心線', d:'排樁配置不是只看開挖尺寸。型鋼本身有斷面寬度，因此<b>外緣到外緣、內緣到內緣、中心線</b>會有不同數值。<br><br>本系統以幾何換算把輸入尺寸轉成繪圖與數量計算所需的中心位置。', dim:0.68, before:function(){ if(window.v72OpenPage)v72OpenPage('B','02',false); } },
+            { t:'5｜排樁支數不是直接填死', d:'B-02 後段「排樁數量」依長、短向尺寸與排樁配置條件產生各方向支數、總支數與中心間距等自動結果。<br><br>這些結果應先用 C-01 平面圖核對排列是否符合預期。', dim:0.62, before:function(){ if(window.v72OpenPage)v72OpenPage('B','02',false); } },
+            { t:'6｜橫擋（圍囹）的角色', d:'橫擋沿排樁內側形成封閉框架，把個別排樁承受的側向作用傳遞到角撐、中間支撐等構件。<br><br>在平面圖中，它是貼近外圍排樁內側的一圈主要水平構件。', dim:0.62, before:function(){ if(window.v72OpenPage)v72OpenPage('C','01',false); focusCanvas('layoutCanvas'); } },
+            { t:'7｜小角撐與大角撐', d:'四角以斜向構件縮短橫擋轉角附近的有效跨距。本工具將<b>小角撐、大角撐</b>分開設定規格與幾何，因此圖面與數量統計也分開計算。<br><br>斜邊長還可依不同測量基準換算。', dim:0.58, before:function(){ if(window.v72OpenPage)v72OpenPage('B','04',false); } },
+            { t:'8｜基坑較寬時：中間水平支撐', d:'當單靠四角支撐不足以形成合理配置時，可加入<b>中間水平支撐（井字支撐）</b>，並搭配中間柱與斜撐。<br><br>B-04 可設定幾何與數量，C-01 可立即確認交點與方向。', dim:0.58, before:function(){ if(window.v72OpenPage)v72OpenPage('B','04',false); } },
+            { t:'9｜中間柱是立體系統的垂直支點', d:'中間柱不是外圍擋土樁，而是支撐內部水平構件的垂直構件。其支數會依中間支撐交點配置產生，長度另行設定。<br><br>在 3D 模型中最容易辨識它與水平支撐的關係。', dim:0.55, before:function(){ if(window.v72OpenPage)v72OpenPage('C','04',false); focusCanvas('three-container'); } },
+            { t:'10｜木襯板位在排樁之間', d:'H 型鋼排樁為離散樁，樁間可用木襯板形成擋土面。B-01 後段設定木襯板相關條件，F-03 另有木襯板材料參數供安全檢核使用。', dim:0.58, before:function(){ if(window.v72OpenPage)v72OpenPage('B','01',false); } },
+            { t:'11｜施工節奏：分階開挖、分階支撐', d:'本系統用各階設計深度表示施工階段。<b>大於 0 的最深階</b>決定開挖總階數；水平支撐階數依程式既有邏輯由開挖階數推得。<br><br>B-06「開挖回填」前段負責輸入，C-02/C-03 立面圖負責核對。', dim:0.60, before:function(){ if(window.v72OpenPage)v72OpenPage('B','06',false); } },
+            { t:'12｜從立面圖核對高程', d:'立面圖顯示地面/河床基準、各階開挖面、水平支撐與樁體上下關係。<br><br>不要只看數字；輸入後應切到 C-02 與 C-03，確認兩方向的支撐層位是否一致。', dim:0.50, before:function(){ if(window.v72OpenPage)v72OpenPage('C','02',false); focusCanvas('sectionCanvas'); } },
+            { t:'13｜預力與千斤頂不是同一個數字', d:'B-05 先設定各階<b>設計預力</b>，再依千斤頂型號與內插參考點換算成加壓錶值。<br><br>也就是「設計要求的力」與「現場操作看到的錶壓」分屬兩個層次。', dim:0.55, before:function(){ if(window.v72OpenPage)v72OpenPage('B','05',false); } },
+            { t:'14｜D 計算：看公式，不只是看答案', d:'D-01 顯示 H 型鋼排樁相關計算推演，D-03 顯示共通支撐計算。<br><br>遇到數量或長度與預期不同時，先看 D 區的公式與中間值，比只看 E 統計更容易找到原因。', dim:0.55, before:function(){ if(window.v72OpenPage)v72OpenPage('D','01',false); } },
+            { t:'15｜E 統計：把工程結果收斂成表', d:'E 區將結果分為工程摘要、幾何配置、開挖高程、預力、鋼材數量與附屬材料。<br><br>這裡適合核對「最後要帶走的數量」，但若發現異常仍應回 D 與 B 追查。', dim:0.55, before:function(){ if(window.v72OpenPage)v72OpenPage('E','05',false); } },
+            { t:'16｜F-02 幾何碰撞先於安全檢核', d:'構件規格與幾何都可能造成互相侵入、間距不合理或配置衝突。<br><br>因此完成圖面後，先看 F-02 幾何碰撞，再進入 F-03 的結構/地工安全檢核，兩者不能互相取代。', dim:0.55, before:function(){ if(window.v72OpenPage)v72OpenPage('F','02',false); } },
+            { t:'17｜F-03 安全檢核看「逐步判定」', d:'安全檢核採既有 Peck 表觀土壓力包絡線與容許應力法流程，畫面會列出<b>採用公式 → 代入數值 → 計算結果 → 判定</b>。<br><br>若出現紅色不通過，不應只改到變綠，而要確認輸入與設計假設是否合理。', dim:0.50, before:function(){ if(window.v72OpenPage)v72OpenPage('F','03',false); } },
+            { t:'18｜H 型鋼排樁完整工作鏈', d:'建議工作順序：<b>B-01 選型式 → B-01~B-06 輸入 → C 圖面核對 → D 追算 → E 數量 → F 幾何/安全 → G 匯出</b>。<br><br>這樣可避免只輸入數字就直接匯出，而漏掉圖面與檢核層。', dim:0.70, before:function(){ if(window.v72OpenPage)v72OpenPage('B','01',false); } }
         ];
 
-        // ---------- ② 何謂鋼板樁圍堰(概念，15頁；含真實圖面插圖) ----------
+        // ---------- ② 鋼板樁圍堰：工程概念 + 本系統對照（v72.1 詳細版） ----------
         const TOUR_B = [
-            { t:'🌊 何謂鋼板樁圍堰', d:'在河中、海邊或地下水位很高的地方施工，光擋土還不夠，更要<b>擋水</b>。<br><br>本篇用約 15 頁，帶你認識<b>鋼板樁圍堰</b>——一種能圍出乾燥工作空間的臨時擋水擋土結構。', dim:0.82, before:function(){ tourSetMode('sheet'); expandAll(); } },
-            { t:'一、什麼是圍堰', d:'<b>圍堰(Cofferdam)</b>是一道臨時的圍牆：先把要施工的區域圈起來，<br>再<b>把裡面的水抽乾</b>，就能在水域中央做出一塊乾的工作面，用來蓋橋墩基礎等結構。', dim:0.8 },
-            { t:'二、為什麼用鋼板樁', d:'鋼板樁一片片<b>互相咬合</b>，能連成<b>連續、可止水</b>的鋼牆，打設快、可回收再利用，<br>是築圍堰最常用的材料，因此稱為<b>鋼板樁圍堰</b>。', dim:0.8 },
-            { t:'三、鋼板樁長什麼樣', d:'鋼板樁斷面呈<b>波浪(梯形/U/Z)形</b>，兩側帶有<b>鎖扣(interlock)</b>。<br><br>波形讓它<b>斷面慣性大、抗彎強</b>；鎖扣讓片與片咬合止水。本系統以 <b>SP-Ⅲ</b> 等 JIS 規格計算。', dim:0.72 },
-            { t:'四、看平面圖：連續波形牆', d:'這是本系統即時畫出的鋼板樁<b>平面圖</b>。<br>注意外圍那圈<b>鋸齒狀波形</b>——那就是一片片鋼板樁咬合而成的連續牆，與 H 型鋼「一支一支分開」明顯不同。', dim:0.45, before:function(){ tourSetMode('sheet'); focusCanvas('layoutCanvas'); } },
-            { t:'五、為什麼要「雙層」', d:'水壓比土壓更難纏，且無所不在。<br><b>雙層鋼板樁</b>做<b>內、外兩道牆</b>，中間再回填材料，形成一堵又厚又重的牆體，<br>靠<b>自身重量與寬度</b>抵抗水壓推力與傾覆。', dim:0.75 },
-            { t:'六、內填材料的角色', d:'內外牆之間填滿<b>砂石或 CLSM(控制性低強度回填材料)</b>，<br>讓整道圍堰像一堵<b>重力式擋牆</b>：越重越寬，越不容易被水推動或掀翻。', dim:0.6, before:function(){ focusBlock('blockDetailParam'); } },
-            { t:'七、看 3D：內填填滿牆體', d:'這是本系統的 <b>3D 模型</b>。<br>可以看到內、外兩道波形鋼板樁牆，以及中間<b>被內填材料完全填滿</b>的牆體——這正是雙層圍堰的重量來源。', dim:0.38, before:function(){ tourSetMode('sheet'); focusCanvas('three-container'); } },
-            { t:'八、外緣、內緣與間距', d:'雙層牆有<b>外層外緣寬</b>、<b>內層外緣寬</b>，兩者之差的一半就是<b>內外層間距</b>(牆體厚度的一部分)。<br><br>本系統會依你輸入的內外緣尺寸，自動算出間距與內填體積。', dim:0.5, before:function(){ focusBlock('blockQuickInput'); } },
-            { t:'九、看立面圖：水位與貫入', d:'這是本系統畫的<b>立面圖</b>。<br>可看到<b>最高潮位線、現地高程、樁底高程</b>，以及鋼板樁往河床面以下的<b>貫入深度</b>——止水與抗隆起都靠它。', dim:0.42, before:function(){ tourSetMode('sheet'); focusCanvas('sectionCanvas'); } },
-            { t:'十、圍堰內也要支撐', d:'把水圍住、抽乾後，圍堰內壁同樣承受土壓與殘餘水壓。<br>因此內部一樣要架<b>橫擋、角撐、中間水平支撐</b>維持形狀——這套支撐邏輯與 H 型鋼排樁<b>完全相通</b>。', dim:0.45, before:function(){ focusCanvas('layoutCanvas'); } },
-            { t:'十一、抽水與滲流', d:'圍堰圍起後要<b>抽水</b>，水會沿鋼板樁底部<b>繞流(滲流)</b>進來。<br>貫入深度不足會發生<b>管湧/砂沸</b>，因此止水長度與貫入深度是圍堰安全的關鍵，本系統會協助檢核。', dim:0.5, before:function(){ focusBlock('blockSafetyCheck'); } },
-            { t:'十二、分階開挖', d:'和 H 型鋼一樣，圍堰內也是<b>挖一層、撐一層</b>往下，<br>每階都有對應的開挖面高程與水平支撐，直到基礎底。', dim:0.5, before:function(){ focusCanvas('sectionCanvas'); } },
-            { t:'十三、數量與材料', d:'本系統依尺寸自動算出：<b>鋼板樁支數(內/外層)、周長、內填體積、繫材鋼棒數量</b>，<br>以及各支撐構件長度與型鋼總重，彙整成可匯出的數量表。', dim:0.5, before:function(){ focusBlock('blockSummary'); } },
-            { t:'十四、兩種型式的差別', d:'<b>H 型鋼排樁</b>：一支支分離、以木襯板擋土，主要<b>擋土</b>。<br><b>鋼板樁圍堰</b>：連續咬合牆、可雙層內填，兼具<b>擋土與止水</b>，用於水域。<br><br>本系統兩種一鍵切換、共用支撐計算。', dim:0.65 },
-            { t:'✅ 小結', d:'<b>鋼板樁圍堰 = 連續止水鋼牆 + (雙層內填成重力牆) + 內部支撐 + 抽水分階開挖。</b><br><br>可回看第一篇<b>「何謂 H 型鋼排樁」</b>，或切到「鋼板樁」型式開始輸入你的專案。', dim:0.72, before:function(){ tourSetMode('sheet'); focusBlock('blockQuickInput'); } }
+            { t:'🌊 鋼板樁圍堰｜導覽目的', d:'這一篇聚焦本工具的<b>雙層鋼板樁圍堰</b>模式：鋼板樁連續牆、內外層幾何、牆間填充、內部水平支撐、分階開挖、止水/滲流相關檢核。', dim:0.82, before:function(){ tourSetMode('sheet'); if(window.v72OpenPage)v72OpenPage('A','02',false); } },
+            { t:'1｜鋼板樁與 H 型鋼排樁的核心差別', d:'H 型鋼排樁是<b>離散的垂直型鋼</b>；鋼板樁則由一片片板樁透過鎖扣連成<b>連續牆</b>。<br><br>因此鋼板樁模式除了擋土，也特別重視圍堰、水位、貫入與內外層幾何。', dim:0.76 },
+            { t:'2｜本工具採雙層圍堰幾何', d:'B-03 的板樁設定包含外層、內層及其尺寸關係；不是只輸入一圈周長。<br><br>雙層幾何會進一步影響板樁支數、牆間體積、2D/3D 與統計。', dim:0.68, before:function(){ if(window.v72OpenPage)v72OpenPage('B','03',false); } },
+            { t:'3｜鋼板樁規格', d:'系統保留常用鋼板樁規格資料並依輸入進行幾何與數量換算。<br><br>規格與 H 型鋼是兩套不同資料，不要把 H350×350 類型鋼格式填到鋼板樁規格欄位。', dim:0.64, before:function(){ if(window.v72OpenPage)v72OpenPage('B','03',false); } },
+            { t:'4｜外層外緣與內層外緣', d:'雙層圍堰至少要分清楚<b>外層外緣尺寸</b>與<b>內層外緣尺寸</b>。若使用固定間距邏輯，系統會依外層尺寸與間距推算相應幾何。<br><br>輸入後先用平面圖核對兩圈是否同心且方向正確。', dim:0.62, before:function(){ if(window.v72OpenPage)v72OpenPage('C','01',false); focusCanvas('layoutCanvas'); } },
+            { t:'5｜固定間距與牆體厚度概念', d:'內外層之間的距離決定雙層牆體的空間厚度。原程式對固定間距設有輸入警示與自動換算邏輯；若採 0，表示不使用固定間距推算。', dim:0.62, before:function(){ if(window.v72OpenPage)v72OpenPage('B','03',false); } },
+            { t:'6｜牆間填充是數量的一部分', d:'雙層鋼板樁之間可形成填充區；系統會依幾何計算相應體積並納入統計。<br><br>因此修改內外層尺寸時，不只是圖形變化，材料/土方數量也會跟著變。', dim:0.58, before:function(){ if(window.v72OpenPage)v72OpenPage('E','06',false); } },
+            { t:'7｜平面圖先看兩圈板樁與內支撐', d:'C-01 平面圖是檢查鋼板樁模式最重要的第一張圖：先確認內外層牆，再確認橫擋、角撐、中間支撐是否落在正確位置。', dim:0.52, before:function(){ if(window.v72OpenPage)v72OpenPage('C','01',false); focusCanvas('layoutCanvas'); } },
+            { t:'8｜鋼板樁模式也共用水平支撐', d:'板樁牆是外圍擋土/止水構件，但圍堰內部仍使用橫擋、角撐、中間水平支撐、斜撐與中間柱等支撐系統。<br><br>所以 B-04 與 D-03 是兩種模式共同的重要頁面。', dim:0.58, before:function(){ if(window.v72OpenPage)v72OpenPage('B','04',false); } },
+            { t:'9｜最高水位與現地/河床高程', d:'鋼板樁圍堰特別需要正確輸入水位與現地高程。這些基準會進入立面圖與安全檢核，並決定你看到的水位線、開挖面與樁底相對位置。', dim:0.56, before:function(){ if(window.v72OpenPage)v72OpenPage('B','06',false); } },
+            { t:'10｜立面圖看貫入與分階支撐', d:'C-02/C-03 顯示兩方向立面。核對重點包括：樁頂、現地/河床面、最高水位、各階支撐、各階開挖面與樁底。<br><br>任何一條高程線不合理，都應先回 B 區修正。', dim:0.50, before:function(){ if(window.v72OpenPage)v72OpenPage('C','02',false); focusCanvas('sectionCanvas'); } },
+            { t:'11｜貫入深度不是「樁長減開挖深」這麼簡單看完就算', d:'畫面會呈現樁體深入開挖底以下的區段；真正安全判斷仍應進 F-03，因為程式還會結合地質、水文與既有安全檢核步驟判定。', dim:0.55, before:function(){ if(window.v72OpenPage)v72OpenPage('F','03',false); } },
+            { t:'12｜抽水後的水文風險', d:'圍堰內抽水使內外水位形成差異，安全檢核中因此包含與<b>湧砂/滲流</b>相關的判定。<br><br>這也是鋼板樁模式不能只做幾何繪圖、卻忽略 F-03 的原因。', dim:0.55, before:function(){ if(window.v72OpenPage)v72OpenPage('F','03',false); } },
+            { t:'13｜分階開挖仍遵循「先輸入階段，再核對立面」', d:'B-06「開挖回填」前段設定各階設計深度，系統依有效階數建立水平支撐層位。<br><br>鋼板樁與 H 型鋼在這部分共用同一套階段邏輯，因此改階數會同時影響支撐、圖面與統計。', dim:0.58, before:function(){ if(window.v72OpenPage)v72OpenPage('B','06',false); } },
+            { t:'14｜預力與千斤頂同樣適用', d:'鋼板樁模式內部支撐也可依 B-05 設計預力與千斤頂資料進行換算。<br><br>若不同階使用不同預力，應逐階核對，不要只看單一總值。', dim:0.56, before:function(){ if(window.v72OpenPage)v72OpenPage('B','05',false); } },
+            { t:'15｜D-02 與 D-03 的分工', d:'D-02 專門呈現鋼板樁圍堰計算；D-03 則是兩模式共用的支撐/數量等計算。<br><br>所以鋼板樁專案至少應檢查這兩頁，而不是只看 D-02。', dim:0.55, before:function(){ if(window.v72OpenPage)v72OpenPage('D','02',false); } },
+            { t:'16｜3D 用來抓「層與層」的關係', d:'C-04 可旋轉觀察內外兩層鋼板樁、水平支撐、中間柱及其他構件的立體位置。<br><br>平面圖看得懂配置，3D 則更適合檢查上下層與內外層的空間關係。', dim:0.48, before:function(){ if(window.v72OpenPage)v72OpenPage('C','04',false); focusCanvas('three-container'); } },
+            { t:'17｜先 F-02 幾何碰撞，再 F-03 安全', d:'板樁雙層幾何比 H 型鋼模式多一層內外牆關係，幾何錯誤更可能連鎖影響支撐位置。<br><br>因此圖面完成後先看 F-02，再看 F-03 的地工/結構安全判定。', dim:0.54, before:function(){ if(window.v72OpenPage)v72OpenPage('F','02',false); } },
+            { t:'18｜鋼板樁模式完整工作鏈', d:'建議順序：<b>B-01 切鋼板樁 → B-03 板樁設定 → B-04 水平支撐 → B-05 預力加壓 → B-06 開挖回填 → C 圖面 → D-02/D-03 → E 統計 → F 檢核 → G 匯出</b>。<br><br>每次改內外層幾何後，都建議重新看平面圖與數量。', dim:0.70, before:function(){ if(window.v72OpenPage)v72OpenPage('B','03',false); } }
         ];
 
-        // ---------- ③ 如何使用本系統(操作教學) ----------
+        // ---------- ③ 新版操作教學：完全依 A～G / 第二層分頁（v72.1） ----------
         const TOUR_C = [
-            { t:'📖 如何使用本系統', d:'這套工具的用法可濃縮成一句話：<br><b>「填主要參數 → 看圖與數量 → 檢核 → 匯出」。</b><br><br>本篇約 30 頁，逐區帶你完整操作一遍，可自行按「下一頁 ▶」前進、隨時 Esc 結束。', dim:0.82, before:function(){ tourSetMode('hbeam'); expandAll(); } },
-            { t:'導覽總覽', d:'頁面由上而下分為：<b>主要參數快速輸入 → 詳細參數輸入 → 安全檢核 → 計算推演 → 自動繪圖 → 統計彙整 → 匯出</b>。<br>本篇會依這個順序走一遍。', dim:0.6, before:function(){ expandAll(); } },
-            { t:'兩種擋土型式', d:'本系統支援兩種：<b>H型鋼樁</b>(一支支排樁+木襯板，主要擋土) 與 <b>鋼板樁</b>(連續咬合牆、可雙層內填，兼擋土止水)。<br>先在 A 欄選定，全系統會據此切換適用欄位。', dim:0.55, before:function(){ focusBlock('blockQuickInput'); } },
-            { t:'第1步　選擇擋土型式', d:'主要參數快速輸入區 <b>A. 排樁型式</b> 選 <b>H型鋼樁</b> 或 <b>鋼板樁</b>。<br>不適用的欄位會自動<b>反灰鎖定</b>，避免填錯。', dim:0.5, before:function(){ focusBlock('blockQuickInput'); } },
-            { t:'第2步　外緣寬度 B/C', d:'<b>B</b> 填 H 型鋼排樁外緣寬度、<b>C</b> 填鋼板樁外層外緣寬度(依型式)。<br>方向1/方向2 分別輸入，對應長向與短向。', dim:0.5, before:function(){ focusBlock('blockQuickInput'); } },
-            { t:'第3步　間距與內緣 D/E', d:'<b>D</b> 內外層固定間距(鋼板樁)、<b>E</b> 內層外緣寬度。<br>輸入 0 表示無固定間距，系統會自動由外緣推算。', dim:0.5, before:function(){ focusBlock('blockQuickInput'); } },
-            { t:'第4步　各階開挖深度 F', d:'<b>F</b> 填各階開挖深度。<br>重點：<b>沒有「開挖階數」欄位</b>——系統依 F 項<b>大於0的最深階自動判定</b>階數，填幾階就算幾階。', dim:0.5, before:function(){ focusBlock('blockQuickInput'); } },
-            { t:'第5步　高程 G/H/I', d:'<b>G</b> 樁頂高程、<b>H</b> 最高潮位(鋼板樁)、<b>I</b> 河床面高程。<br>決定立面圖的水位線、地面線與各階開挖面 E.L. 標高。', dim:0.5, before:function(){ focusBlock('blockQuickInput'); } },
-            { t:'快速區與詳細區連動', d:'主要參數快速輸入區只是<b>常用欄位的捷徑</b>，它與<b>詳細參數輸入區</b>雙向連動：<br>改任一邊，另一邊即時同步，不會各算各的。', dim:0.55, before:function(){ focusBlock('blockDetailParam'); } },
-            { t:'詳細區 1：基本資料', d:'詳細參數輸入區<b>基本資料</b>：工程名稱、開挖區代號、承包商、監造單位等。<br>這些會出現在匯出的報表抬頭與統計彙整區。', dim:0.5, before:function(){ focusBlock('blockDetailParam'); } },
-            { t:'詳細區 2：型鋼規格', d:'<b>2-1~2-9</b> 設定各構件型鋼規格(垂直排樁、橫擋、大小角撐、井字樑、斜撐、中間柱)。<br>可下拉選 JIS 常用規格，或自行輸入 H高x寬x腹板厚x翼板厚。', dim:0.5, before:function(){ focusBlock('blockDetailParam'); } },
-            { t:'詳細區 2-10：型鋼單位重', d:'<b>2-10</b> 型鋼單位長重量表(5組)：前兩組已預設常用值，其餘自填。<br>各構件會依所選型號<b>自動比對此表</b>取單位重，算出總重量。', dim:0.5, before:function(){ focusBlock('blockDetailParam'); } },
-            { t:'詳細區 3：排樁與翼板', d:'<b>3-x</b> 設定垂直排樁規格與長度。<br>排樁的腹板垂直牆面、翼板貼土，系統依此排列並算出各方向支數與中心間距。', dim:0.5, before:function(){ focusBlock('blockDetailParam'); } },
-            { t:'詳細區 4：角撐與斜撐', d:'<b>4-1/4-2</b> 小/大角撐垂直邊長、<b>4-5</b> 斜撐垂直邊長。<br>每欄旁都有<b>斜邊長欄</b>，兩者<b>雙向連動</b>(斜邊=垂直邊×√2)，改哪個另一個自動換算。', dim:0.5, before:function(){ focusBlock('blockDetailParam'); } },
-            { t:'角撐/斜撐測量基準', d:'角撐、斜撐的斜邊長可選以<b>型鋼中心／較長側邊／較短側邊</b>為量測基準。<br>欄位下方有圖說解釋三者差異，選錯會影響碰撞檢核。', dim:0.5, before:function(){ focusBlock('blockDetailParam'); } },
-            { t:'詳細區 5：開挖深度細節', d:'<b>5-x</b> 逐階設計深度與相關參數，對應立面圖各階開挖面。<br>與快速區 F 欄連動。', dim:0.5, before:function(){ focusBlock('blockDetailParam'); } },
-            { t:'詳細區 6：預力與千斤頂', d:'設定各階設計預力，系統會換算成<b>油壓千斤頂錶壓</b>。<br>可選千斤頂型號，並自動配置保護匣、大角撐千斤頂。', dim:0.5, before:function(){ focusBlock('blockDetailParam'); } },
-            { t:'詳細區 7：土方與附屬', d:'木襯板厚度、土方開挖回填、其他附屬材料。<br>影響統計彙整區的土方量與附屬材料清單。', dim:0.5, before:function(){ focusBlock('blockDetailParam'); } },
-            { t:'第6步　安全檢核', d:'<b>安全檢核區</b>用 Peck 土壓包絡線與容許應力法逐項檢核。<br><b>紅字</b>=不通過，會指出哪一步、差多少，據此回頭修正。', dim:0.5, before:function(){ focusBlock('blockSafetyCheck'); } },
-            { t:'檢核項目說明', d:'檢核涵蓋<b>型鋼應力、貫入深度、踢腳、隆起、湧砂</b>等。<br>每項都列出計算值與容許值的比較，方便寫進計算書。', dim:0.5, before:function(){ focusBlock('blockSafetyCheck'); } },
-            { t:'第7步　計算推演', d:'<b>計算推演區</b>把每條算式攤開，分「鋼板樁部分／H型鋼樁部分／共同部分」。<br>可收合、可直接複製貼進計算書。', dim:0.5, before:function(){ focusBlock('blockCalcDetail'); } },
-            { t:'讀懂總長與總重', d:'計算推演區會列出<b>橫擋/角撐/斜撐/井字樑/中間柱</b>的總長度，<br>並依 2-10 單位重表算出各項<b>總重量(T)</b>，附在長度後方。', dim:0.5, before:function(){ focusBlock('blockCalcDetail'); } },
-            { t:'第8步　看平面圖', d:'<b>自動繪圖區</b>即時產生平面圖：排樁、橫擋、角撐、斜撐、井字樑、中間柱、木襯板一應俱全。<br>尺寸標註含淡灰虛線延伸線，看得出標在哪。', dim:0.45, before:function(){ tourSetMode('hbeam'); focusCanvas('layoutCanvas'); } },
-            { t:'第9步　看立面圖', d:'<b>立面圖 A-A′/B-B′</b> 呈現水位線、地面線、各階水平支撐與開挖面 E.L.。<br>是「挖一層撐一層」的側視。', dim:0.42, before:function(){ focusCanvas('sectionCanvas'); } },
-            { t:'第10步　看 3D 模型', d:'<b>3D 模型</b>呈現所有構件的立體接合關係，可旋轉、平移、縮放。<br>操作鍵在畫面下方(手機可收合)，也可雙指直接操作。', dim:0.38, before:function(){ focusCanvas('three-container'); } },
-            { t:'元件與標註開關', d:'繪圖區可<b>獨立開關</b>每個元件與名稱標註(井字排列的勾選清單)。<br>想單看某構件、或關掉雜訊標註都行。', dim:0.45, before:function(){ focusBlock('blockDraw'); } },
-            { t:'第11步　施工流程動畫', d:'3D 可播放<b>施工流程動畫</b>，逐步演示基坑如何一層層蓋起來。<br>可暫停、上一步/下一步、調速，適合簡報說明。', dim:0.4, before:function(){ focusCanvas('three-container'); } },
-            { t:'第12步　統計彙整', d:'<b>統計資料彙整區</b>收成六大分類：基本資料、幾何與排樁配置、開挖高程、設計預力、型鋼數量與重量、附屬材料。', dim:0.5, before:function(){ focusBlock('blockSummary'); } },
-            { t:'第13步　匯出帶走', d:'<b>匯出與存檔區</b>可輸出 Excel、Word、JPG／A3 PDF、DXF(CAD)、JSON，或<b>一鍵打包 ZIP</b>。<br>匯出前系統自動展開所有區塊，不會拍到空白。', dim:0.5, before:function(){ focusBlock('blockExport'); } },
-            { t:'存檔與載入', d:'可將所有輸入<b>存成 JSON 檔</b>，下次載入即還原整個專案。<br>方便多個開挖區切換、或交接給同事續做。', dim:0.5, before:function(){ focusBlock('blockExport'); } },
-            { t:'手機與 LINE 使用', d:'手機版版面自動單欄、3D 操作鍵可收合。<br>若在 LINE 內開啟看不到圖，請<b>重新整理或改用瀏覽器</b>(系統會自動提示)。', dim:0.55, before:function(){ expandAll(); } },
-            { t:'✅ 開始使用', d:'就這樣！<b>填參數 → 看圖與數量 → 檢核 → 匯出</b>。<br><br><span style="color:#90caf9;">提示：任何區塊點標題可收合；隨時可回頁面最上方重看這三段介紹。</span>', dim:0.75, before:function(){ tourSetMode('hbeam'); focusBlock('blockQuickInput'); } }
+            { t:'📖 操作教學｜先認識新版畫面', d:'新版不是長頁面往下找，而是<b>第一層 A～G → 第二層子頁 → 第三層單一作業區</b>。<br><br>第一層與第二層固定在頂端；桌機不足寬會換行，手機可橫向滑動。', dim:0.82, before:function(){ if(window.v72OpenPage)v72OpenPage('A','03',false); } },
+            { t:'0-1｜A～G 的工作順序', d:'建議實際使用順序：<b>B 輸入 → C 繪圖 → D 計算 → E 統計 → F 檢核 → G 匯出</b>。<br>A 教學是輔助區，可隨時回來查觀念、操作與程式架構。', dim:0.72 },
+            { t:'0-2｜第二層頁籤的原則', d:'第二層每個頁籤現在是<b>獨立作業頁</b>；切換後只顯示該頁內容，不應再同時看到其他第二層頁面的表單。<br><br>這樣可把大量參數拆成可管理的工程工作包。', dim:0.70 },
+            { t:'B-01｜基本設定', d:'第一件事先選 <b>H鋼+木襯板 / 鋼板樁</b>。新版用勾選卡外觀，但底層為單選邏輯。<br><br>本頁先填工程名稱、工區、承包商、監造、主辦機關/單位與河川名稱等基本資料；後段再集中木襯板與三角拖架設定。', dim:0.58, before:function(){ if(window.v72OpenPage)v72OpenPage('B','01',false); } },
+            { t:'B-02｜H鋼設定', d:'先設定垂直排樁及水平支撐等 H 鋼規格，再輸入 H 鋼排樁開挖幾何；<b>排樁支數、中心間距、總支數與總長度已併在本頁後段</b>，不用再切到另一頁。<br><br>鋼板樁模式仍可使用共用的水平支撐 H 鋼規格，但 H 鋼排樁幾何/數量會自動隱藏。', dim:0.56, before:function(){ tourSetMode('hbeam'); if(window.v72OpenPage)v72OpenPage('B','02',false); } },
+            { t:'B-03｜板樁設定', d:'鋼板樁模式在此處理板樁規格、外層/內層幾何、雙層圍堰尺寸關係及相關數量。<br><br>若目前是 H鋼+木襯板 模式，本頁會顯示不適用說明，而不再留下空白頁。', dim:0.55, before:function(){ tourSetMode('sheet'); if(window.v72OpenPage)v72OpenPage('B','03',false); } },
+            { t:'B-04｜水平支撐', d:'橫擋、大小角撐、斜撐、中間水平支撐與中間柱的幾何/數量集中在這一頁。<br><br>角撐、斜撐斜邊的量測基準會影響長度與碰撞，輸入後應配合 C-01/F-02 核對。', dim:0.55, before:function(){ if(window.v72OpenPage)v72OpenPage('B','04',false); } },
+            { t:'B-05｜預力加壓', d:'設定各階水平支撐設計預力、千斤頂型號與加壓換算參考資料。<br><br>系統會把設計預力轉換成現場可使用的千斤頂錶值資訊。', dim:0.54, before:function(){ if(window.v72OpenPage)v72OpenPage('B','05',false); } },
+            { t:'B-06｜開挖回填', d:'本頁把原「各階開挖」移到預力加壓之後，並與土方回填整併。前段逐階填設計深度/開挖高程，後段計算總開挖、結構體積與回填量。<br><br>填完應到 C-02/C-03 核對立面高程，再到 E 區核對土方結果。', dim:0.54, before:function(){ if(window.v72OpenPage)v72OpenPage('B','06',false); } },
+            { t:'C-01｜平面圖', d:'先看平面圖核對：外圍排樁/板樁、橫擋、角撐、斜撐、中間水平支撐、中間柱位置是否符合預期。<br><br>平面配置不對時，應回 B-02/B-03/B-04 修正。', dim:0.44, before:function(){ if(window.v72OpenPage)v72OpenPage('C','01',false); focusCanvas('layoutCanvas'); } },
+            { t:'C-01｜圖面匯出與顯示控制', d:'平面圖頁保留 JPG、A3 PDF、DXF 等既有匯出能力及元件/名稱顯示控制。<br><br>DXF 用於 CAD 後續處理；JPG/PDF 適合快速檢視與報告。', dim:0.44, before:function(){ if(window.v72OpenPage)v72OpenPage('C','01',false); } },
+            { t:'C-02｜立面 A', d:'A-A′ 立面用來核對第一方向：地面/河床基準、水位、樁頂/樁底、各階水平支撐與開挖面。<br><br>層位錯誤通常來自 B-06 開挖回填頁或相關高程輸入。', dim:0.42, before:function(){ if(window.v72OpenPage)v72OpenPage('C','02',false); focusCanvas('sectionCanvas'); } },
+            { t:'C-03｜立面 B', d:'B-B′ 是另一方向立面。即使平面是近似矩形，兩方向的跨度、支撐配置仍可能不同，因此兩張立面都要看。', dim:0.42, before:function(){ if(window.v72OpenPage)v72OpenPage('C','03',false); } },
+            { t:'C-04｜3D 模型', d:'3D 用來檢查立體接合：外圍排樁/板樁、各階橫擋、角撐、中間支撐、中間柱、千斤頂與木襯板等。<br><br>可旋轉、縮放、平移；元件與名稱標註可獨立開關。', dim:0.38, before:function(){ if(window.v72OpenPage)v72OpenPage('C','04',false); focusCanvas('three-container'); } },
+            { t:'C-04｜施工流程動畫', d:'3D 施工動畫用來按階段觀察構件建立順序。可暫停、前後步進與調整速度。<br><br>它是施工說明/理解工具，不取代計算與安全檢核。', dim:0.38, before:function(){ if(window.v72OpenPage)v72OpenPage('C','04',false); } },
+            { t:'D-01｜H鋼計算', d:'H 型鋼模式的專屬計算推演。畫面以逐項公式與中間值呈現，適合追查排樁配置、長度或相關結果為何得到目前數字。', dim:0.50, before:function(){ tourSetMode('hbeam'); if(window.v72OpenPage)v72OpenPage('D','01',false); } },
+            { t:'D-02｜板樁計算', d:'鋼板樁模式的專屬計算推演，包含雙層圍堰相關幾何與數量。<br><br>板樁專案切到此頁前，先確認 B-03 的內外層尺寸已正確。', dim:0.50, before:function(){ tourSetMode('sheet'); if(window.v72OpenPage)v72OpenPage('D','02',false); } },
+            { t:'D-03｜共通計算', d:'兩種擋土型式共用的水平支撐、構件長度/數量等計算集中在 D-03。<br><br>因此無論 H 型鋼或鋼板樁，D-03 都應檢查。', dim:0.50, before:function(){ if(window.v72OpenPage)v72OpenPage('D','03',false); } },
+            { t:'E-01｜工程摘要', d:'整理工程基本資料與目前專案識別資訊。這些內容也會進入部分報表抬頭或輸出資料。', dim:0.50, before:function(){ if(window.v72OpenPage)v72OpenPage('E','01',false); } },
+            { t:'E-02｜幾何配置', d:'集中看排樁/板樁與平面配置的關鍵結果。它是數字版的 C-01；建議數字與圖面交叉核對。', dim:0.50, before:function(){ if(window.v72OpenPage)v72OpenPage('E','02',false); } },
+            { t:'E-03｜開挖高程', d:'整理各階開挖與高程結果。若 E-03 和立面圖看起來不一致，優先回 B-06 檢查輸入，不要直接改輸出文字。', dim:0.50, before:function(){ if(window.v72OpenPage)v72OpenPage('E','03',false); } },
+            { t:'E-04｜預力統計', d:'彙整各階設計預力及相關加壓結果，適合施工前快速核對不同階段設定是否完整。', dim:0.50, before:function(){ if(window.v72OpenPage)v72OpenPage('E','04',false); } },
+            { t:'E-05｜鋼材數量', d:'型鋼構件總長、總重等材料量集中在這裡。重量依規格與單位重資料換算，因此規格字串或單位重表不正確時，總重也會跟著錯。', dim:0.50, before:function(){ if(window.v72OpenPage)v72OpenPage('E','05',false); } },
+            { t:'E-06｜附屬材料', d:'木襯板、土方、板樁圍堰相關填充或其他附屬材料等結果集中於此。<br><br>完成 E 區後，代表「結果彙整」完成，但尚未代表「安全檢核」完成。', dim:0.50, before:function(){ if(window.v72OpenPage)v72OpenPage('E','06',false); } },
+            { t:'F-01｜基本檢核', d:'F-01 會彙整目前可偵測的輸入警示與模式資訊，用來抓明顯漏填、矛盾或既有警告。<br><br>它是第一道篩選，不是結構安全驗算。', dim:0.50, before:function(){ if(window.v72OpenPage)v72OpenPage('F','01',false); } },
+            { t:'F-02｜幾何碰撞', d:'檢查構件配置、幾何合理性與碰撞。若出現問題，通常應回 B-02/B-03/B-04 修改尺寸或規格，再重新看 C 圖面。', dim:0.50, before:function(){ if(window.v72OpenPage)v72OpenPage('F','02',false); } },
+            { t:'F-03｜安全檢核的輸入區', d:'安全檢核內還有地質、水文、木襯板材料與 TORSA 分析成果選填等資料。<br><br>若你有正式計算書值，可依原欄位邏輯選填；沒有時程式使用既有預設/估算流程。', dim:0.48, before:function(){ if(window.v72OpenPage)v72OpenPage('F','03',false); } },
+            { t:'F-03｜逐步安全檢核', d:'每一步會列出<b>採用公式、代入數值、計算結果、判定</b>，並以警告/不通過顏色提示。<br><br>請把它當「透明的計算流程」，不要只看最後顏色。', dim:0.46, before:function(){ if(window.v72OpenPage)v72OpenPage('F','03',false); } },
+            { t:'G-01｜圖面匯出', d:'平面、立面與 3D 的圖面匯出主要仍放在各 C 圖頁，就近操作；G-01 提供圖面匯出入口與導引。', dim:0.50, before:function(){ if(window.v72OpenPage)v72OpenPage('G','01',false); } },
+            { t:'G-02｜報表匯出', d:'Excel、計算推演 Word、統計 Word、安全檢核/全畫面 PDF 等報表功能集中在此類。<br><br>匯出前先完成 F 檢核，避免把尚未確認的結果直接帶走。', dim:0.50, before:function(){ if(window.v72OpenPage)v72OpenPage('G','02',false); } },
+            { t:'G-03｜專案存讀', d:'JSON 用來保存目前輸入狀態，之後可載入還原同一專案。<br><br>它不是報表，而是「工作檔」概念；多個工區可分別存不同 JSON。', dim:0.50, before:function(){ if(window.v72OpenPage)v72OpenPage('G','03',false); } },
+            { t:'G-04｜一鍵打包', d:'一鍵打包把既有多種輸出整理成 ZIP，適合完成一輪輸入、繪圖、計算、統計與檢核後一次帶走。', dim:0.50, before:function(){ if(window.v72OpenPage)v72OpenPage('G','04',false); } },
+            { t:'✅ 建議每次使用的自我檢查', d:'完成前至少確認：<b>①型式正確 ②尺寸/高程正確 ③平面/兩向立面/3D合理 ④D計算可追 ⑤E數量合理 ⑥F-02無幾何衝突 ⑦F-03逐步檢核已閱讀 ⑧再匯出</b>。', dim:0.72, before:function(){ if(window.v72OpenPage)v72OpenPage('B','01',false); } }
         ];
 
         window.startTour = function(which) {
@@ -8969,5 +9155,518 @@ window.onload = function() { init3D(); applyPileTypeMode(); drawSheetSpecChart()
         } catch(e){}
     })();
     </script>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════════════
+   【v72.7】三層式工程應用介面控制器
+   - 保留既有計算核心、欄位 ID、2D/3D、匯出與 JSON 邏輯
+   - 舊快速輸入 B~I 不再顯示，僅保留相容 DOM；擋土型式改由 B-01 勾選卡控制
+   - 主頁切換只變更顯示，不複製帶 ID 的節點，避免破壞既有程式
+   ═══════════════════════════════════════════════════════════════════════ */
+(function(){
+    'use strict';
+    const NAV = {
+        A:{title:'教學', pages:[
+            ['01','H鋼排樁'],['02','鋼板樁'],['03','操作教學'],['04','相關知識'],['05','程式架構']
+        ]},
+        B:{title:'輸入', pages:[
+            ['01','基本設定'],['02','H鋼設定'],['03','板樁設定'],
+            ['04','水平支撐'],['05','預力加壓'],['06','開挖回填']
+        ]},
+        C:{title:'繪圖', pages:[['01','平面圖'],['02','立面A'],['03','立面B'],['04','3D模型']]},
+        D:{title:'計算', pages:[['01','H鋼計算'],['02','板樁計算'],['03','共通計算']]},
+        E:{title:'統計', pages:[
+            ['01','工程摘要'],['02','幾何配置'],['03','開挖高程'],['04','預力統計'],['05','鋼材數量'],['06','附屬材料']
+        ]},
+        F:{title:'檢核', pages:[['01','基本檢核'],['02','幾何碰撞'],['03','安全檢核']]},
+        G:{title:'匯出', pages:[['01','圖面匯出'],['02','報表匯出'],['03','專案存讀'],['04','一鍵打包']]}
+    };
+    let currentMain='B', currentSub='01';
+    window.V72_NAV = NAV;
+
+    function q(id){ return document.getElementById(id); }
+    function all(sel, root){ return Array.from((root||document).querySelectorAll(sel)); }
+
+    // v72.7：固定 Header 的實際高度會因桌機換行、第二層項目數、手機/平板寬度而變動。
+    // 每次高度改變即更新 --v72-head-h，讓作業區永遠從固定列下方開始，不被遮住。
+    function syncFixedHeaderHeight(){
+        const h=q('v72AppHeader');
+        if(!h) return;
+        const px=Math.ceil(h.getBoundingClientRect().height);
+        document.documentElement.style.setProperty('--v72-head-h', px+'px');
+    }
+    let v72HeaderRO=null;
+    function initFixedHeaderHeight(){
+        syncFixedHeaderHeight();
+        if('ResizeObserver' in window){
+            if(v72HeaderRO) v72HeaderRO.disconnect();
+            v72HeaderRO=new ResizeObserver(syncFixedHeaderHeight);
+            const h=q('v72AppHeader'); if(h) v72HeaderRO.observe(h);
+        }
+        window.addEventListener('resize',syncFixedHeaderHeight,{passive:true});
+        window.addEventListener('orientationchange',()=>setTimeout(syncFixedHeaderHeight,80),{passive:true});
+    }
+    function showBlock(id){ const el=q(id); if(el) el.classList.add('v72-show'); return el; }
+    function hideAllBlocks(){ all('.content-block').forEach(el=>el.classList.remove('v72-show')); }
+    function forceOpenBlock(el){
+        if(!el) return;
+        all(':scope > [data-clps-wrap]',el).forEach(w=>{ w.dataset.v72ForceOpen='1'; w.style.display='contents'; });
+    }
+    function clearFilter(root){ if(root) all('.v72-filter-hidden',root).forEach(el=>el.classList.remove('v72-filter-hidden')); }
+    // v72.1：第二層分頁採「硬隔離」顯示。舊版收合機制會動態寫入 display，
+    // 僅靠 class 有機會在後續初始化/重建時被蓋回；此處直接以 !important 控制，
+    // 確保同一時間只有目前第二層頁籤的內容存在於作業區。
+    function setExactVisible(el, yes, openDisplay){
+        if(!el) return;
+        el.classList.toggle('v72-filter-hidden',!yes);
+        if(!yes){ el.style.setProperty('display','none','important'); return; }
+        el.style.removeProperty('display');
+        if(openDisplay) el.style.setProperty('display',openDisplay,'important');
+    }
+
+    function buildHeader(){
+        const p=q('v72PrimaryNav'), s=q('v72SecondaryNav');
+        p.innerHTML='';
+        Object.keys(NAV).forEach(k=>{
+            const b=document.createElement('button'); b.type='button';
+            b.className='v72-nav-btn v72-primary-btn'; b.dataset.main=k;
+            b.innerHTML='<span class="v72-num">'+k+'</span>'+NAV[k].title;
+            b.onclick=()=>selectMain(k);
+            p.appendChild(b);
+        });
+        renderSecondary();
+        requestAnimationFrame(syncFixedHeaderHeight);
+    }
+    function renderSecondary(){
+        const s=q('v72SecondaryNav'); s.innerHTML='';
+        NAV[currentMain].pages.forEach(([num,title])=>{
+            const b=document.createElement('button'); b.type='button';
+            b.className='v72-nav-btn v72-secondary-btn'; b.dataset.sub=num;
+            b.innerHTML='<span class="v72-num">'+num+'</span>'+title;
+            b.onclick=()=>openPage(currentMain,num);
+            s.appendChild(b);
+        });
+        updateActiveNav();
+        requestAnimationFrame(syncFixedHeaderHeight);
+    }
+    function updateActiveNav(){
+        all('#v72PrimaryNav .v72-nav-btn').forEach(b=>b.classList.toggle('is-active',b.dataset.main===currentMain));
+        all('#v72SecondaryNav .v72-nav-btn').forEach(b=>b.classList.toggle('is-active',b.dataset.sub===currentSub));
+    }
+    function selectMain(k){ currentMain=k; currentSub=NAV[k].pages[0][0]; renderSecondary(); openPage(k,currentSub,false); }
+
+    function prepareTour(){
+        const b=q('blockTour'); if(!b || b.dataset.v72Done) return;
+        b.dataset.v72Done='1';
+        b.removeAttribute('style');
+        b.innerHTML = '<h2 class="block-heading">A 教學</h2>'+
+          '<div class="v72-tour-grid">'+
+          '<div class="v72-tour-card" data-tour="01"><h3>A-01 H型鋼排樁</h3><p><b>構造原理＋施工順序＋系統對照</b>。從垂直排樁、木襯板、圍囹、角撐、中間支撐、預力到分階開挖與安全檢核，逐頁搭配本系統圖面說明。</p><button class="v72-action-btn" type="button" onclick="startTour(1)">開始完整導覽</button></div>'+
+          '<div class="v72-tour-card" data-tour="02"><h3>A-02 鋼板樁</h3><p><b>雙層圍堰原理＋擋土止水＋系統對照</b>。說明鋼板樁咬合、內外層幾何、內填、抽水滲流、貫入與內支撐，並帶你辨識平面/立面/3D。</p><button class="v72-action-btn" type="button" onclick="startTour(2)">開始完整導覽</button></div>'+
+          '<div class="v72-tour-card" data-tour="03"><h3>A-03 操作教學</h3><p><b>依新版 A～G 工作流程實際操作</b>：B輸入 → C繪圖 → D計算 → E統計 → F檢核 → G匯出；逐頁指出每個第二層分頁的用途與檢查重點。</p><button class="v72-action-btn" type="button" onclick="startTour(3)">開始完整操作教學</button></div>'+
+          '</div>';
+    }
+
+    function filterTour(sub){
+        const b=showBlock('blockTour'); forceOpenBlock(b);
+        all('[data-tour]',b).forEach(c=>setExactVisible(c,c.dataset.tour===sub));
+    }
+
+    function prepareModeChooser(){
+        const blk=q('blockDetailParam'); if(!blk || q('v72ModeChooser')) return;
+        const box=document.createElement('div'); box.id='v72ModeChooser'; box.className='v72-mode-box';
+        box.innerHTML='<div class="v72-mode-title"><span class="v72-field-code">B-01-01</span>擋土型式</div>'+
+          '<div class="v72-mode-options">'+
+          '<label class="v72-mode-card"><input type="radio" name="v72PileMode" value="hbeam">☑ H鋼+木襯板</label>'+
+          '<label class="v72-mode-card"><input type="radio" name="v72PileMode" value="sheet">☑ 鋼板樁</label></div>'+
+          '<div class="v72-mode-note">採單選邏輯避免兩種擋土型式同時成立；原選單保留於相容層供既有計算、JSON 與模式切換函式使用。</div>';
+        const h=blk.querySelector('.block-heading');
+        if(h) h.insertAdjacentElement('afterend',box); else blk.prepend(box);
+        const sel=q('pileType');
+        const sync=()=>all('input[name="v72PileMode"]',box).forEach(r=>r.checked=(r.value===(sel?sel.value:'hbeam')));
+        all('input[name="v72PileMode"]',box).forEach(r=>r.addEventListener('change',function(){
+            if(!this.checked || !sel) return; sel.value=this.value;
+            sel.dispatchEvent(new Event('change',{bubbles:true})); sync();
+        }));
+        if(sel) sel.addEventListener('change',sync); sync();
+    }
+
+    function normalizeDetailStructure(){
+        // v72.5：解除舊版「型鋼規格」收合 wrapper，並將 B-02/B-03/B-04 三個大型容器完全隔離。
+        // v71 的 initParamCollapse() 會把「型鋼規格」標題後、下一個同層標題前的所有節點
+        // 一口氣包進同一個 param wrapper；因此鋼板樁區、H鋼幾何區、排樁數量區雖各有
+        // 自己的子標題，仍可能被「型鋼規格」父 wrapper 的 display:none 一起藏掉。
+        const blk=q('blockDetailParam'), sheet=q('sheetPileSection'), geom=q('hbeamGeomSection'), calcs=q('hbeamGeomCalcs');
+        if(!blk) return;
+
+        // 若仍是舊 HTML 巢狀，先把 B-03 從 H鋼幾何容器抽出。
+        if(geom && calcs && geom.contains(calcs)) geom.insertAdjacentElement('afterend',calcs);
+
+        // 找到包住這三區的「param:型鋼規格」舊收合 wrapper，將三區依原順序移到 wrapper 後方，
+        // 但仍保留在 blockDetailParam 的整體 blk:detail wrapper 內，兼顧舊匯出/收合相容性。
+        let specWrap=null;
+        [sheet,geom,calcs].some(el=>{
+            if(!el) return false;
+            const w=el.closest('[data-clps-wrap^="param:"]');
+            if(w){ specWrap=w; return true; }
+            return false;
+        });
+        if(specWrap){
+            let anchor=specWrap;
+            [sheet,geom,calcs].forEach(el=>{
+                if(!el) return;
+                anchor.insertAdjacentElement('afterend',el);
+                anchor=el;
+            });
+        }
+        if(calcs) calcs.classList.add('hbeam-only');
+    }
+
+    function detailGroups(){
+        const blk=q('blockDetailParam'); if(!blk) return [];
+        return all('.sub-group-title',blk).map(t=>({title:t, wrap:t.nextElementSibling && t.nextElementSibling.dataset.clpsWrap ? t.nextElementSibling : null, text:(t.innerText||'').trim()}));
+    }
+    const BMAP={
+        // v72.6：依實際工作流程重新整併第二層頁面
+        // 01 基本設定＝工程基本資料＋木襯板＋三角拖架
+        // 02 H鋼設定＝型鋼規格＋H鋼開挖幾何＋排樁數量
+        // 03 板樁設定＝鋼板樁規格與幾何
+        // 04 水平支撐＝水平支撐幾何與數量
+        // 05 預力加壓＝預力＋千斤頂
+        // 06 開挖回填＝各階開挖＋開挖/回填土方
+        '01':['工程基本資料','木襯板設定','橫擋三角拖架'],
+        '02':['型鋼規格','H型鋼樁開挖幾何','H型鋼樁垂直排樁數量'],
+        '03':['鋼板樁規格與幾何'],
+        '04':['水平支撐幾何與數量'],
+        '05':['水平支撐設計預力設定','千斤頂加壓出力對照表','千斤頂型號'],
+        '06':['各階設計深度','開挖及回填土方計算']
+    };
+    function ensureModeNotice(){
+        const blk=q('blockDetailParam'); if(!blk) return null;
+        let box=q('v72ModeNotice');
+        if(!box){
+            box=document.createElement('div'); box.id='v72ModeNotice';
+            box.style.cssText='display:none;margin:8px 0 16px;padding:14px 16px;border:1px solid #e0b24b;border-left:5px solid #f4a300;border-radius:6px;background:#fff8df;color:#4c3a12;line-height:1.75;';
+            const mc=q('v72ModeChooser');
+            if(mc) mc.insertAdjacentElement('afterend',box);
+            else { const h=blk.querySelector('.block-heading'); if(h) h.insertAdjacentElement('afterend',box); }
+        }
+        return box;
+    }
+    function setModeNotice(sub){
+        const box=ensureModeNotice(); if(!box) return;
+        const mode=(q('pileType')||{}).value||'hbeam';
+        let html='';
+
+        // B-02 在鋼板樁模式仍保留「水平支撐等共用 H 鋼規格」，
+        // 但 H鋼垂直排樁的開挖幾何與排樁數量不適用，因此明確提示而非呈現空白。
+        if(sub==='02' && mode==='sheet'){
+            html='<b>B-02 H鋼設定｜目前為鋼板樁模式</b><br>'+
+                 '鋼板樁圍堰內部仍可能使用 H 鋼橫擋、角撐、斜撐、中間水平支撐與中間柱，因此本頁的 <b>共用 H 鋼規格</b> 仍可設定；'+
+                 '但「H鋼垂直排樁開挖幾何」與「H鋼排樁數量」僅適用於 <b>H鋼+木襯板</b> 模式，故本模式自動隱藏。';
+        }else if(sub==='03' && mode!=='sheet'){
+            html='<b>B-03 板樁設定目前不適用</b><br>'+
+                 '目前擋土型式為「H鋼+木襯板」。本頁是 <b>鋼板樁／雙層圍堰專用</b>，因此板樁規格、內外層幾何與板樁數量會依模式邏輯隱藏，避免誤輸入。'+
+                 '若本案採鋼板樁，請先至 <b>B-01 基本設定</b> 將擋土型式切換為「鋼板樁」。<br>'+
+                 '<button type="button" class="v72-action-btn" style="margin-top:8px" onclick="v72OpenPage(\'B\',\'01\')">前往 B-01 切換型式</button>';
+        }
+        box.innerHTML=html;
+        setExactVisible(box,!!html,'block');
+    }
+    function filterDetail(sub){
+        const blk=showBlock('blockDetailParam'); forceOpenBlock(blk); prepareModeChooser(); normalizeDetailStructure();
+        const mc=q('v72ModeChooser'); setExactVisible(mc,sub==='01');
+        const wanted=BMAP[sub]||[];
+        const groups=detailGroups();
+        // 先全部關閉，再只開目前頁籤；避免舊收合初始化或前一頁狀態造成重複顯示。
+        groups.forEach(g=>{ setExactVisible(g.title,false); setExactVisible(g.wrap,false); });
+        groups.forEach(g=>{
+            const yes=wanted.some(x=>g.text.indexOf(x)>=0);
+            if(!yes) return;
+            setExactVisible(g.title,true);
+            if(g.wrap){ g.wrap.dataset.v72ForceOpen='1'; setExactVisible(g.wrap,true,'contents'); }
+        });
+
+        // v72.3：B-03 採「整個容器」顯示/隱藏，不再只依賴內層標題與舊收合 wrapper。
+        // 這可根除舊版 initParamCollapse() 先包裝 DOM 後，祖先或 wrapper 狀態殘留造成的空白頁。
+        const pileCalcs=q('hbeamGeomCalcs');
+        const sheetSec=q('sheetPileSection');
+        const hbeamGeomSec=q('hbeamGeomSection');
+        const mode=(q('pileType')||{}).value||'hbeam';
+
+        // v72.5：三個大型專用容器全部採「第二層頁籤＋工法模式」雙重硬隔離。
+        // 之前只有 B-03、B-04 兩區做容器級控制，hbeamGeomSection 仍由舊 applyPileTypeMode()
+        // 控制，因此在 H 型鋼模式切到 B-04 時，可能被舊模式函式重新顯示，造成
+        // 「▼ H型鋼樁開挖幾何」誤跑到板樁設定頁。現在明確限定它只能出現在 B-02。
+        if(hbeamGeomSec){
+            const showGeom=(sub==='02' && mode!=='sheet');
+            setExactVisible(hbeamGeomSec,showGeom,'block');
+            if(showGeom){
+                all('.sub-group-title',hbeamGeomSec).forEach(el=>setExactVisible(el,true,'block'));
+                all('[data-clps-wrap]',hbeamGeomSec).forEach(w=>{
+                    w.dataset.v72ForceOpen='1';
+                    setExactVisible(w,true,'contents');
+                });
+            }
+        }
+
+        if(pileCalcs){
+            const showPile=(sub==='02' && mode!=='sheet');
+            setExactVisible(pileCalcs,showPile,'block');
+            if(showPile){
+                all('.sub-group-title',pileCalcs).forEach(el=>setExactVisible(el,true,'block'));
+                all('[data-clps-wrap]',pileCalcs).forEach(w=>{
+                    w.dataset.v72ForceOpen='1';
+                    setExactVisible(w,true,'contents');
+                });
+            }
+        }
+
+        // B-03 以整個鋼板樁容器做硬隔離。H鋼+木襯板模式不顯示板樁內容，而由模式說明取代。
+        if(sheetSec){
+            const showSheet=(sub==='03' && mode==='sheet');
+            setExactVisible(sheetSec,showSheet,'block');
+            if(showSheet){
+                all('.sub-group-title',sheetSec).forEach(el=>setExactVisible(el,true,'block'));
+                all('[data-clps-wrap]',sheetSec).forEach(w=>{
+                    w.dataset.v72ForceOpen='1';
+                    setExactVisible(w,true,'contents');
+                });
+            }
+        }
+
+        setModeNotice(sub);
+        // 全域錯誤訊息只在有內容時顯示，不當成任何子頁重複內容。
+        const h=blk.querySelector('.block-heading'); if(h) h.textContent='B-'+sub+' '+((NAV.B.pages.find(x=>x[0]===sub)||[])[1]||'輸入');
+        renumberDetail(sub);
+    }
+
+    function stripOldPrefix(node){
+        if(!node) return;
+        const walker=document.createTreeWalker(node,NodeFilter.SHOW_TEXT);
+        let n;
+        while((n=walker.nextNode())){
+            if(!n.nodeValue || !n.nodeValue.trim()) continue;
+            n.nodeValue=n.nodeValue.replace(/^\s*(?:[A-I]|SC)\s*[-.]?\s*\d*(?:[-.]\w+)*\.?\s*/i,'').replace(/^\s*\d+(?:[-.]\w+)+\.?\s*/,'').replace(/^\s*\d+\.?\s*/,'');
+            break;
+        }
+    }
+    function addCode(el,code){
+        if(!el) return;
+        const old=el.querySelector(':scope > .v72-field-code');
+        if(old){ old.textContent=code; return; }
+        stripOldPrefix(el);
+        const sp=document.createElement('span'); sp.className='v72-field-code'; sp.textContent=code;
+        el.insertBefore(sp,el.firstChild);
+    }
+    function renumberDetail(sub){
+        const blk=q('blockDetailParam'); if(!blk) return;
+        const visibleGroups=detailGroups().filter(g=>!g.title.classList.contains('v72-filter-hidden'));
+        let n=2; // 01 reserved for B-01-01 擋土型式
+        if(sub!=='01') n=1;
+        visibleGroups.forEach(g=>{
+            const root=g.wrap||g.title.parentElement;
+            all('.input-group > label, .depth-total-box label, .min-dig-display label',root).forEach(lb=>addCode(lb,'B-'+sub+'-'+String(n++).padStart(2,'0')));
+        });
+    }
+
+    function drawParts(){
+        const blk=q('blockDraw'); if(!blk) return [];
+        return all('h3',blk).map(h=>({h,wrap:h.nextElementSibling && h.nextElementSibling.dataset.clpsWrap ? h.nextElementSibling:null,text:(h.innerText||'').trim()}));
+    }
+    function filterDraw(sub){
+        const blk=showBlock('blockDraw'); forceOpenBlock(blk);
+        const names={'01':'擋土支撐平面圖','02':'A-A','03':'B-B','04':'3D立體示意圖'};
+        const parts=drawParts();
+        parts.forEach(p=>{ setExactVisible(p.h,false); setExactVisible(p.wrap,false); });
+        parts.forEach(p=>{
+            const yes=p.text.indexOf(names[sub])>=0;
+            if(!yes) return;
+            setExactVisible(p.h,true);
+            if(p.wrap){p.wrap.dataset.v72ForceOpen='1';setExactVisible(p.wrap,true,'contents');}
+        });
+        // 圖例亦依目前圖頁精確切換；非目前圖頁不殘留。
+        const legends=all('.legend',blk);
+        legends.forEach((lg,i)=>{
+            const is3=/3D圖例/.test(lg.innerText||'');
+            setExactVisible(lg,sub==='04'?is3:(sub==='01' && !is3 && i===0));
+        });
+        const h=blk.querySelector('.block-heading'); if(h) h.textContent='C-'+sub+' '+((NAV.C.pages.find(x=>x[0]===sub)||[])[1]||'繪圖');
+        if(sub==='04' && typeof window.build3DModel==='function') setTimeout(()=>window.build3DModel(),80);
+    }
+
+    function calcParts(){
+        const cd=q('calcDetail'); if(!cd) return [];
+        return Array.from(cd.children).filter(el=>el.tagName==='DIV' && /▼\s*(圍堰雙層鋼板樁部分|H型鋼樁垂直排樁部分|共同部分)/.test(el.innerText||''))
+          .map(h=>({h,wrap:h.nextElementSibling && h.nextElementSibling.dataset.clpsWrap ? h.nextElementSibling:null,text:h.innerText||''}));
+    }
+    function applyCalcFilter(sub){
+        const match={'01':'H型鋼樁垂直排樁部分','02':'圍堰雙層鋼板樁部分','03':'共同部分'}[sub];
+        const parts=calcParts();
+        parts.forEach(p=>{setExactVisible(p.h,false);setExactVisible(p.wrap,false);});
+        parts.forEach(p=>{
+            const yes=p.text.indexOf(match)>=0; if(!yes) return;
+            setExactVisible(p.h,true);
+            if(p.wrap){p.wrap.dataset.v72ForceOpen='1';setExactVisible(p.wrap,true,'contents');}
+        });
+    }
+    function filterCalc(sub){
+        const blk=showBlock('blockCalcDetail'); forceOpenBlock(blk); applyCalcFilter(sub);
+        const h=blk.querySelector('.block-heading'); if(h) h.textContent='D-'+sub+' '+((NAV.D.pages.find(x=>x[0]===sub)||[])[1]||'計算');
+        setTimeout(()=>applyCalcFilter(sub),50);
+    }
+
+    function prepareSummarySections(){
+        const root=q('pileInfoBlock'); if(!root || root.dataset.v72Grouped) return;
+        root.dataset.v72Grouped='1';
+        const children=Array.from(root.children);
+        const heads=children.filter(el=>/^[①②③④⑤⑥]/.test((el.innerText||'').trim()));
+        heads.forEach((h,i)=>{
+            h.dataset.v72Summary=String(i+1).padStart(2,'0');
+            let n=h.nextElementSibling;
+            while(n && !/^[①②③④⑤⑥]/.test((n.innerText||'').trim())){ n.dataset.v72Summary=String(i+1).padStart(2,'0'); n=n.nextElementSibling; }
+        });
+    }
+    function filterSummary(sub){
+        const blk=showBlock('blockSummary'); forceOpenBlock(blk); prepareSummarySections();
+        const root=q('pileInfoBlock');
+        all('[data-v72-summary]',root).forEach(el=>setExactVisible(el,el.dataset.v72Summary===sub));
+        const h=blk.querySelector('.block-heading'); if(h) h.textContent='E-'+sub+' '+((NAV.E.pages.find(x=>x[0]===sub)||[])[1]||'統計');
+    }
+
+    function createBasicCheck(){
+        if(q('blockBasicCheck')) return;
+        const d=document.createElement('div'); d.id='blockBasicCheck'; d.className='content-block';
+        d.innerHTML='<h2 class="block-heading">F-01 基本檢核</h2><div class="v72-check-summary">'+
+          '<div class="v72-check-card" id="v72CheckInput"><b>輸入完整性</b><div>即時掃描輸入與警示訊息</div></div>'+
+          '<div class="v72-check-card" id="v72CheckMode"><b>目前模式</b><div id="v72CheckModeTxt">—</div></div></div>'+
+          '<div style="font-weight:800;color:#17324d;">F-01-01 即時警示彙整</div><ul id="v72BasicCheckList"></ul>'+
+          '<div style="font-size:.82em;color:#657680;margin-top:12px;">本頁彙整既有輸入警示；幾何/碰撞請至 F-02，結構與地工安全檢核請至 F-03。</div>';
+        const anchor=q('blockGeomCheck'); if(anchor && anchor.parentNode) anchor.parentNode.insertBefore(d,anchor); else document.querySelector('.main-wrapper').appendChild(d);
+    }
+    function updateBasicCheck(){
+        createBasicCheck(); const list=q('v72BasicCheckList'); if(!list) return;
+        const warnings=[];
+        all('.stage-alert,.inline-alert,.error-msg').forEach(el=>{
+            if(el.closest('#blockBasicCheck')) return;
+            const st=getComputedStyle(el); const txt=(el.innerText||'').trim();
+            if(txt && st.display!=='none' && st.visibility!=='hidden') warnings.push(txt);
+        });
+        list.innerHTML='';
+        if(!warnings.length){ const li=document.createElement('li');li.textContent='目前未偵測到既有輸入警示。';list.appendChild(li); }
+        else Array.from(new Set(warnings)).forEach(w=>{const li=document.createElement('li');li.textContent=w;list.appendChild(li);});
+        const card=q('v72CheckInput'); card.classList.toggle('warn',warnings.length>0); card.classList.toggle('err',warnings.length>4);
+        const sel=q('pileType'); q('v72CheckModeTxt').textContent=sel && sel.value==='sheet'?'鋼板樁':'H鋼+木襯板';
+    }
+
+    function filterSafety(sub){
+        if(sub==='01'){ showBlock('blockBasicCheck'); updateBasicCheck(); return; }
+        if(sub==='02'){
+            const blk=showBlock('blockGeomCheck'); forceOpenBlock(blk);
+            const h=blk.querySelector('.block-heading'); if(h) h.textContent='F-02 幾何碰撞'; return;
+        }
+        const blk=showBlock('blockSafetyCheck'); forceOpenBlock(blk);
+        const sc=q('safetyCheckContentWrap'); if(sc){sc.dataset.v72ForceOpen='1';sc.style.display='block';}
+        const h=blk.querySelector('.block-heading'); if(h) h.textContent='F-03 安全檢核';
+    }
+
+    function exportBlocks(){
+        const blk=q('blockExport'); if(!blk) return [];
+        forceOpenBlock(blk);
+        return all(':scope > [data-clps-wrap] > .info-block',blk).length ? all(':scope > [data-clps-wrap] > .info-block',blk) : all(':scope > .info-block',blk);
+    }
+    function filterExport(sub){
+        const blk=showBlock('blockExport'); forceOpenBlock(blk); const arr=exportBlocks();
+        arr.forEach(el=>setExactVisible(el,false));
+        const showBy=(rx)=>arr.forEach(el=>{if(rx.test(el.innerText||''))setExactVisible(el,true);});
+        if(sub==='01'){
+            // 圖面匯出主要位於各 C 圖頁；此頁提供快速跳轉及全畫面 PDF
+            showBy(/全部畫面逐序 PDF/);
+            let panel=q('v72DrawingExportPanel');
+            if(!panel){panel=document.createElement('div');panel.id='v72DrawingExportPanel';panel.className='info-block';panel.innerHTML='<strong style="color:#17324d;">G-01-01 圖面匯出</strong><p>平面圖、立面 A/B 的 JPG、PDF(A3)、DXF 及 3D JPG 已配置於各 C 繪圖頁，可在檢視圖面時直接匯出。</p><button type="button" class="v72-action-btn" onclick="v72OpenPage(\'C\',\'01\')">前往 C 繪圖</button>'; const wrap=blk.querySelector(':scope > [data-clps-wrap]')||blk;wrap.insertBefore(panel,wrap.firstChild);} setExactVisible(panel,true);
+        }
+        if(sub==='02') showBy(/匯出 Excel|計算推演區資料匯出|全部畫面逐序 PDF/);
+        if(sub==='03') showBy(/參數存檔／載入/);
+        if(sub==='04') showBy(/一鍵匯出/);
+        const h=blk.querySelector('.block-heading'); if(h) h.textContent='G-'+sub+' '+((NAV.G.pages.find(x=>x[0]===sub)||[])[1]||'匯出');
+        renumberExport(sub);
+    }
+    function renumberExport(sub){
+        let n=1; exportBlocks().filter(el=>!el.classList.contains('v72-filter-hidden')).forEach(el=>{
+            const st=el.querySelector('strong'); if(!st || st.querySelector('.v72-item-code')) return;
+            stripOldPrefix(st); const c=document.createElement('span');c.className='v72-item-code';c.textContent='G-'+sub+'-'+String(n++).padStart(2,'0');st.insertBefore(c,st.firstChild);
+        });
+    }
+
+    function prepareArchDoc(){
+        const blk=q('blockArchDoc'); if(!blk || blk.dataset.v72Doc) return; blk.dataset.v72Doc='1';
+        const h=blk.querySelector('.block-heading'); if(h) h.textContent='A-05 程式架構';
+        const info=blk.querySelector('.info-block'); if(!info) return;
+        info.innerHTML='<div class="v72-arch" style="line-height:1.9">'+
+          '<div style="background:#eaf3f8;border-left:5px solid #17324d;padding:12px 14px;margin-bottom:14px;"><b>系統定位：</b>單一 HTML 工程輔助應用，支援 H 型鋼排樁與雙層鋼板樁圍堰。v72.1 採「主功能 → 子分頁 → 單一作業區」三級介面；運算核心與既有欄位 ID 儘量維持相容。</div>'+
+          '<h3>A-05-01　三層式資訊架構</h3><p><b>第一層 A～G</b> 負責工作類別；<b>第二層</b>負責同類工作的子頁；<b>第三層</b>只顯示目前子頁內容。切頁只改顯示狀態，不複製含 ID 的 DOM 節點，避免同一 ID 出現兩份而破壞計算。</p>'+
+          '<h3>A-05-02　主功能模組</h3><p>A 教學＝知識與系統說明；B 輸入＝所有工程/幾何/材料/施工參數；C 繪圖＝平面、兩向立面與 3D；D 計算＝H鋼、板樁、共通推演；E 統計＝摘要、幾何、高程、預力、鋼材、附屬材料；F 檢核＝基本、幾何碰撞、安全；G 匯出＝圖面、報表、JSON、ZIP。</p>'+
+          '<h3>A-05-03　資料流與 calc() 主循環</h3><p>輸入元件的 <code>oninput/onchange</code> 主要匯入 <code>calc()</code>。主循環讀取現值後進行幾何換算、排樁/支撐數量、型鋼重量、開挖/回填、預力與千斤頂換算，再更新自動計算欄位並觸發平面圖、立面圖、3D 與檢核結果。維護時應優先沿這條資料流追查，不要在 UI 層另建第二套公式。</p>'+
+          '<h3>A-05-04　模式切換與相容層</h3><p>B-01-01 採「勾選卡外觀＋radio 單選邏輯」切換 H鋼+木襯板/鋼板樁；底層仍同步原 <code>#pileType</code>。舊快速輸入 B～I 不再作為使用介面，但必要相容節點仍保留，確保 JSON、舊函式與雙向連動不被一次性重構破壞。</p>'+
+          '<h3>A-05-05　B 輸入頁面分工</h3><p>B-01 基本設定（工程資料＋木襯板＋三角拖架）；B-02 H鋼設定（型鋼規格＋H鋼幾何＋排樁數量）；B-03 板樁設定；B-04 水平支撐；B-05 預力加壓；B-06 開挖回填（各階開挖＋土方回填）。v72.1 起採硬隔離顯示，同一時間只顯示目前第二層頁籤對應群組。</p>'+
+          '<h3>A-05-06　2D 繪圖模組</h3><p><code>drawCanvas()</code> 產生平面配置；<code>drawSectionCanvas()</code> 產生 A-A′/B-B′ 立面。圖面尺寸、排樁、橫擋、角撐、斜撐、井字支撐、中間柱、木襯板與高程均取自同一份輸入資料。若新增構件，應同步考慮圖例、元件顯示開關與 DXF 匯出。</p>'+
+          '<h3>A-05-07　3D 模組</h3><p><code>build3DModel()</code> 以 Three.js 重建場景；元件應設定 <code>userData.part</code> 供顯示/隱藏與施工動畫辨識。相機使用 OrbitControls；手機保留旋轉、縮放、平移操作。新增 3D 構件時須同步處理元件開關、名稱標註與動畫階段。</p>'+
+          '<h3>A-05-08　計算推演與統計</h3><p>D 區是「公式與推導過程」，E 區是「結果彙整」。兩者資料來源相同，但用途不同：D 適合計算書查核與追算；E 適合材料數量、工程摘要與匯出。新增一項計算時，應確認是否同時需要出現在 D、E 與 Excel/Word。</p>'+
+          '<h3>A-05-09　檢核層級</h3><p>F-01 彙整輸入警示與模式狀態；F-02 檢查幾何合理性、構件配置與碰撞；F-03 保留 Peck 表觀土壓力包絡線及容許應力法的逐步檢核，並列採用公式、代入值、結果與判定。三層檢核用途不同，不應只看單一「通過/不通過」。</p>'+
+          '<h3>A-05-10　匯出與專案存讀</h3><p>G 區整合 JPG/PDF/DXF 圖面、Excel/Word 報表、JSON 專案存讀與 ZIP 一鍵打包。JSON 的價值在於保存「輸入狀態」以便日後復原；報表與圖面則是輸出結果。新增欄位時務必確認 JSON 儲存/載入清單是否同步。</p>'+
+          '<h3>A-05-11　響應式與固定導覽</h3><p>頁首、第一層與第二層共同固定在頂端。桌機/平板導覽不足寬時換行；手機為避免導覽佔掉過多高度，改為單列橫向滑動。第三層作業區維持單工作區邏輯，避免桌機雙欄與手機單欄產生兩套操作流程。</p>'+
+          '<h3>A-05-12　維護檢查清單</h3><p>新增/修改輸入欄位時依序檢查：①HTML ID與標籤編號 ②calc()讀值與公式 ③模式顯示/隱藏 ④JSON存讀 ⑤D計算推演 ⑥E統計 ⑦2D ⑧3D ⑨F檢核 ⑩Excel/Word/PDF/DXF/ZIP。若只改其中一處，最容易形成「畫面有值但輸出沒值」或「計算有值但載入無法還原」。</p>'+
+          '<h3>A-05-13　故障排查順序</h3><p>遇到異常時建議依序：先看瀏覽器 Console 是否有 JS 錯誤 → 確認欄位 ID 是否存在 → 確認模式 class 是否正確 → 手動呼叫 calc() → 檢查 2D/3D 函式 → 再查匯出。若只有某第二層頁面重複或消失，優先檢查 v72 分頁過濾，而非改計算核心。</p>'+
+          '<div style="font-size:.82em;color:#667983;margin-top:18px;padding-top:10px;border-top:1px dashed #b8c4cc;">版本：v72.7｜第一、二層導覽永久固定：2026-08-11</div></div>';
+    }
+
+    function openPage(main,sub,scroll=true){
+        currentMain=main; currentSub=sub; hideAllBlocks();
+        if(main==='A'){
+            if(['01','02','03'].includes(sub)) filterTour(sub);
+            else if(sub==='04'){const b=showBlock('blockBasicKnowledge');forceOpenBlock(b); const h=b.querySelector('.block-heading'); if(h)h.textContent='A-04 相關知識';}
+            else {prepareArchDoc();const b=showBlock('blockArchDoc');forceOpenBlock(b);}
+        }
+        if(main==='B') filterDetail(sub);
+        if(main==='C') filterDraw(sub);
+        if(main==='D') filterCalc(sub);
+        if(main==='E') filterSummary(sub);
+        if(main==='F') filterSafety(sub);
+        if(main==='G') filterExport(sub);
+        updateActiveNav();
+        try{localStorage.setItem('v72:lastPage',main+'-'+sub);}catch(e){}
+        if(scroll) window.scrollTo({top:0,behavior:'smooth'});
+    }
+    window.v72OpenPage=openPage;
+
+    function enhanceTourFocusCompatibility(){
+        // 舊導覽仍可呼叫 focusBlock；若目標被新版分頁隱藏，先切到對應主功能。
+        const old=window.focusBlock; if(typeof old!=='function') return;
+        window.focusBlock=function(id){
+            const map={blockQuickInput:['B','01'],blockDetailParam:['B','02'],blockDraw:['C','01'],blockCalcDetail:['D','01'],blockSummary:['E','01'],blockExport:['G','01'],blockSafetyCheck:['F','03'],blockBasicKnowledge:['A','04'],blockArchDoc:['A','05']};
+            if(map[id]) openPage(map[id][0],map[id][1],false);
+            return old.apply(this,arguments);
+        };
+    }
+
+    function init(){
+        document.body.classList.add('v72-ui');
+        initFixedHeaderHeight();
+        const author=q('blockAuthor'); if(author) author.remove(); // 作者附註正式移除 DOM
+        prepareTour(); prepareModeChooser(); normalizeDetailStructure(); prepareArchDoc(); createBasicCheck(); buildHeader();
+        // 舊整塊收合在新版不再作為主要導覽；先保持目前顯示頁可強制展開
+        all('.content-block > [data-clps-wrap]').forEach(w=>w.dataset.v72ForceOpen='1');
+        document.addEventListener('input',()=>{ if(currentMain==='F'&&currentSub==='01') setTimeout(updateBasicCheck,0); },true);
+        document.addEventListener('change',()=>{ if(currentMain==='F'&&currentSub==='01') setTimeout(updateBasicCheck,0); },true);
+        // calcDetail 每次重建後重新套用目前 D 分頁過濾
+        const cd=q('calcDetail'); if(cd) new MutationObserver(()=>{ if(currentMain==='D') setTimeout(()=>applyCalcFilter(currentSub),0); }).observe(cd,{childList:true});
+        enhanceTourFocusCompatibility();
+        let start=['B','01'];
+        try{const p=(localStorage.getItem('v72:lastPage')||'').match(/^([A-G])-(\d{2})$/); if(p&&NAV[p[1]].pages.some(x=>x[0]===p[2])) start=[p[1],p[2]];}catch(e){}
+        currentMain=start[0]; currentSub=start[1]; renderSecondary(); openPage(currentMain,currentSub,false);
+    }
+    if(document.readyState==='loading') window.addEventListener('DOMContentLoaded',()=>setTimeout(init,80)); else setTimeout(init,80);
+})();
+</script>
 </body>
 </html>
